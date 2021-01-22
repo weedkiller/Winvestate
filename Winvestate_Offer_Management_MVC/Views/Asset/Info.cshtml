@@ -1,0 +1,286 @@
+﻿@model ViewModelBase;
+@{
+    ViewData["Title"] = "Add";
+}
+
+@{
+    var _firstAnnouncementDate = Model.Asset?.first_announcement_date.Value.ToString("dd.MM.yyyy HH:mm");
+    var _lastAnnouncementDate = Model.Asset?.last_announcement_date.Value.ToString("dd.MM.yyyy HH:mm");
+    var _lastOfferDate = Model.Asset?.last_offer_date.Value.ToString("dd.MM.yyyy HH:mm");
+    var _assetNo = Model.Asset?.asset_no;
+    var _assetName = Model.Asset?.asset_name;
+    var _address = Model.Asset?.address;
+    var _block = Model.Asset?.block_number;
+    var _plot = Model.Asset?.plot_number;
+    var _size = Model.Asset?.size;
+    var _share = Model.Asset?.share;
+    var _startAmount = Model.Asset?.starting_amount.Value.ToString("C0");
+    var _guarantee = Model.Asset?.guarantee_amount.Value.ToString("C0");
+    var _minimum = Model.Asset?.minimum_increate_amout.Value.ToString("C0");
+    var _explanation = Model.AssetExplanation;
+    var _availableForCredit = Model.Asset?.is_compatible_for_credit.Value==true ? "checked:checked": "";
+
+
+}
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <div class="d-flex flex-column-fluid">
+        <!--begin::Container-->
+        <div class="container">
+            <!--begin::Card-->
+            <div class="card card-custom">
+                <div class="card-header py-3">
+                    <div class="card-title">
+                        <span class="card-icon">
+                            <span class="svg-icon svg-icon-md svg-icon-primary">
+                                <!--begin::Svg Icon | path:assets/media/svg/icons/Shopping/Chart-bar1.svg-->
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                        <rect x="0" y="0" width="24" height="24" />
+                                        <rect fill="#000000" opacity="0.3" x="12" y="4" width="3" height="13" rx="1.5" />
+                                        <rect fill="#000000" opacity="0.3" x="7" y="9" width="3" height="8" rx="1.5" />
+                                        <path d="M5,19 L20,19 C20.5522847,19 21,19.4477153 21,20 C21,20.5522847 20.5522847,21 20,21 L4,21 C3.44771525,21 3,20.5522847 3,20 L3,4 C3,3.44771525 3.44771525,3 4,3 C4.55228475,3 5,3.44771525 5,4 L5,19 Z" fill="#000000" fill-rule="nonzero" />
+                                        <rect fill="#000000" opacity="0.3" x="17" y="11" width="3" height="6" rx="1.5" />
+                                    </g>
+                                </svg>
+                                <!--end::Svg Icon-->
+                            </span>
+                        </span>
+                        <h3 class="card-label">Yeni Gayrimenkul</h3>
+                    </div>
+                    <div class="card-toolbar">
+                        <!--begin::Dropdown-->
+                        @*<div class="dropdown dropdown-inline mr-2">
+                                <button type="button" class="btn btn-light-primary font-weight-bolder dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="la la-download"></i>Dışa Aktarım
+                                </button>
+
+                                <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
+                                    <ul class="nav flex-column nav-hover">
+                                        <li class="nav-header font-weight-bolder text-uppercase text-primary pb-2">Bir yöntem seçiniz:</li>
+                                        <li class="nav-item">
+                                            <a href="#" class="nav-link">
+                                                <i class="nav-icon la la-print"></i>
+                                                <span class="nav-text">Yazdır</span>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="#" class="nav-link">
+                                                <i class="nav-icon la la-file-excel-o"></i>
+                                                <span class="nav-text">Excel</span>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="#" class="nav-link">
+                                                <i class="nav-icon la la-file-text-o"></i>
+                                                <span class="nav-text">CSV</span>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="#" class="nav-link">
+                                                <i class="nav-icon la la-file-pdf-o"></i>
+                                                <span class="nav-text">PDF</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                            </div>*@
+                        <!--end::Dropdown-->
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form class="form form--label-right" id="newAssetForm">
+                        <div class="form-group row">
+                            <label class="col-lg-2 col-form-label">İlan Yayınlama Başlangıç:</label>
+                            <div class="col-lg-2">
+                                <input type="text" class="form-control form-control-solid datetimepicker-input" id="first_announcement_date_str" name="first_announcement_date_str" placeholder="Tarih ve Saat Seçiniz"  data-toggle="datetimepicker" data-target="#first_announcement_date_str" value="@_firstAnnouncementDate"/>
+                                @*<span class="form-text text-primary">Doğum tarihiniz sisteme kayıt edilmez, yalnızca doğrulama işlemleri için kullanılır.</span>*@
+                            </div>
+                            <label class="col-lg-2 col-form-label text-right">İlan Yayınlama Bitiş:</label>
+                            <div class="col-lg-2">
+                                <input type="text" class="form-control form-control-solid datetimepicker-input" id="last_announcement_date_str" name="last_announcement_date_str" placeholder="Tarih ve Saat Seçiniz"  data-toggle="datetimepicker" data-target="#last_announcement_date_str" value="@_lastAnnouncementDate"/>
+                                       @*<span class="form-text text-primary">Doğum tarihiniz sisteme kayıt edilmez, yalnızca doğrulama işlemleri için kullanılır.</span>*@
+                            </div>
+                            <label class="col-lg-2 col-form-label text-right">Son Teklif Tarihi:</label>
+                            <div class="col-lg-2">
+                                <input type="text" class="form-control form-control-solid datetimepicker-input" id="last_offer_date_str" placeholder="Tarih ve Saat Seçiniz" name="last_offer_date_str" data-toggle="datetimepicker" data-target="#last_offer_date_str" value="@_lastOfferDate"/>
+                                @*<span class="form-text text-primary">Doğum tarihiniz sisteme kayıt edilmez, yalnızca doğrulama işlemleri için kullanılır.</span>*@
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-2 col-form-label">İlan Başlığı:</label>
+                            <div class="col-lg-10">
+                                <input class="form-control wv_upper" id="asset_name" type="text" name="asset_name" placeholder="" value="@_assetName"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-2 col-form-label">Gayrimenkul Sahibi:</label>
+                            <div class="col-lg-4">
+                                <select class="form-control select2" id="bank_guid" name="bank_guid">
+                                    @foreach (var loOption in Model.User.banks)
+                                    {
+                                        <option value="@loOption.row_guid">@loOption.name</option>
+                                    }
+                                </select>
+                            </div>
+                            <label class="col-lg-2 col-form-label text-right ">Kullanılacak Sözleşme:</label>
+                            <div class="col-lg-4">
+                                <select class="form-control select2" id="agreement_guid" name="agreement_guid">
+                                    @foreach (var loOption in Model.User.contracts)
+                                    {
+                                        <option value="@loOption.row_guid">@loOption.document_name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-2 col-form-label">Kategori:</label>
+                            <div class="col-lg-4">
+                                <select class="form-control select2" id="category_type_system_type_id" name="category_type_system_type_id">
+                                    @foreach (var loOption in Model.User.sys_definitions.asset_category)
+                                    {
+                                        <option value="@loOption.id">@loOption.type_value</option>
+                                    }
+                                </select>
+                            </div>
+                            <label class="col-lg-2 col-form-label text-right ">Tür:</label>
+                            <div class="col-lg-4">
+                                <select class="form-control select2" id="asset_type_system_type_id" name="asset_type_system_type_id">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-2 col-form-label">İl:</label>
+                            <div class="col-lg-4">
+                                <select class="form-control select2" id="city_id" name="city_id">
+                                </select>
+                            </div>
+                            <label class="col-lg-2 col-form-label text-right ">İlçe:</label>
+                            <div class="col-lg-4">
+                                <select class="form-control select2" id="district_id" name="district_id">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-2 col-form-label">Address:</label>
+                            <div class="col-lg-10">
+                                <input class="form-control wv_upper" id="address" type="text" name="address" placeholder="" value="@_address"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-2 col-form-label">Ada:</label>
+                            <div class="col-lg-2">
+                                <input class="form-control wv_upper" id="block_number" type="text" name="block_number" placeholder="" value="@_block" />
+                            </div>
+                            <label class="col-lg-2 col-form-label text-right ">Parsel:</label>
+                            <div class="col-lg-2">
+                                <input class="form-control wv_upper" id="plot_number" type="text" name="plot_number" placeholder="" value="@_plot"/>
+                            </div>
+                            <label class="col-lg-2 col-form-label text-right ">M2:</label>
+                            <div class="col-lg-2">
+                                <input class="form-control wv_upper" id="size" type="text" name="size" placeholder="" value="@_size"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-2 col-form-label">Hisse:</label>
+                            <div class="col-lg-2">
+                                <input class="form-control wv_upper" id="share" type="text" name="share" placeholder="" value="@_share"/>
+                            </div>
+                            <label class="col-lg-2 col-form-label text-right ">Krediye Uygun:</label>
+                            <label class="checkbox">
+                                <input type="checkbox" name="is_compatible_for_credit" id="is_compatible_for_credit" class="mr-5" @_availableForCredit/>
+                                <span></span>
+                            </label>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-2 col-form-label">Başlangıç Bedeli:</label>
+                            <div class="col-lg-2">
+                                <input class="form-control wv_upper priceInput" id="starting_amount" type="text" name="starting_amount" placeholder="" value="@_startAmount"/>
+                            </div>
+                            <label class="col-lg-2 col-form-label text-right">Teminat Bedeli:</label>
+                            <div class="col-lg-2">
+                                <input class="form-control wv_upper priceInput" id="guarantee_amount" type="text" name="guarantee_amount" placeholder="" value="@_guarantee"/>
+                            </div>
+                            <label class="col-lg-2 col-form-label text-right">Minimum Artış:</label>
+                            <div class="col-lg-2">
+                                <input class="form-control wv_upper priceInput" id="minimum_increate_amout" type="text" name="minimum_increate_amout" placeholder="" value="@_minimum"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-2 col-form-label">Açıklama</label>
+                            <div class="col-lg-10">
+                                <textarea class="form-control form-control-solid  form-control-sm wv_upper" id="explanation" name="explanation" rows="2" ></textarea>
+                            </div>
+                        </div>
+                        @if (Model.Asset == null)
+                        {
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label ">Fotoğraflarını Yükleyiniz:</label>
+                                <div class="col-lg-10">
+                                    <div class="dropzone dropzone-default dropzone-primary" id="dropzone_for_asset_images">
+                                        <div class="dropzone-msg dz-message needsclick">
+                                            <h3 class="dropzone-msg-title">Dosyaları buraya sürükleyin ya da tıklayınız.</h3>
+                                            <span class="dropzone-msg-desc">En fazla 35 fotoğraf yükleyebilirsiniz.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                       
+                        <div class="d-flex justify-content-between border-top mt-5 pt-10">
+                            <div class="mr-2">
+                                @*<button type="button" class="btn btn-light-primary font-weight-bolder text-uppercase px-9 py-4" data-wizard-type="action-prev">Previous</button>*@
+                            </div>
+                            <div>
+                                <button type="button" id="saveAsset" class="btn btn-primary font-weight-bolder text-uppercase px-9 py-4">Kaydet</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!--end::Card-->
+        </div>
+    </div>
+    <!--end::Container-->
+</div>
+
+@section Scripts {
+    <script src="~/assets/js/Asset/Asset.js"></script>
+    <script src="~/assets/js/address.js"></script>
+    <script>
+
+        jQuery(document).ready(function () {
+            var loUser = JSON.parse('@Html.Raw(Json.Serialize(Model.User))');
+            var loAsset = JSON.parse('@Html.Raw(Json.Serialize(Model.Asset))');
+            
+            var loMyAddressObj = {};
+           
+
+            if (loAsset!= null && loAsset.id > 0) {
+                setAssetVariables(loUser.sys_definitions, loUser.session_id, loAsset);
+                $("#bank_guid").val(loAsset.bank_guid).trigger("change");
+                $("#agreement_guid").val(loAsset.agreement_guid).trigger("change");
+                $("#category_type_system_type_id").val(loAsset.category_type_system_type_id).trigger("change");
+                $("#asset_type_system_type_id").val(loAsset.asset_type_system_type_id).trigger("change");
+                loMyAddressObj.city_id = loAsset.city_id;
+                loMyAddressObj.district_id = loAsset.district_id;
+                setAddressVariables(loMyAddressObj);
+                GetCities();
+                GetDistricts($("#district_id"));
+                $("#explanation").text('@Html.Raw(Model.AssetExplanation)');
+            } else {
+                setAssetVariables(loUser.sys_definitions, loUser.session_id);
+                setAddressVariables(loMyAddressObj);
+                GetCities();
+            }
+
+            
+        });
+
+
+
+
+
+    </script>
+}

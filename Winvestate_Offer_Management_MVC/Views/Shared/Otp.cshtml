@@ -1,0 +1,32 @@
+﻿<div class="modal fade" id="kt_modal_otp" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal">
+        <div class="modal-content" role="document">
+            <div class="modal-header">
+                <h5 class="modal-title ModalLabel">Güvenli Doğrulama</h5>
+
+            </div>
+            <div class="modal-body">
+                <div class="kt-section__content kt-section__content--solid">
+                    <p>Güvenli doğrulama için lütfen cep telefonunza gelen kodu giriniz</p>
+                </div>
+                <form class="kt-form kt-form--label-right">
+                    <div class="form-group row">
+                        <label for="otp" class="col-2 col-form-label">Kod:</label>
+                        <div class="col-10">
+                            <input type="text" class="form-control" id="otp">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-12" id="secondSms">
+                            <label></label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                <button type="button" class="btn btn-primary" id="validateOtp">Doğrula</button>
+            </div>
+        </div>
+    </div>
+</div>

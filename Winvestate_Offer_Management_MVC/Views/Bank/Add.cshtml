@@ -1,0 +1,27 @@
+﻿@model ViewModelBase;
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+<div class="modal fade" id="kt_modal_add_bank" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content" role="document">
+            <div class="modal-header">
+                <h5 class="modal-title">Yeni Kurum</h5>
+            </div>
+            <div class="modal-body">
+                <form class="form form--label-right" id="newBankForm">
+                    <div class="form-group row">
+                        <label class="col-lg-2 col-form-label">Adı:</label>
+                        <div class="col-lg-10">
+                            <input class="form-control wv_upper" id="bank_name" type="text" name="name" placeholder="Kurum adı yazınız" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                <button type="button" class="btn btn-primary" id="saveBank">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>

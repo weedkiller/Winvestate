@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29806.167
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Winvestate_Offer_Management_MVC", "Winvestate_Offer_Management_MVC\Winvestate_Offer_Management_MVC.csproj", "{8A232A4C-5F0B-4DA7-A395-B2BEC05B2B2D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Winvestate_Offer_Management_API", "Winvestate_Offer_Management_API\Winvestate_Offer_Management_API.csproj", "{8156C9F2-EED8-4946-B761-78A3651F2268}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Winvestate_Offer_Management_Models", "Winvestate_Offer_Management_Models\Winvestate_Offer_Management_Models.csproj", "{277D1B99-98DC-4B1D-B675-9AF67151FFDE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		PROD|Any CPU = PROD|Any CPU
+		Release|Any CPU = Release|Any CPU
+		TEST|Any CPU = TEST|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8A232A4C-5F0B-4DA7-A395-B2BEC05B2B2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A232A4C-5F0B-4DA7-A395-B2BEC05B2B2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A232A4C-5F0B-4DA7-A395-B2BEC05B2B2D}.PROD|Any CPU.ActiveCfg = PROD|Any CPU
+		{8A232A4C-5F0B-4DA7-A395-B2BEC05B2B2D}.PROD|Any CPU.Build.0 = PROD|Any CPU
+		{8A232A4C-5F0B-4DA7-A395-B2BEC05B2B2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A232A4C-5F0B-4DA7-A395-B2BEC05B2B2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A232A4C-5F0B-4DA7-A395-B2BEC05B2B2D}.TEST|Any CPU.ActiveCfg = TEST|Any CPU
+		{8A232A4C-5F0B-4DA7-A395-B2BEC05B2B2D}.TEST|Any CPU.Build.0 = TEST|Any CPU
+		{8156C9F2-EED8-4946-B761-78A3651F2268}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8156C9F2-EED8-4946-B761-78A3651F2268}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8156C9F2-EED8-4946-B761-78A3651F2268}.PROD|Any CPU.ActiveCfg = PROD|Any CPU
+		{8156C9F2-EED8-4946-B761-78A3651F2268}.PROD|Any CPU.Build.0 = PROD|Any CPU
+		{8156C9F2-EED8-4946-B761-78A3651F2268}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8156C9F2-EED8-4946-B761-78A3651F2268}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8156C9F2-EED8-4946-B761-78A3651F2268}.TEST|Any CPU.ActiveCfg = TEST|Any CPU
+		{8156C9F2-EED8-4946-B761-78A3651F2268}.TEST|Any CPU.Build.0 = TEST|Any CPU
+		{277D1B99-98DC-4B1D-B675-9AF67151FFDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{277D1B99-98DC-4B1D-B675-9AF67151FFDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{277D1B99-98DC-4B1D-B675-9AF67151FFDE}.PROD|Any CPU.ActiveCfg = PROD|Any CPU
+		{277D1B99-98DC-4B1D-B675-9AF67151FFDE}.PROD|Any CPU.Build.0 = PROD|Any CPU
+		{277D1B99-98DC-4B1D-B675-9AF67151FFDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{277D1B99-98DC-4B1D-B675-9AF67151FFDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{277D1B99-98DC-4B1D-B675-9AF67151FFDE}.TEST|Any CPU.ActiveCfg = TEST|Any CPU
+		{277D1B99-98DC-4B1D-B675-9AF67151FFDE}.TEST|Any CPU.Build.0 = TEST|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AC9555A2-6F9C-497C-B72A-F44DA316D353}
+	EndGlobalSection
+EndGlobal

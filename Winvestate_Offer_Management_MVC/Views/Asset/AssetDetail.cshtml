@@ -1,0 +1,435 @@
+﻿@using Winvestate_Offer_Management_MVC.Classes
+@model ViewModelBase;
+
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <!--begin::Subheader-->
+    <div class="subheader py-2 py-lg-4 subheader-transparent" id="kt_subheader">
+        <div class="container d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
+            <!--begin::Details-->
+            <div class="d-flex align-items-center flex-wrap mr-2">
+                <!--begin::Title-->
+                <h5 class="text-dark font-weight-bold mt-2 mb-2 mr-5">Gayrimenkul Detayı</h5>
+                <!--end::Title-->
+                <!--begin::Separator-->
+                <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-5 bg-gray-200"></div>
+                <!--end::Separator-->
+                <!--begin::Search Form-->
+                <div class="d-flex align-items-center" id="kt_subheader_search">
+                    <span class="text-dark-50 font-weight-bold" id="kt_subheader_total"></span>
+                </div>
+                <!--end::Search Form-->
+            </div>
+            <!--end::Details-->
+            <!--begin::Toolbar-->
+            <div class="d-flex align-items-center">
+                <!--begin::Button-->
+                <a href="/Asset/AssetForOffer" class="btn btn-default font-weight-bold">Listeye Dön</a>
+                <!--end::Button-->
+            </div>
+            <!--end::Toolbar-->
+        </div>
+    </div>
+    <!--end::Subheader-->
+
+    <div class="d-flex flex-column-fluid">
+        <!--begin::Container-->
+        <div class="container">
+            @if (Model.User == null)
+            {
+                <div class="row">
+                    <div class="col-xl-6 mb-10">
+                        <!--begin::Callout-->
+                        <div class="card card-custom gutter-b bg-light-dark">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center justify-content-between p-4 flex-lg-wrap flex-xl-nowrap">
+                                    <div class="d-flex flex-column mr-5">
+                                        <a href="#" class="h4 text-dark text-hover-primary mb-5">Beni Arayın</a>
+                                        <p class="text-dark-50">Tüm sorularınıza hızlıca cevap vermemiz için lütfen geri aranma talep formumuzu doldurunuz.</p>
+                                    </div>
+                                    <div class="ml-6 ml-lg-0 ml-xxl-6 flex-shrink-0">
+                                        <a href="custom/apps/support-center/feedback.html" target="_blank" class="btn font-weight-bolder text-uppercase btn-dark py-4 px-6" data-toggle="modal" data-target="#kt_modal_callback">Talepte Bulun</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--end::Callout-->
+                    </div>
+
+                    <div class="col-xl-6 mb-10">
+                        <!--begin::Callout-->
+                        <div class="card card-custom gutter-b bg-light-primary">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center justify-content-between p-4 flex-lg-wrap flex-xl-nowrap">
+                                    <div class="d-flex flex-column mr-5">
+                                        <a href="#" type="button" class="h4 text-dark text-hover-primary mb-5" data-toggle="modal" data-target="#kt_modal_offer">E-Teklif</a>
+                                        <p class="text-dark-50">Kolay ve hızlı teklif vermek için, tüm bilgilerinizi doldurun; daha sonra E-Sözleşme’yi online imzalayın. </p>
+                                    </div>
+                                    <div class="ml-6 ml-lg-0 ml-xxl-6 flex-shrink-0">
+                                        <a href="#" class="btn font-weight-bolder text-uppercase btn-primary py-4 px-6" data-toggle="modal" data-target="#kt_modal_offer">Teklif Ver</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--end::Callout-->
+                    </div>
+                </div>
+            }
+            <div class="row mt-3">
+                <div class="col-xl-8">
+                    <div class="card card-custom">
+                        <div class="card-header card-header-tabs-line">
+                            <div class="card-toolbar">
+                                <ul class="nav nav-tabs nav-bold nav-tabs-line">
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#kt_tab_pane_photos">
+                                            <span class="nav-icon"><i class="flaticon2-photograph"></i></span>
+                                            <span class="nav-text">Fotoğraflar</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="tab-content">
+                                <div class="tab-pane fade show active" id="kt_tab_pane_photos" role="tabpanel" aria-labelledby="kt_tab_pane_photos">
+                                    <div id="image-slider" class="splide">
+                                        <div class="splide__track">
+                                            <ul class="splide__list">
+
+
+                                                @foreach (var loImage in Model.Asset.asset_photos.FindAll(X => X.is_thumb == false))
+                                                {
+                                                    <li class="splide__slide myImageSize">
+                                                        <img src="~/Uploads/@loImage.file_path">
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-4">
+
+                    <!--begin::Card-->
+                    <div class="card card-custom myHeight">
+                        <!--begin::Header-->
+                        <div class="card-header h-auto py-4">
+                            <div class="card-title">
+                                <h6 class="card-label">
+                                    Bilgiler
+                                </h6>
+                            </div>
+                        </div>
+                        <!--end::Header-->
+                        <!--begin::Body-->
+                        <div class="card-body py-4">
+                            <div class="form-group row my-2">
+                                <label class="col-4 col-form-label font-size-xs ">Fiyat:</label>
+                                <div class="col-8">
+                                    <span class="form-control-plaintext">
+                                        <span class="font-weight-bolder">@string.Format("{0:C}", Model.Asset.starting_amount)</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group row my-2 font-size-xs">
+                                <label class="col-4 col-form-label">İl:</label>
+                                <div class="col-8">
+                                    <span class="form-control-plaintext">
+                                        <span class="font-weight-bolder">@Model.Asset.city</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group row my-2 font-size-xs">
+                                <label class="col-4 col-form-label">İlçe:</label>
+                                <div class="col-8">
+                                    <span class="form-control-plaintext">
+                                        <span class="font-weight-bolder">@Model.Asset.district</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group row my-2">
+                                <label class="col-4 col-form-label font-size-xs">Adres:</label>
+                                <div class="col-8">
+                                    <span class="form-control-plaintext">
+                                        <span class="font-weight-bolder">@Model.Asset.address</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group row my-2">
+                                <label class="col-4 col-form-label font-size-xs">Kategori:</label>
+                                <div class="col-8">
+                                    <span class="form-control-plaintext">
+                                        <span class="font-weight-bolder">@Model.Asset.category / @Model.Asset.asset_type  </span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group row my-2">
+                                <label class="col-4 col-form-label font-size-xs">Ada:</label>
+                                <div class="col-8">
+                                    <span class="form-control-plaintext">
+                                        <span class="font-weight-bolder">@Model.Asset.block_number</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group row my-2">
+                                <label class="col-4 col-form-label font-size-xs">Parsel:</label>
+                                <div class="col-8">
+                                    <span class="form-control-plaintext">
+                                        <span class="font-weight-bolder">@Model.Asset.plot_number</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group row my-2">
+                                <label class="col-4 col-form-label font-size-xs">Hisse:</label>
+                                <div class="col-8">
+                                    <span class="form-control-plaintext">
+                                        <span class="font-weight-bolder">@Model.Asset.share</span>
+                                    </span>
+                                </div>
+                            </div>
+                            @{
+                                var loResult = Model.Asset.is_compatible_for_credit == true ? "Evet" : "Hayır";
+                            }
+                            <div class="form-group row my-2">
+                                <label class="col-4 col-form-label font-size-xs">Krediye Uygunluk:</label>
+                                <div class="col-8">
+                                    <span class="form-control-plaintext">
+                                        <span class="font-weight-bolder">@loResult</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group row my-2">
+                                <label class="col-4 col-form-label font-size-xs">Teminat Bedeli:</label>
+                                <div class="col-8">
+                                    <span class="form-control-plaintext">
+                                        <span class="font-weight-bolder">@Model.Asset.guarantee_amount</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group row my-2">
+                                <label class="col-4 col-form-label font-size-xs">Minimum Artış Tutarı:</label>
+                                <div class="col-8">
+                                    <span class="form-control-plaintext">
+                                        <span class="font-weight-bolder">@Model.Asset.minimum_increate_amout</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <!--end::Body-->
+                        <!--begin::Footer-->
+                        @*<div class="card-footer">
+                            <a href="#" class="btn btn-primary font-weight-bold mr-2">Manage company</a>
+                             <a href="#" class="btn btn-light-primary font-weight-bold">Learn more</a>
+                                        </div>*@
+                        <!--end::Footer-->
+                    </div>
+                    <!--end::Card-->
+                </div>
+
+            </div>
+            <div class="row mt-3">
+                <div class="form-group">
+                    <div class="col-12">
+                        <label class="form-group font-weight-bold ">Açıklama:</label>
+                        <span class="form-control-plaintext font-weight-normal font-size-xs">@Model.Asset.explanation</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<div class="modal fade" id="kt_modal_offer" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content" role="document">
+            <div class="modal-header">
+                <h5 class="modal-title font-weight-bolder">Başvuru Formu</h5>
+            </div>
+            <div class="modal-body">
+                <form class="form form--label-right" id="newCustomerValidationForm">
+                    <div class="form-group row">
+                        <label class="col-2 col-form-label">Müşteri Tipi</label>
+                        <div class="col-10 col-form-label">
+                            <div class="radio-inline">
+                                <label class="radio radio-success">
+                                    <input type="radio" name="userType" checked="checked" value="1" />
+                                    <span></span>
+                                    Bireysel
+                                </label>
+                                <label class="radio radio-success">
+                                    <input type="radio" name="userType" value="2" />
+                                    <span></span>
+                                    Kurumsal
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row company">
+                        <label class="col-lg-2 col-form-label">Firma Ünvanı:</label>
+                        <div class="col-lg-10">
+                            <input class="form-control wv_upper" id="company_name" type="text" name="company_name" placeholder="" maxlength="50"
+                                   data-fv-string-length___message="Firma ünvanı 50 karakterden fazla olamaz." />
+                        </div>
+                    </div>
+                    <div class="form-group row company">
+                        <label class="col-lg-2 col-form-label">Iban No:</label>
+                        <div class="col-lg-10">
+                            <input class="form-control wv_upper" id="iban" type="text" name="iban" placeholder="" />
+                        </div>
+                    </div>
+                    <div class="form-group row company">
+                        <label class="col-lg-2 col-form-label">Vergi Dairesi:</label>
+                        <div class="col-lg-4">
+                            <input class="form-control wv_upper" id="tax_office" type="text" name="tax_office" placeholder="" maxlength="30"
+                                   data-fv-string-length___message="Vergi dairesi 30 karakterden fazla olamaz" />
+                        </div>
+                        <label class="col-lg-2 col-form-label">Vergi No:</label>
+                        <div class="col-lg-4">
+                            <input class="form-control wv_upper" id="tax_no" type="text" name="tax_no" placeholder="" maxlength="11"
+                                   data-fv-string-length___message="Vergi numarası 11 karakterden fazla olamaz." />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-2 col-form-label">Ad:</label>
+                        <div class="col-lg-4">
+                            <input class="form-control wv_upper" id="customer_name" type="text" name="customer_name" placeholder="" maxlength="50"
+                                   data-fv-string-length___message="İsim 50 karakterden fazla olamaz" />
+                        </div>
+                        <label class="col-lg-2 col-form-label">Soyad:</label>
+                        <div class="col-lg-4">
+                            <input class="form-control wv_upper" id="customer_surname" type="text" name="customer_surname" placeholder="" maxlength="30"
+                                   data-fv-string-length___message="Soyisim 30 karakterden fazla olamaz" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-2 col-form-label">Tc Kimlik Numarası:</label>
+                        <div class="col-lg-4">
+                            <input class="form-control wv_upper" id="identity_no" type="text" name="identity" placeholder="" maxlength="11"
+                                   minlength="11"
+                                   data-fv-string-length___message="11 haneli TC Kimlik numaranızı giriniz" />
+                            @*<span class="form-text text-primary">Kimlik numaranız sisteme kayıt edilmez, yalnızca doğrulama işlemleri için kullanılır.</span>*@
+                        </div>
+                        <label class="col-lg-2 col-form-label">Doğum Tarihi:</label>
+                        <div class="col-lg-4" id="dtpicker">
+                            <input class="form-control" id="birthdate" type="date" name="birthdate" />
+                            @*<span class="form-text text-primary">Doğum tarihiniz sisteme kayıt edilmez, yalnızca doğrulama işlemleri için kullanılır.</span>*@
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-2 col-form-label">Telefon Numarası:</label>
+                        <div class="col-lg-4">
+                            <input class="form-control wv_upper phoneInput" id="phone" type="text" name="phone" placeholder="" />
+                            @*<span class="form-text text-primary">Girmiş olduğunuz telefon numarasına doğrulama için kod gönderimi sağlanacaktır.</span>*@
+                        </div>
+                        <label class="col-lg-2 col-form-label">Mail Adresi:</label>
+                        <div class="col-lg-4">
+                            <input class="form-control wv_lower" id="mail" type="text" name="mail" placeholder="" maxlength="50"
+                                   data-fv-string-length___message="Mail adresiniz 50 karakterden fazla olamaz." />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-2 col-form-label">Adres:</label>
+                        <div class="col-lg-10">
+                            <textarea class="form-control" rows="3" maxlength="255"
+                                      data-fv-string-length___message="Adres 255 karakterden fazla olamaz"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-lg-2">
+                            <span class="switch switch-outline switch-icon switch-danger">
+                                <label>
+                                    <input class="mr-2" type="checkbox" name="checkKvkk" id="checkKvkk" />
+                                    <span></span>
+                                </label>
+                            </span>
+                        </div>
+                        <p class="col-10 font-weight-boldest"><u>Kişisel Verileri Koruma Kanunu aydınlatma metnini okudum, kabul ediyorum.</u></p>
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                <button type="button" class="btn btn-primary" id="validateCustomer">Başvuru Yap</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="kt_modal_callback" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" role="document">
+            <div class="modal-header">
+                <h5 class="modal-title font-weight-bolder">Geri Aranma Formu</h5>
+            </div>
+            <div class="modal-body">
+                <form class="form form--label-right" id="newCallbackForm">
+                    <input type="hidden" name="captcha" id="captchaInput" value="" />
+                    <div class="form-group row">
+                        <label class="col-lg-3 col-form-label">Adı:</label>
+                        <div class="col-lg-9">
+                            <input class="form-control wv_upper" id="applicant_name" type="text" name="applicant_name" placeholder="" maxlength="50"
+                                   data-fv-string-length___message="İsim 50 karakterden fazla olamaz" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-3 col-form-label">Soyadı:</label>
+                        <div class="col-lg-9">
+                            <input class="form-control wv_upper" id="applicant_surname" type="text" name="applicant_surname" placeholder="" maxlength="30"
+                                   data-fv-string-length___message="Soyisim 30 karakterden fazla olamaz" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-3 col-form-label">Cep Telefonu:</label>
+                        <div class="col-lg-9">
+                            <input class="form-control wv_upper phoneInput" id="applicant_phone" type="text" name="applicant_phone" placeholder="" />
+                            @*<span class="form-text text-primary">Girmiş olduğunuz telefon numarasına doğrulama için kod gönderimi sağlanacaktır.</span>*@
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                <button type="button" class="btn btn-primary" id="submitCallback">Başvuru Yap</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("~/Views/Shared/Otp.cshtml", Model)
+
+@section Scripts {
+    <script src="~/assets/js/Asset/AssetDetail.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=6LfoijYaAAAAAI7hFmYWzOudX3-8FEGEn_wRdYv4"></script>
+    <script>
+        grecaptcha.ready(function() {
+            grecaptcha.execute('6LfoijYaAAAAAI7hFmYWzOudX3-8FEGEn_wRdYv4', { action: 'contact' }).then(function (token) {
+                $("#captchaInput").val(token);
+            });
+        });
+    </script>
+    <script>
+        jQuery(document).ready(function() {
+            SELECTED_ASSET = '@Model.Asset.row_guid';
+
+            if (@Model.Asset.asset_photos.FindAll(x => !x.file_path.Contains("thumb")).Count() > 0) {
+                new Splide('#image-slider',
+                    {
+                        'autoplay': true,
+                        'cover': true,
+                        'autoWidth': true,
+                        'rewind': true,
+                        'heightRatio': 0.5,
+                    }).mount();
+            }
+        });
+
+    </script>
+}

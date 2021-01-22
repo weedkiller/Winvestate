@@ -1,0 +1,12 @@
+﻿.wv_upper {
+    text-transform: uppercase;
+}
+
+.wv_lower {
+    text-transform: lowercase;
+}
+
+.myImageSize {
+    width: 100rem !important;
+    height: 35rem !important;
+}

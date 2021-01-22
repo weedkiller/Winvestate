@@ -1,0 +1,180 @@
+﻿@using Winvestate_Offer_Management_MVC.Classes
+@model ViewModelBase;
+@using Winvestate_Offer_Management_MVC.Classes
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Winvestate</title>
+    <link rel="stylesheet" href="~/assets/threatio/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/assets/threatio/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="~/assets/threatio/css/flaticon.css" />
+    <link rel="stylesheet" href="~/assets/threatio/css/owl.carousel.min.css" />
+    <link rel="stylesheet" href="~/assets/threatio/css/owl.theme.css" />
+    <link rel="stylesheet" href="~/assets/threatio/css/vegas.css" />
+    <link rel="stylesheet" href="~/assets/threatio/css/magnific-popup.css" />
+    <link rel="stylesheet" href="~/assets/threatio/css/lightgallery.css" />
+    <link rel="stylesheet" href="~/assets/threatio/css/woocommerce.css" />
+    <link rel="stylesheet" href="~/assets/threatio/css/royal-preload.css" />
+
+    <link rel="stylesheet" href="~/assets/threatio/css/style.css" />
+    <link rel="canonical" href="https://mesnetbilisim.com.tr" />
+    <!--begin::Fonts-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
+    <!--end::Fonts-->
+    <!--begin::Page Vendors Styles(used by this page)-->
+    <link href="~/assets/plugins/custom/fullcalendar/fullcalendar.bundle.css" rel="stylesheet" type="text/css" />
+    <!--end::Page Vendors Styles-->
+    <!--begin::Global Theme Styles(used by all pages)-->
+    <link href="~/assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/plugins/custom/prismjs/prismjs.bundle.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/css/myCustomizeClass.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/css/splide/splide.min.css" rel="stylesheet" type="text/css" />
+    <!--end::Global Theme Styles-->
+    <!--begin::Layout Themes(used by all pages)-->
+    <!--end::Layout Themes-->
+    <link rel="shortcut icon" href="assets/media/logos/favicon.ico" />
+    @RenderSection("Css", false)
+</head>
+<body>
+    <div id="page" class="site">
+        <header id="site-header" class="site-header site-header-onepage bg-dark-1">
+            <!-- Main Header start -->
+            <div class="octf-main-header">
+                <div class="octf-area-wrap">
+                    <div class="container octf-mainbar-container">
+                        <div class="octf-mainbar">
+                            <div class="octf-mainbar-row octf-row">
+                                <div class="octf-col logo-col">
+                                    <div id="site-logo" class="site-logo">
+                                        <a href="index.html">
+                                            <img src="~/assets/Winvestate-Logo-4.png" alt="Winvestate" class="logo-onepage">
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="octf-col menu-col justify-content-end">
+                                    <nav id="site-navigation" class="main-navigation">
+                                        <ul class="menu">
+                                            <li><a class="scroll-target" href="https://winvestate.com/anasayfa#hakkimizda">HAKKIMIZDA</a></li>
+                                            <li><a class="scroll-target" href="https://winvestate.com/anasayfa#cozumlerimiz">ÇÖZÜMLERİMİZ</a></li>
+                                            <li><a class="scroll-target" href="https://winvestate.com/anasayfa#teklif">E-TEKLİF</a></li>
+                                            <li><a class="scroll-target" href="/Asset/AssetForOffer">GAYRİMENKULLER</a></li>
+                                            <li><a class="scroll-target" href="https://winvestate.com/anasayfa#iletisim">İLETİŞİM</a></li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="header_mobile">
+                <div class="container">
+                    <div class="octf-mainbar-row octf-row">
+                        <div class="octf-col">
+                            <div class="mlogo_wrapper clearfix">
+                                <div class="mobile_logo">
+                                    <a href="index.html">
+                                        <img src="~/assets/Winvestate-Logo-4.png" alt="Winvestate">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="octf-col justify-content-end">
+                            <div class="octf-menu-mobile octf-cta-header pr-0">
+                                <div id="mmenu-toggle" class="mmenu-toggle">
+                                    <button><i class="ot-flaticon-menu"></i></button>
+                                </div>
+                                <div class="site-overlay mmenu-overlay"></div>
+                                <div id="mmenu-wrapper" class="mmenu-wrapper on-right">
+                                    <div class="mmenu-inner">
+                                        <a class="mmenu-close" href="#"><i class="ot-flaticon-right-arrow"></i></a>
+                                        <div class="mobile-nav">
+                                            <ul id="menu-main-menu" class="mobile_mainmenu none-style">
+                                                <li><a class="scroll-target" href="https://winvestate.com/anasayfa#hakkimizda">HAKKIMIZDA</a></li>
+                                                <li><a class="scroll-target" href="https://winvestate.com/anasayfa#cozumlerimiz">ÇÖZÜMLERİMİZ</a></li>
+                                                <li><a class="scroll-target" href="https://winvestate.com/anasayfa#teklif">E-TEKLİF</a></li>
+                                                <li><a class="scroll-target" href="/Asset/AssetForOffer">GAYRİMENKULLER</a></li>
+                                                <li><a class="scroll-target" href="https://winvestate.com/anasayfa#iletisim">İLETİŞİM</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        @RenderBody()
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-7 col-md-12 mb-4 mb-lg-0">
+                        <p>Copyright © @DateTime.Now.Year Winvestate – Tüm Hakları Saklıdır. Tasarım: DUTAjans</p>
+                    </div>
+                    <div class="col-lg-5 col-md-12 align-self-center">
+                        <ul class="icon-list-items inline-items justify-content-lg-end">
+                            <li class="icon-list-item inline-item">
+                                <a href="#"><span class="icon-list-text">Kullanım Şartları</span></a>
+                            </li>
+                            <li class="icon-list-item inline-item">
+                                <a href="#"><span class="icon-list-text">Gizlilik Çevre Politikası</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    var HOST_URL = "@Common.ApiUrl";
+
+
+    @if (Model.User != null)
+    {
+        Model.Token = Model.User.token;
+    }
+
+    var HOST_TOKEN = "@Model.Token";
+    var SELECTED_ASSET = "";
+    </script>
+    <!--begin::Global Config(global config for global JS scripts)-->
+    <script>var KTAppSettings = { "breakpoints": { "sm": 576, "md": 768, "lg": 992, "xl": 1200, "xxl": 1200 }, "colors": { "theme": { "base": { "white": "#ffffff", "primary": "#6993FF", "secondary": "#E5EAEE", "success": "#1BC5BD", "info": "#8950FC", "warning": "#FFA800", "danger": "#F64E60", "light": "#F3F6F9", "dark": "#212121" }, "light": { "white": "#ffffff", "primary": "#E1E9FF", "secondary": "#ECF0F3", "success": "#C9F7F5", "info": "#EEE5FF", "warning": "#FFF4DE", "danger": "#FFE2E5", "light": "#F3F6F9", "dark": "#D6D6E0" }, "inverse": { "white": "#ffffff", "primary": "#ffffff", "secondary": "#212121", "success": "#ffffff", "info": "#ffffff", "warning": "#ffffff", "danger": "#ffffff", "light": "#464E5F", "dark": "#ffffff" } }, "gray": { "gray-100": "#F3F6F9", "gray-200": "#ECF0F3", "gray-300": "#E5EAEE", "gray-400": "#D6D6E0", "gray-500": "#B5B5C3", "gray-600": "#80808F", "gray-700": "#464E5F", "gray-800": "#1B283F", "gray-900": "#212121" } }, "font-family": "Poppins" };</script>
+    <!--end::Global Config-->
+    <!--begin::Global Theme Bundle(used by all pages)-->
+    <script src="~/assets/plugins/global/plugins.bundle.js"></script>
+    <script src="~/assets/plugins/custom/prismjs/prismjs.bundle.js"></script>
+    <script src="~/assets/js/scripts.bundle.js"></script>
+    <!--end::Global Theme Bundle-->
+    <!--begin::Page Vendors(used by this page)-->
+    <script src="~/assets/plugins/custom/fullcalendar/fullcalendar.bundle.js"></script>
+    <script src="//maps.google.com/maps/api/js?key=AIzaSyBTGnKT7dt597vo9QgeQ7BFhvSRP4eiMSM"></script>
+    <script src="~/assets/plugins/custom/gmaps/gmaps.js"></script>
+    <!--end::Page Vendors-->
+    <!--begin::Page Scripts(used by this page)-->
+    <script src="~/assets/js/pages/widgets.js"></script>
+    <script src="~/assets/js/helper.js"></script>
+    <script src="~/assets/js/address.js"></script>
+
+    @if (Model.User == null)
+    {
+        <script src="~/assets/js/Asset/AssetPublicList.js"></script>
+        <script src="~/assets/js/splide/splide.js">
+        </script>
+        <script src="~/assets/js/Asset/AssetDetail.js"></script>
+        <script src="~/assets/js/otp.js"></script>
+    }
+    else
+    {
+        <script src="~/assets/js/user/user.js"></script>
+        <script src="~/assets/js/bank/bank.js"></script>
+    }
+
+    <!--end::Page Scripts-->
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

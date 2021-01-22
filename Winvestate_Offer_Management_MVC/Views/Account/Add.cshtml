@@ -1,0 +1,47 @@
+﻿@model ViewModelBase;
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+<div class="modal fade" id="kt_modal_add_user" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content" role="document">
+            <div class="modal-header">
+                <h5 class="modal-title">Yeni Kullanıcı</h5>
+            </div>
+            <div class="modal-body">
+                <form class="form form--label-right" id="newUserForm">
+                    <div class="form-group row">
+                        <label class="col-lg-2 col-form-label">Ad:</label>
+                        <div class="col-lg-4">
+                            <input class="form-control wv_upper" id="name" type="text" name="name" placeholder="Ad  yazınız" />
+                        </div>
+                        <label class="col-lg-2 col-form-label">Soyad:</label>
+                        <div class="col-lg-4">
+                            <input class="form-control wv_upper" id="surname" name="surname" placeholder="Soyad yazınız" value="" step="1" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-2 col-form-label">Mail:</label>
+                        <div class="col-lg-4">
+                            <input class="form-control wv_lower" id="mail" type="text" name="mail" placeholder="Mail Adresi Yazınız" data-fv-email-address___message="Lütfen geçerli bir mail adresi giriniz."/>
+                        </div>
+                        <label class="col-lg-2 col-form-label">Telefon:</label>
+                        <div class="col-lg-4">
+                            <input class="form-control phoneInput" id="phone" name="phone" placeholder="Telefon numarası yazınız" value="" step="1" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-2 col-form-label">Şifre:</label>
+                        <div class="col-lg-10">
+                            <input class="form-control" id="password" type="password" name="password" placeholder="Şifre yazınız" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                <button type="button" class="btn btn-primary" id="saveUser">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
