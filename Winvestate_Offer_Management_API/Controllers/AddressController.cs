@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Winvestate_Offer_Management_API.Api;
 using Winvestate_Offer_Management_API.Classes;
+using Winvestate_Offer_Management_API.Database;
 using Winvestate_Offer_Management_Models;
 
 namespace Winvestate_Offer_Management_API.Controllers
@@ -26,7 +27,7 @@ namespace Winvestate_Offer_Management_API.Controllers
                 Code = -1,
                 Message = "Kayıt Bulunamadı"
             };
-            var loCities = RestCalls.GetCities();
+            var loCities = GetData.GetCities();
 
             if (!loCities.Any()) return loGenericResponse;
 
@@ -45,7 +46,7 @@ namespace Winvestate_Offer_Management_API.Controllers
                 Code = -1,
                 Message = "Kayıt Bulunamadı"
             };
-            var loCities = RestCalls.GetDistricts(pId.ToString());
+            var loCities = GetData.GetDistricts(pId.ToString());
 
             if (!loCities.Any()) return loGenericResponse;
 

@@ -39,16 +39,41 @@ namespace Winvestate_Offer_Management_MVC.Controllers
             return View(new HomeViewModel { User = loUser, Token = RestCalls.GetToken() });
         }
 
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Remove("User");
+            return RedirectToAction("Login");
+        }
+
         [HttpPost]
         public User Validate(UserDto pUser)
         {
-            pUser.password = Request.Cookies["password"] ?? pUser.password.ToUpper();
+            if (pUser.remember_me)
+            {
+                var loRememberedPassword = Request.Cookies["password"];
+
+                if (string.IsNullOrEmpty(loRememberedPassword) || pUser.password != loRememberedPassword)
+                {
+                    pUser.password = pUser.password.ToUpper();
+                }
+                else
+                {
+                    pUser.password = Cipher.DecryptString(loRememberedPassword);
+                }
+            }
+
             var loUser = RestCalls.ValidateUser(pUser);
             if (loUser.id <= 0) return loUser;
 
             loUser.password = pUser.password;
             loUser.session_id = Guid.NewGuid().ToString();
-            loUser.banks = RestCalls.GetAllBanks(loUser.token);
+            
+            if (loUser.user_type != 3)
+            {
+                loUser.banks = RestCalls.GetAllBanks(loUser.token);
+                loUser.contracts = RestCalls.GetContractTypes(loUser.token);
+            }
+
             HttpContext.Session.SetObject("User", loUser);
 
             if (pUser.remember_me)
@@ -58,8 +83,13 @@ namespace Winvestate_Offer_Management_MVC.Controllers
                     Expires = DateTime.Now.AddMonths(1)
                 };
 
-                Response.Cookies.Append("phone", Cipher.EncryptString(pUser.mail), cookie);
+                Response.Cookies.Append("phone", Cipher.EncryptString(pUser.phone), cookie);
                 Response.Cookies.Append("password", Cipher.EncryptString(pUser.password), cookie);
+            }
+            else
+            {
+                Response.Cookies.Delete("phone");
+                Response.Cookies.Delete("password");
             }
 
             return loUser;
@@ -67,6 +97,7 @@ namespace Winvestate_Offer_Management_MVC.Controllers
 
         [HttpPost]
         [SessionTimeout]
+        [OnlyAdmin]
         public UserDto Save([FromBody] UserDto pUser)
         {
             var loUser = HttpContext.Session.GetObject<UserDto>("User");
@@ -75,6 +106,7 @@ namespace Winvestate_Offer_Management_MVC.Controllers
             return loUserToSave;
         }
 
+        [OnlyAdmin]
         public IActionResult List()
         {
             var loUser = HttpContext.Session.GetObject<UserDto>("User");

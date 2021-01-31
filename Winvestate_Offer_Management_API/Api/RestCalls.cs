@@ -17,7 +17,7 @@ namespace Winvestate_Offer_Management_API.Api
         private static readonly string _addressApiUrl = "https://information.mesnetbilisim.com.tr/api/Address/";
         private static readonly string _mespactApiKey = "1605935e-3c83-494c-a77e-3e5ea8203b3e";
         private static readonly string _mespactApiUrl = "https://mespactapi-prod.mesnetbilisim.com.tr/api/v2";
-
+        private static readonly string _infoUrl = "https://information.mesnetbilisim.com.tr/api/";
 
         public static string GetMespactToken()
         {
@@ -170,6 +170,41 @@ namespace Winvestate_Offer_Management_API.Api
             }
 
             return 0;
+        }
+
+        public static Task<bool> SendMail(string pMailContent, string pMailAdres, string pSubject, List<KeyValuePair<string, byte[]>> pAttachments = null)
+        {
+            var loSmsModel = new MailModel()
+            {
+                BodyHtmlMessage = pMailContent,
+                To = pMailAdres,
+                Subject = pSubject,
+                Attachments = pAttachments,
+                SenderMail = Common.SenderMail,
+                SenderHost = Common.SenderHost,
+                SenderPassword = Common.SenderPassword,
+                SenderPort = Common.SenderPort
+            };
+
+            var client = new RestClient(_infoUrl + "Information/SendMail");
+            var request = new RestRequest(Method.POST);
+            var loToken = GetToken("mesnetapi", "5158898A39CC7B544969DBF80261A0AF", _infoUrl + "GetToken");
+            request.AddHeader("Authorization", "Bearer " + loToken);
+            request.AddHeader("Content-Type", "application/json");
+            request.RequestFormat = DataFormat.Json;
+
+            var loModel = JsonConvert.SerializeObject(loSmsModel);
+            request.AddJsonBody(loModel);
+            //var responseData = client.Execute(request).Content;
+            var result = client.Execute(request);
+            var loGenericResult = JsonConvert.DeserializeObject<GenericResponseModel>(result.Content);
+
+            if (loGenericResult != null && loGenericResult.Status == "Ok")
+            {
+                return Task.FromResult(true);
+            }
+
+            return Task.FromResult(false);
         }
 
         public static string GetToken(string pUserName, string pPassword, string pUrl, string pBankId = "")

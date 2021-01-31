@@ -207,6 +207,106 @@ namespace Winvestate_Offer_Management_API.Database
             return loResult;
         }
 
+        public static bool UpdateAsset(AssetDto pAsset)
+        {
+
+            using var connection = Connection.ConnectionWinvestate();
+            connection.Open();
+            using var transaction = connection.BeginTransaction();
+
+            try
+            {
+                Asset loMyAsset = pAsset;
+                var loResult = connection.Update(loMyAsset, transaction);
+                if (!loResult)
+                {
+                    transaction.Rollback();
+                    return false;
+                }
+
+                if (pAsset.asset_photos != null && pAsset.asset_photos.Any())
+                {
+                    foreach (var loAsset in pAsset.asset_photos)
+                    {
+                        loAsset.asset_uuid = loMyAsset.row_guid;
+                        if (loAsset.id > 0)
+                        {
+                            if (loAsset.is_deleted)
+                            {
+                                if (connection.Delete(loAsset, transaction)) continue;
+                                transaction.Rollback();
+                                return false;
+                            }
+
+                            if (connection.Update(loAsset, transaction)) continue;
+                            transaction.Rollback();
+                            return false;
+
+
+                        }
+
+                        if (connection.Insert(loAsset, transaction) > 0) continue;
+                        transaction.Rollback();
+                        return false;
+
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                return false;
+            }
+
+
+            transaction.Commit();
+            return true;
+        }
+
+        public static int InsertNewOffer(OfferHistory pOfferHistory, Offer pOffer, Asset pAsset)
+        {
+            int loResult = 0;
+            using var connection = Connection.ConnectionWinvestate();
+            connection.Open();
+            using var transaction = connection.BeginTransaction();
+
+            try
+            {
+                loResult = (int)connection.Insert(pOfferHistory, transaction);
+                if (loResult <= 0)
+                {
+                    transaction.Rollback();
+                    return 0;
+                }
+
+                pOfferHistory.id = (int)loResult;
+
+                if (!connection.Update(pOffer, transaction))
+                {
+                    transaction.Rollback();
+                    return 0;
+                }
+
+                if (!connection.Update(pAsset, transaction))
+                {
+                    transaction.Rollback();
+                    return 0;
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                return 0;
+            }
+
+
+            transaction.Commit();
+            return loResult;
+        }
+
         public static int InsertCustomerWithOffer(CustomerDto pCustomerDto, Offer pOffer)
         {
             int loResult = 0;

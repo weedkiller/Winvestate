@@ -15,5 +15,7 @@ namespace Winvestate_Offer_Management_Models
         public AllTypes sys_definitions { get; set; }
         public List<DocumentType> contracts { get; set; }
         public List<Bank> banks { get; set; }
+        public List<OfferDto> active_offers { get; set; }
+        public List<AssetDto> offered_assets{ get; set; }
     }
 }

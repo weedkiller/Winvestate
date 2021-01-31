@@ -35,11 +35,23 @@ namespace Winvestate_Offer_Management_API.Controllers
                 return loGenericResponse;
             }
 
-            loObj.name = pObject.name ?? loObj.name;
+            loObj.bank_name = pObject.bank_name ?? loObj.bank_name;
+            loObj.company_prefix = pObject.company_prefix ?? loObj.company_prefix;
+            loObj.authorized_mail = pObject.authorized_mail ?? loObj.authorized_mail;
+            loObj.authorized_password = pObject.authorized_password ?? loObj.authorized_password;
+            loObj.authorized_name = pObject.authorized_name ?? loObj.authorized_name;
+            loObj.authorized_surname = pObject.authorized_surname ?? loObj.authorized_surname;
+            loObj.authorized_phone = pObject.authorized_phone ?? loObj.authorized_phone;
+            loObj.bank_name = pObject.bank_name ?? loObj.bank_name;
             loObj.mespact_agreement_uuid = pObject.mespact_agreement_uuid ?? loObj.mespact_agreement_uuid;
+            loObj.sale_in_company = pObject.sale_in_company ?? loObj.sale_in_company;
             loObj.is_active = pObject.is_active ?? loObj.is_active;
             loObj.is_deleted = pObject.is_deleted ?? loObj.is_deleted;
-            loObj.name = loObj.name.ToUpper();
+            loObj.bank_name = loObj.bank_name.ToUpper();
+            loObj.authorized_name = loObj.authorized_name.ToUpper();
+            loObj.authorized_surname = loObj.authorized_surname.ToUpper();
+            loObj.authorized_mail = loObj.authorized_mail.ToLower();
+            loObj.authorized_phone = HelperMethods.SerializePhone(loObj.authorized_phone);
             loObj.row_update_date = DateTime.Now;
             loObj.row_update_user = loUserId;
 
@@ -62,7 +74,7 @@ namespace Winvestate_Offer_Management_API.Controllers
                 Code = -1
             };
 
-            if (string.IsNullOrEmpty(pObject.name))
+            if (string.IsNullOrEmpty(pObject.bank_name))
             {
                 loGenericResponse.Message = "Kurum adı girilmeden işleme devam edilemez";
                 return loGenericResponse;
@@ -72,8 +84,13 @@ namespace Winvestate_Offer_Management_API.Controllers
             pObject.row_guid = Guid.NewGuid();
             pObject.is_deleted = false;
             pObject.is_active = true;
-            pObject.name = pObject.name.ToUpper();
-            pObject.name = pObject.name.ToUpper();
+            pObject.bank_name = string.IsNullOrEmpty(pObject.bank_name) ? "" : pObject.bank_name.ToUpper();
+            pObject.authorized_name = string.IsNullOrEmpty(pObject.authorized_name) ? "" :  pObject.authorized_name.ToUpper();
+            pObject.authorized_surname = string.IsNullOrEmpty(pObject.authorized_surname) ? "" : pObject.authorized_surname.ToUpper();
+            pObject.authorized_mail = string.IsNullOrEmpty(pObject.authorized_mail) ? "" : pObject.authorized_mail.ToLower();
+            pObject.authorized_password = string.IsNullOrEmpty(pObject.authorized_password) ? "" : pObject.authorized_password.ToUpper();
+            pObject.authorized_phone = string.IsNullOrEmpty(pObject.authorized_phone) ? "" : HelperMethods.SerializePhone(pObject.authorized_phone);
+            pObject.authorized_second_phone = string.IsNullOrEmpty(pObject.authorized_second_phone) ? "" : HelperMethods.SerializePhone(pObject.authorized_second_phone);
             var loResult = Crud<Bank>.Insert(pObject, out _);
 
 

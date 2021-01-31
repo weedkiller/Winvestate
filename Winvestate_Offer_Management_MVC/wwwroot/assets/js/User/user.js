@@ -26,9 +26,23 @@ $(document).ready(function () {
         ".deleteUser",
         function () {
             var loId = $(this).data("id");
-            loSelectedUser = loMyUserList.find(x => x.row_guid === loId);
-            loSelectedUser.is_deleted = true;
-            SendUserToServer(loSelectedUser, $(this));
+
+            Swal.fire({
+                title: "Emin misiniz?",
+                text: "Seçtiğiniz kullanıcı silinecek!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Evet, sil!",
+                cancelButtonText: "İptal Et"
+            }).then(function (result) {
+                if (result.value) {
+                    loSelectedUser = loMyUserList.find(x => x.row_guid === loId);
+                    loSelectedUser.is_deleted = true;
+                    SendUserToServer(loSelectedUser, $(this));
+                }
+            });
+
+          
         });
 
     $(document).on("click",
@@ -38,6 +52,16 @@ $(document).ready(function () {
             loSelectedUser = loMyUserList.find(x => x.row_guid === loId);
             loMyProcess = "update";
             $("#kt_modal_add_user").modal("show");
+
+
+        });
+
+    $(document).on("click",
+        ".forgotPassword",
+        function () {
+            var loId = $(this).data("id");
+            loSelectedUser = loMyUserList.find(x => x.row_guid === loId);
+            $("#ModalForUpdatePassword").modal("show");
 
 
         });
@@ -55,6 +79,14 @@ $(document).ready(function () {
                 $("#mail").val(loSelectedUser.mail);
                 $("#phone").val(loSelectedUser.phone);
                 $("#password").val(loSelectedUser.password);
+                if (loSelectedUser.user_type == 1) {
+                    $("#authorize_full").attr('checked', 'checked');
+                    $("#authorize_standart").removeAttr('checked', 'checked');
+                } else {
+                    $("#authorize_standart").attr('checked', 'checked');
+                    $("#authorize_full").removeAttr('checked', 'checked');
+                }
+
             } else {
                 $("#name").val("");
                 $("#surname").val("");
@@ -63,7 +95,101 @@ $(document).ready(function () {
                 $("#password").val("");
             }
         });
+
+    $('#updatePassword').on('click', function (e) {
+        e.preventDefault();
+
+        var loPasswordToUpdate = $("#passwordToUpdate").val();
+
+        if (loPasswordToUpdate.length < 8) {
+            swal.fire({
+                "title": "Hata",
+                "text": "Şifreniz en az 8 karakter olmalıdır.",
+                "icon": "error",
+                //"confirmButtonClass": "btn btn-secondary"
+            }).then(result => {
+                if (result.value) {
+
+                }
+            });
+        }
+
+        else if (loPasswordToUpdate != $("#passwordToUpdate2").val()) {
+            swal.fire({
+                "title": "Hata",
+                "text": "Girmiş olduğunuz Şifreler Uyuşmamaktadır.",
+                "icon": "error",
+                //"confirmButtonClass": "btn btn-secondary"
+            }).then(result => {
+                if (result.value) {
+
+                }
+            });
+        } else {
+            var model = {};
+            model.password = MD5(loPasswordToUpdate);
+            model.phone = loSelectedUser.phone;
+            UpdateUserPassword(model);
+        }
+
+    });
 });
+
+function UpdateUserPassword(model) {
+    $('#updatePassword').addClass('spinner spinner-right spinner-white pr-15').attr('disabled', true).text("Kaydet");
+    $.ajax({
+        method: "put",
+        url: HOST_URL+'/User/Password',
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify(model),
+        traditional: true,
+        crossDomain: true,
+        dataType: 'json',
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader('Authorization', 'Bearer '+HOST_TOKEN);
+        },
+        error: function () {
+            $('#updatePassword').removeClass('spinner spinner-right spinner-white pr-15').attr('disabled', false).text("Kaydet");
+            swal.fire({
+                "title": "Hata",
+                "text": "İşlem Tamamlanamadı",
+                "icon": "error",
+                //"confirmButtonClass": "btn btn-secondary"
+            }).then(result => {
+                if (result.value) {
+
+                }
+            });
+        },
+        success: function (data) {
+            $('#updatePassword').removeClass('spinner spinner-right spinner-white pr-15').attr('disabled', false).text("Kaydet");
+            if (data.code !== 200) {
+                swal.fire({
+                    "title": "Hata",
+                    "text": "Şifre Kaydedilemedi. " + data.message,
+                    "icon": "error",
+                    //"confirmButtonClass": "btn btn-secondary"
+                }).then(result => {
+                    if (result.value) {
+                    }
+
+                });
+            } else {
+                swal.fire({
+                    "title": "Başarılı",
+                    "text": "Şifre başarıyla güncellendi.",
+                    "icon": "success",
+                    //"confirmButtonClass": "btn btn-secondary"
+                }).then(result => {
+                    if (result.value) {
+                        $(".modal").modal("hide");
+                    }
+
+                });
+            }
+        }
+    });
+}
 
 function SendUserToServer(model, btn) {
     var loTempText = btn.text();
@@ -145,6 +271,7 @@ function SaveUser() {
         loMyUser.password = MD5($("#password").val());
     }
 
+    loMyUser.user_type = Number($('input[name="user_type"]:checked').val());
 
     SendUserToServer(loMyUser, $("#saveUser"));
 }
@@ -180,6 +307,13 @@ function setUserValidation() {
                     validators: {
                         notEmpty: {
                             message: 'Telefon numarası girilmeden işleme devam edilemez.'
+                        }
+                    }
+                },
+                user_type: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Kullanıcı tipi seçilmelidir'
                         }
                     }
                 },
@@ -288,9 +422,12 @@ var KTDatatableAutoColumnHideDemo = function () {
                         return '\
 										 <button data-id=' + row.row_guid + ' class="btn btn-xs btn-clean btn-icon mr-2 editUser" title="Güncelle">\
 											<span class="navi-icon"><i class="flaticon2-edit text-primary"></i></span>\
-										</a>\
+										</button>\
                                         <button data-id=' + row.row_guid + ' class="btn btn-xs btn-clean btn-icon mr-2 deleteUser" title="Sil">\
 											<span class="navi-icon"><i class="flaticon2-trash  text-danger"></i></span>\
+										</button>\
+                                        <button data-id=' + row.row_guid + ' class="btn btn-xs btn-clean btn-icon mr-2 forgotPassword" title="Şifreyi Sıfırla">\
+											<span class="navi-icon"><i class="flaticon-questions-circular-button  text-danger"></i></span>\
 										</button>\
 									';
                     },

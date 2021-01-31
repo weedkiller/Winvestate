@@ -63,9 +63,19 @@ function setAddressVariables(customer) {
 
 }
 
-function setDataToSelect(myDropdown, msg, selectedVal) {
+function setDataToSelect(myDropdown, msg, selectedVal, filter) {
     var loData = msg.data;
     myDropdown.empty();
+
+    if (filter) {
+        myDropdown.append(
+            $('<option>',
+                {
+                    value: -1,
+                    text: "HEPSİ"
+                },
+                '</option>'));
+    }
 
     if (loData) {
         for (var i = 0; i < loData.length; i++) {
@@ -89,7 +99,7 @@ function setDataToSelect(myDropdown, msg, selectedVal) {
 
 }
 
-function GetCities() {
+function GetCities(filter) {
     blockUI();
     var dropdownCity = $('#city_id');
     dropdownCity.empty();
@@ -101,7 +111,7 @@ function GetCities() {
         crossDomain: true,
         success: function (msg) {
             unblockUI();
-            setDataToSelect(dropdownCity, msg, loAddressObj.select_city);
+            setDataToSelect(dropdownCity, msg, loAddressObj.select_city, filter);
         }
     });
 }
@@ -122,7 +132,12 @@ function CallService(dropdown, route, id, parentId) {
 }
 
 function GetDistricts(dropDown) {
-    CallService(dropDown, "/Distrcit", loAddressObj.select_district, loAddressObj.select_city);
+    if (loAddressObj.select_city == -1) {
+        $('#district_id').empty();;
+    } else {
+        CallService(dropDown, "/Distrcit", loAddressObj.select_district, loAddressObj.select_city);
+    }
+        
 }
 
 $("#city_id").change(function () {

@@ -28,13 +28,13 @@ namespace Winvestate_Offer_Management_API.Middleware
                     {
                         var loCrashLog = new Crashlog
                         {
-                            application_name = "Fibimi Test API",
+                            application_name = "Winvestate Test API",
                             exception = contextFeature.Error.Message,
                             exception_time = DateTime.Now
                         };
 
 #if PROD
-            loCrashLog.application_name = "Fibimi API";
+            loCrashLog.application_name = "Winvestate API";
 #endif
 
                         Crud<Crashlog>.InsertLog(loCrashLog, out _);

@@ -8,8 +8,7 @@ namespace Winvestate_Offer_Management_Models.Database.Winvestate
     [Table("winvestate_asset")]
     public class Asset : Entity
     {
-        [Key]
-        public long? asset_no { get; set; }
+        public string asset_no { get; set; }
         public string asset_name { get; set; }
         public int? city_id { get; set; }
         public string city{ get; set; }

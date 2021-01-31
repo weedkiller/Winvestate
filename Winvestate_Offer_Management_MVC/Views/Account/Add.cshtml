@@ -23,7 +23,7 @@
                     <div class="form-group row">
                         <label class="col-lg-2 col-form-label">Mail:</label>
                         <div class="col-lg-4">
-                            <input class="form-control wv_lower" id="mail" type="text" name="mail" placeholder="Mail Adresi Yazınız" data-fv-email-address___message="Lütfen geçerli bir mail adresi giriniz."/>
+                            <input class="form-control wv_lower" id="mail" type="text" name="mail" placeholder="Mail Adresi Yazınız" data-fv-email-address___message="Lütfen geçerli bir mail adresi giriniz." />
                         </div>
                         <label class="col-lg-2 col-form-label">Telefon:</label>
                         <div class="col-lg-4">
@@ -34,6 +34,24 @@
                         <label class="col-lg-2 col-form-label">Şifre:</label>
                         <div class="col-lg-10">
                             <input class="form-control" id="password" type="password" name="password" placeholder="Şifre yazınız" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-2 col-form-label">Yetki</label>
+                        <div class="col-10 col-form-label">
+                            <div class="radio-inline">
+                                <label class="radio radio-success">
+                                    <input type="radio" name="user_type" value="2" id="authorize_standart"/>
+                                    <span></span>
+                                    Standart
+                                </label>
+                                <label class="radio radio-success">
+                                    <input type="radio" name="user_type" value="1" id="authorize_full"/>
+                                    <span></span>
+                                    Tam Yetki
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </form>

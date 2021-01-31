@@ -303,6 +303,10 @@ $('.phoneInput').mask('500 000 00 00', {
     placeholder: "5xx xxx xx xx"
 });
 
+$('.secondPhoneInput').mask('000 000 00 00', {
+    placeholder: "xxx xxx xx xx"
+});
+
 
 RegExp.escape = function (s) {
     return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');

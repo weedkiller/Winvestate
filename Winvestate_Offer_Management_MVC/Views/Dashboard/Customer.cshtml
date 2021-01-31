@@ -1,0 +1,117 @@
+﻿@using Winvestate_Offer_Management_Models.Enums.Offer
+@using Winvestate_Offer_Management_MVC.Classes
+@model ViewModelBase;
+@{
+    decimal loMinimumAmountForOffer = 0;
+}
+
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card card-custom gutter-b">
+            <div class="card-header">
+                <div class="card-title">
+                    <h3 class="card-label">
+                        Teklif Verebileceğim Gayrimenkuller
+                    </h3>
+                </div>
+            </div>
+            <div class="card-body">
+                @foreach (var loOffer in Model.User.active_offers)
+                {
+                    var loAssetName = string.IsNullOrEmpty(loOffer.asset_name) ? loOffer.asset_no : loOffer.asset_no + "-" + loOffer.asset_name;
+                    <div class="card card-custom mb-5">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <h5>
+                                    @loOffer.customer_full_name
+                                    <small>(@loOffer.customer_phone)</small>
+                                </h5>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            @{
+                                var loMaximumAmount = loOffer.max_offer_amount <= 0 ? loOffer.starting_amount.ToString("N0") : loOffer.max_offer_amount.ToString("N0");
+                                loMinimumAmountForOffer = loOffer.max_offer_amount <= 0 ? loOffer.starting_amount : loOffer.max_offer_amount + loOffer.minimum_increate_amout;
+
+                            }
+                            <label class="form-control text-dark">Gayrimenkul: <span class="text-danger">@loAssetName</span></label>
+                            <label class="form-control text-dark">E-Teklif Kapanış Tarihi: <span class="text-danger">@loOffer.last_offer_date</span></label>
+                            <label class="form-control text-dark">Başlangıç Teklif Tutarı (TL): <span class="text-danger">@loOffer.starting_amount.ToString("N0") </span></label>
+                            <label class="form-control text-dark">Minimum Teklif Yükseltme Tutarı (TL): <span class="text-danger">@loOffer.minimum_increate_amout.ToString("N0") </span></label>
+                            <label class="form-control text-dark">Başvuru Tarihi: <span class="text-danger">@loOffer.row_create_date.Value </span></label>
+                            <label class="form-control text-dark">Gayrimenkule Verilen Son Teklif (TL): <span class="text-danger">@loMaximumAmount</span></label>
+
+                            @if (loOffer.history.Any())
+                            {
+                                string loClassForLastOffer = loOffer.price.Value == loOffer.max_offer_amount ? "text-success" : "text-danger";
+                                string loStatusOfOffer = loOffer.price.Value == loOffer.max_offer_amount ? " (Kazanıyor) " : " (Kaybediyor) ";
+                                <label class="form-control text-dark font-weight-boldest">Son Teklifim (TL): <span class="@loClassForLastOffer">@loOffer.price.Value.ToString("N0") @loStatusOfOffer</span></label>
+                                <label class="form-control text-dark">Son Teklif Verdiğim Tarih: <span class="text-danger">@loOffer.history.OrderByDescending(x => x.row_create_date).ToList()[0].row_create_date.ToString("F")</span></label>
+                            }
+                            <a target="_blank" href="@Common.MespactLinkUrl/Document/showDocument?id=@loOffer.mespact_session_uuid" data-id="@loOffer.row_guid.ToString()" class="btn btn-light-danger font-weight-bold align-right">Şartnameyi Görüntüle</a>
+                            <a href="#" data-id="@loOffer.row_guid" data-minimum="@loMinimumAmountForOffer" class="btn btn-light-success font-weight-bold align-right openOfferPage">Teklif Ver</a>
+
+                            @if (loOffer.history.Count > 1)
+                            {
+                                <a href="#" id="show_offer_detail_@loOffer.id" class="btn btn-light-warning font-weight-bold align-right showOtherOffers" data-id="@loOffer.id">Diğer Tekliflerimi Görüntüle</a>
+                                <div class="timeline timeline-2 mt-2 hide" id="offer_detail_@loOffer.id">
+                                    <div class="timeline-bar"></div>
+                                    @foreach (var offerHistory in loOffer.history.OrderByDescending(x => x.row_create_date))
+                                    {
+                                        <div class="timeline-item">
+                                            <div class="timeline-badge"></div>
+                                            <div class="timeline-content d-flex align-items-center justify-content-between">
+                                                <span class="mr-3">
+                                                    <a>@offerHistory.amount.ToString("N0") TL</a>
+                                                </span>
+                                                <span class="text-muted text-right">@offerHistory.row_create_date.ToString("F")</span>
+                                            </div>
+                                        </div>
+                                    }
+
+                                </div>
+                            }
+
+
+
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="kt_modal_new_offer" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content" role="document">
+            <div class="modal-header">
+                <h5 class="modal-title font-weight-bolder">Teklif Ekranı</h5>
+            </div>
+            <div class="modal-body">
+                <form class="form form--label-right" id="newOfferForm">
+                    <input type="hidden" id="offer_uuid" value="" />
+                    <div class="form-group row">
+                        <label class="col-lg-3 col-form-label">Teklif Tutarı:</label>
+                        <div class="col-lg-9">
+                            <input class="form-control priceInput" id="amount" type="text" name="amount" placeholder="" />
+                            <span class="form-text text-danger" id="warningOfOffer"></span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                <button type="button" class="btn btn-primary" id="saveOffer">Teklifi Gönder</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        jQuery(document).ready(function () {
+        });
+    </script>
+}

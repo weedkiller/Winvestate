@@ -30,8 +30,6 @@ namespace Winvestate_Offer_Management_MVC
             {
                 options.IdleTimeout = TimeSpan.FromHours(10);//You can set Time   
             });
-
-            services.AddHttpClient<ICaptchaValidator, GoogleReCaptchaValidator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,7 +56,7 @@ namespace Winvestate_Offer_Management_MVC
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Asset}/{action=AssetForOffer}/{id?}");
+                    pattern: "{controller=Account}/{action=Login}/{id?}");
             });
         }
     }

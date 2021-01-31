@@ -11,6 +11,29 @@ namespace Winvestate_Offer_Management_API.Database
 {
     public static class GetData
     {
+        public static List<AddressKeyValue> GetCities()
+        {
+            var loQuery = Queries.GetCities;
+
+            using var connection = Connection.ConnectionMesnet();
+            if (!Connection.OpenConnection(connection)) return null;
+
+            var result = connection.Query<AddressKeyValue>(loQuery).ToList();
+            return !result.Any() ? new List<AddressKeyValue>() : result;
+        }
+
+        public static List<AddressKeyValue> GetDistricts(string pCityId)
+        {
+            var loQuery = Queries.GetDistricts;
+            loQuery = loQuery.Replace("@P01", pCityId);
+
+            using var connection = Connection.ConnectionMesnet();
+            if (!Connection.OpenConnection(connection)) return null;
+
+            var result = connection.Query<AddressKeyValue>(loQuery).ToList();
+            return !result.Any() ? new List<AddressKeyValue>() : result;
+        }
+
         public static int CheckApiKey(string pPassword)
         {
             var loQuery = Queries.CheckApiUser;
@@ -22,19 +45,33 @@ namespace Winvestate_Offer_Management_API.Database
             var loUserId = loUsers.Count > 0 ? loUsers.First().id : 0;
             return !Connection.OpenConnection(connection) ? 0 : loUserId;
         }
-        public static UserDto ValidateUser(string pPhone, string pPassword)
+        public static LoginDto ValidateUser(string pPhone, string pPassword)
         {
-                var loQuery = Queries.ValidateUser;
-                loQuery = loQuery.Replace("@P01", pPhone);
-                loQuery = loQuery.Replace("@P02", pPassword.ToUpper());
+            var loQuery = Queries.ValidateUser;
+            loQuery = loQuery.Replace("@P01", pPhone);
+            loQuery = loQuery.Replace("@P02", pPassword.ToUpper());
 
-                using var connection = Connection.ConnectionWinvestate();
+            using var connection = Connection.ConnectionWinvestate();
 
-                if (!Connection.OpenConnection(connection)) return null;
+            if (!Connection.OpenConnection(connection)) return null;
 
-                var result = connection.Query<UserDto>(loQuery).ToList();
-                return !result.Any() ? null : result.FirstOrDefault();
+            var result = connection.Query<LoginDto>(loQuery).ToList();
+            return !result.Any() ? null : result.FirstOrDefault();
         }
+
+        public static LoginDto CheckUser(string pPhone)
+        {
+            var loQuery = Queries.CheckUser;
+            loQuery = loQuery.Replace("@P01", pPhone);
+
+            using var connection = Connection.ConnectionWinvestate();
+
+            if (!Connection.OpenConnection(connection)) return null;
+
+            var result = connection.Query<LoginDto>(loQuery).ToList();
+            return !result.Any() ? null : result.FirstOrDefault();
+        }
+
         public static UserDto GetUserById(string pId)
         {
             var loQuery = Queries.GetUserById;
@@ -54,7 +91,7 @@ namespace Winvestate_Offer_Management_API.Database
             if (!Connection.OpenConnection(connection)) return null;
 
             var result = connection.Query<UserDto>(loQuery).ToList();
-            return !result.Any() ? new List<UserDto>(): result;
+            return !result.Any() ? new List<UserDto>() : result;
         }
         public static User GetUserByPhone(string pPhone)
         {
@@ -126,7 +163,6 @@ namespace Winvestate_Offer_Management_API.Database
             var result = connection.Query<Bank>(loQuery).ToList();
             return !result.Any() ? new List<Bank>() : result;
         }
-
         public static List<SysType> GetAllTypes()
         {
             var loQuery = Queries.GetAllTypes;
@@ -137,10 +173,9 @@ namespace Winvestate_Offer_Management_API.Database
             var result = connection.Query<SysType>(loQuery).ToList();
             return !result.Any() ? new List<SysType>() : result;
         }
-
         public static List<AssetDto> GetAssetForListing()
         {
-            var loQuery = Queries.GetAllAssets;
+            var loQuery = Queries.GetAssetsForListing;
 
             using var connection = Connection.ConnectionWinvestate();
             if (!Connection.OpenConnection(connection)) return null;
@@ -148,7 +183,6 @@ namespace Winvestate_Offer_Management_API.Database
             var result = connection.Query<AssetDto>(loQuery).ToList();
             return !result.Any() ? new List<AssetDto>() : result;
         }
-
         public static List<AssetDto> GetAllAssets()
         {
             var loQuery = Queries.GetAllAssets;
@@ -159,6 +193,42 @@ namespace Winvestate_Offer_Management_API.Database
             var result = connection.Query<AssetDto>(loQuery).ToList();
             return !result.Any() ? new List<AssetDto>() : result;
         }
+
+        public static List<AssetDto> GetAllAssetsForUser(string pId)
+        {
+            var loQuery = Queries.GetAllAssetsForUser;
+            loQuery = loQuery.Replace("@P01", pId);
+
+            using var connection = Connection.ConnectionWinvestate();
+            if (!Connection.OpenConnection(connection)) return null;
+
+            var result = connection.Query<AssetDto>(loQuery).ToList();
+            return !result.Any() ? new List<AssetDto>() : result;
+        }
+
+        public static List<AssetDto> GetAllAssetsForCompany(string pId)
+        {
+            var loQuery = Queries.GetAllAssetsForCompany;
+            loQuery = loQuery.Replace("@P01", pId);
+
+            using var connection = Connection.ConnectionWinvestate();
+            if (!Connection.OpenConnection(connection)) return null;
+
+            var result = connection.Query<AssetDto>(loQuery).ToList();
+            return !result.Any() ? new List<AssetDto>() : result;
+        }
+
+        public static List<AssetDto> GetOfferedAssets()
+        {
+            var loQuery = Queries.GetOfferedAssets;
+
+            using var connection = Connection.ConnectionWinvestate();
+            if (!Connection.OpenConnection(connection)) return null;
+
+            var result = connection.Query<AssetDto>(loQuery).ToList();
+            return !result.Any() ? new List<AssetDto>() : result;
+        }
+
         public static AssetDto GetAssetById(string pId)
         {
             var loQuery = Queries.GetAssetById;
@@ -207,7 +277,7 @@ namespace Winvestate_Offer_Management_API.Database
             return !result.Any() ? null : result.FirstOrDefault();
         }
 
-        public static Offer GetOfferByOwnerAndAssetId(string pOwnerId,string pAssetId)
+        public static Offer GetOfferByOwnerAndAssetId(string pOwnerId, string pAssetId)
         {
             var loQuery = Queries.GetOfferByOwnerAndAssetId;
             loQuery = loQuery.Replace("@P01", pOwnerId);
@@ -277,5 +347,90 @@ namespace Winvestate_Offer_Management_API.Database
             var result = connection.Query<CallbackRecord>(loQuery).ToList();
             return !result.Any() ? null : result.FirstOrDefault();
         }
+
+        public static List<OfferDto> GetAllActiveOffers()
+        {
+            var loQuery = Queries.GetAllActiveOffers;
+
+            using var connection = Connection.ConnectionWinvestate();
+            if (!Connection.OpenConnection(connection)) return null;
+
+            var result = connection.Query<OfferDto>(loQuery).ToList();
+            return !result.Any() ? new List<OfferDto>() : result;
+        }
+
+        public static List<OfferDto> GetActiveOfferByCustomerId(string pId)
+        {
+            var loQuery = Queries.GetActiveOffersByCustomerId;
+            loQuery = loQuery.Replace("@P01", pId);
+
+            using var connection = Connection.ConnectionWinvestate();
+            if (!Connection.OpenConnection(connection)) return null;
+
+            var result = connection.Query<OfferDto>(loQuery).ToList();
+            return !result.Any() ? new List<OfferDto>() : result;
+        }
+
+        public static List<OfferDto> GetActiveOffersByBankId(string pId)
+        {
+            var loQuery = Queries.GetActiveOffersByBankId;
+            loQuery = loQuery.Replace("@P01", pId);
+
+            using var connection = Connection.ConnectionWinvestate();
+            if (!Connection.OpenConnection(connection)) return null;
+
+            var result = connection.Query<OfferDto>(loQuery).ToList();
+            return !result.Any() ? new List<OfferDto>() : result;
+        }
+
+        public static List<OfferDto> GetActiveOfferByAssetId(string pId)
+        {
+            var loQuery = Queries.GetActiveOffersByAssetId;
+            loQuery = loQuery.Replace("@P01", pId);
+
+            using var connection = Connection.ConnectionWinvestate();
+            if (!Connection.OpenConnection(connection)) return null;
+
+            var result = connection.Query<OfferDto>(loQuery).ToList();
+            return !result.Any() ? new List<OfferDto>() : result;
+        }
+
+        public static List<OfferHistoryDto> GetOfferHistoryByOfferId(string pId)
+        {
+            var loQuery = Queries.GetOfferHistoryByOfferId;
+            loQuery = loQuery.Replace("@P01", pId);
+
+            using var connection = Connection.ConnectionWinvestate();
+            if (!Connection.OpenConnection(connection)) return null;
+
+            var result = connection.Query<OfferHistoryDto>(loQuery).ToList();
+            return !result.Any() ? new List<OfferHistoryDto>() : result;
+        }
+
+        public static List<OfferHistoryDto> GetOfferHistoryByAssetId(string pId)
+        {
+            var loQuery = Queries.GetOfferHistoryByAssetId;
+            loQuery = loQuery.Replace("@P01", pId);
+
+            using var connection = Connection.ConnectionWinvestate();
+            if (!Connection.OpenConnection(connection)) return null;
+
+            var result = connection.Query<OfferHistoryDto>(loQuery).ToList();
+            return !result.Any() ? new List<OfferHistoryDto>() : result;
+        }
+
+        public static List<CallbackRecordDto> GetNewCallbackRecords()
+        {
+            var loQuery = Queries.GetNewCallbackRecords;
+
+            using var connection = Connection.ConnectionWinvestate();
+            if (!Connection.OpenConnection(connection)) return null;
+
+            var result = connection.Query<CallbackRecordDto>(loQuery).ToList();
+            return !result.Any() ? new List<CallbackRecordDto>() : result;
+        }
+
+
+
     }
 }

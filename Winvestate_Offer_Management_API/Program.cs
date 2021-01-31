@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor.Language;
@@ -21,6 +22,7 @@ namespace Winvestate_Offer_Management_API
             Common.InitVariablesForTest();
             Common.InitVariablesForProd();
             Connection.PrepareDatabase();
+
             CreateHostBuilder(args).Build().Run();
         }
 

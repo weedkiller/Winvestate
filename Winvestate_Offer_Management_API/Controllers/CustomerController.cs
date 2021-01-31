@@ -30,8 +30,6 @@ namespace Winvestate_Offer_Management_API.Controllers
                 Code = -1
             };
 
-
-
             if (pObject.birth_date == null)
             {
                 if (!DateTime.TryParse(pObject.birthdate, out var loBirthdate))
@@ -55,7 +53,7 @@ namespace Winvestate_Offer_Management_API.Controllers
             }
 
             var loCheckUserHasRegistered = GetData.GetCustomerByIdentity(pObject.identity.ToString());
-            if (loCheckUserHasRegistered != null)
+            if (loCheckUserHasRegistered != null && loCheckUserHasRegistered.user_type_system_type_id ==pObject.user_type_system_type_id)
             {
                 loCheckUserHasRegistered.send_agreement = pObject.send_agreement;
                 loCheckUserHasRegistered.asset_uuid = pObject.asset_uuid;
@@ -201,7 +199,7 @@ namespace Winvestate_Offer_Management_API.Controllers
                 return loGenericResponse;
             }
 
-            if ( string.IsNullOrEmpty(pObject.applicant_phone))
+            if (string.IsNullOrEmpty(pObject.applicant_phone))
             {
                 loGenericResponse.Status = "Fail";
                 loGenericResponse.Code = -1;
@@ -209,7 +207,7 @@ namespace Winvestate_Offer_Management_API.Controllers
                 return loGenericResponse;
             }
 
-            if (pObject.asset_uuid==null)
+            if (pObject.asset_uuid == null)
             {
                 loGenericResponse.Status = "Fail";
                 loGenericResponse.Code = -1;
@@ -218,12 +216,15 @@ namespace Winvestate_Offer_Management_API.Controllers
             }
 
             pObject.applicant_phone = HelperMethods.SerializePhone(pObject.applicant_phone);
-            pObject.row_create_date=DateTime.Now;
+            pObject.row_create_date = DateTime.Now;
             pObject.row_create_user = loUserId;
+            pObject.row_guid = Guid.NewGuid();
             pObject.is_active = true;
             pObject.is_deleted = false;
             pObject.applicant_name = pObject.applicant_name.ToUpper();
             pObject.applicant_surname = pObject.applicant_surname.ToUpper();
+            pObject.callback_record_state_type_system_type_id = 43;
+
             var loResult = Crud<CallbackRecord>.Insert(pObject, out _);
 
             if (loResult < 0)
@@ -232,6 +233,7 @@ namespace Winvestate_Offer_Management_API.Controllers
                 return loGenericResponse;
             }
 
+            Task.Run(() => HelperMethods.SendNewCallBackRecord(pObject));
             loGenericResponse.Code = 200;
             loGenericResponse.Message = "";
             loGenericResponse.Data = pObject;
@@ -240,7 +242,7 @@ namespace Winvestate_Offer_Management_API.Controllers
             return loGenericResponse;
         }
 
-        [HttpPost("Callback")]
+        [HttpPost("CloseCallback")]
         [HttpPut]
         public ActionResult<GenericResponseModel> CloseCallbackRecord([FromBody] CallbackRecord pObject)
         {
@@ -289,7 +291,7 @@ namespace Winvestate_Offer_Management_API.Controllers
                 Status = "Fail"
             };
 
-            var loResult = GetData.GetActiveCallbackRecords();
+            var loResult = GetData.GetNewCallbackRecords();
 
             if (!loResult.Any())
             {

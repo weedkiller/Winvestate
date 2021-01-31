@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Winvestate_Offer_Management_Models;
 using Winvestate_Offer_Management_Models.Database.Winvestate;
 using Winvestate_Offer_Management_MVC.Api;
+using Winvestate_Offer_Management_MVC.Classes;
 using Winvestate_Offer_Management_MVC.Models;
 using Winvestate_Offer_Management_MVC.Session;
 
@@ -15,6 +16,7 @@ namespace Winvestate_Offer_Management_MVC.Controllers
     {
         [HttpPost]
         [SessionTimeout]
+        [OnlyAdmin]
         public Bank Save([FromBody] BankDto pBank)
         {
             var loUser = HttpContext.Session.GetObject<UserDto>("User");
@@ -29,6 +31,7 @@ namespace Winvestate_Offer_Management_MVC.Controllers
             return loBankToSave;
         }
 
+        [OnlyAdmin]
         public IActionResult List()
         {
             var loUser = HttpContext.Session.GetObject<UserDto>("User");

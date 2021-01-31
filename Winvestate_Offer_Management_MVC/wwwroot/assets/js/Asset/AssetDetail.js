@@ -1,10 +1,17 @@
 ﻿var _submitValidation;
 var _callbackValidation;
+var _captchaResponse;
 $(document).ready(function () {
     setSubmitValidation();
     setCallbackValidation();
 
     $(".company").hide();
+
+    $('[data-switch=true]').bootstrapSwitch();
+
+    $('#birth_date').mask('00.00.0000', {
+        placeholder: "gg.aa.yyyy"
+    });
 
     $("#validateCustomer").on('click',
         function (e) {
@@ -32,158 +39,232 @@ $(document).ready(function () {
         if ($("input:radio[name=userType]:checked").val() == 1) {
             $(".company").hide();
         }
-        else  {
+        else {
             $(".company").show();
         }
     });
 });
 
+var correctCaptcha = function (response) {
+    _captchaResponse = response;
+};
+
 function checkUserIdentity() {
     var loTempButtonText = $("#validateCustomer").text();
     $("#validateCustomer").addClass('spinner spinner-right spinner-white pr-15').attr('disabled', true).text("Lütfen Bekleyiniz");
-    var model = objectifyForm($('#newCustomerValidationForm').serializeArray());
-    model.user_type_system_type_id = Number(model.userType);
-    model.identity = Number(model.identity);
-    model.birthdate = new Date($("#birthdate").val()).toLocaleDateString();
-    model.send_agreement = true;
-    model.asset_uuid = SELECTED_ASSET;
 
-    $.ajax({
-        method: "post",
-        url: HOST_URL + '/Customer/Check',
-        dataType: "json",
-        contentType: 'application/json',
-        data: JSON.stringify(model),
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader('Authorization', 'Bearer ' + HOST_TOKEN);
-        },
-        error: function (xhr) {
-            $("#validateCustomer").removeClass('spinner spinner-right spinner-white pr-15').attr('disabled', false).text(loTempButtonText);
-            console.log(xhr);
-            swal.fire({
-                text: "Kimlik bilgileri doğrulama esnasında bir problem oluştu lütfen tekrar deneyiniz..",
-                icon: "error",
-                buttonsStyling: false,
-                confirmButtonText: "Tamam",
-                customClass: {
-                    confirmButton: "btn font-weight-bold btn-light-primary"
-                }
-            }).then(function () {
-                KTUtil.scrollTop();
-            });
-        },
-        success: function (response, status, xhr, $form) {
-            $("#validateCustomer").removeClass('spinner spinner-right spinner-white pr-15').attr('disabled', false).text(loTempButtonText);
-            if (response.code > 0) {
-                checkUserPhone();
-            } else if (response.code == 0) {
+    setTimeout(function () {
+
+        var model = objectifyForm($('#newCustomerValidationForm').serializeArray());
+        model.user_type_system_type_id = Number(model.userType);
+        model.identity = Number(model.identity);
+        model.birthdate = $("#birth_date").val();
+        model.send_agreement = true;
+        model.asset_uuid = SELECTED_ASSET;
+
+        var loCaptcha = {};
+        loCaptcha.GoogleReCaptchaResponse = _captchaResponse;
+
+        $.ajax({
+            method: "post",
+            url: '/Customer/Check',
+            dataType: "json",
+            contentType: 'application/json',
+            data: JSON.stringify(loCaptcha),
+
+            error: function (xhr) {
+                _captchaResponse = "";
+                $("#validateCustomer").removeClass('spinner spinner-right spinner-white pr-15').attr('disabled', false).text(loTempButtonText);
+                console.log(xhr);
                 swal.fire({
-                    text:
-                        "Teklif başvurunuzu daha önce yapmışsınız. Panele yönlendiriliyorsunuz. Size daha önce yollanan kullanıcı adı ve şifre ile panele giriş yapabilirsiniz.",
-                    icon: "warning",
-                    buttonsStyling: false,
-                    confirmButtonText: "Tamam",
-                    customClass: {
-                        confirmButton: "btn font-weight-bold btn-light-primary"
-                    }
-                }).then(() => {
-                    window.location = "/Account/Login";
-                });
-            }
-            else {
-                swal.fire({
-                    text: "Kimlik bilgileriniz doğrulanamadı. Lütfen bilgilerinizi kontrol ediniz.",
+                    text: "Lütfen ben robot değilim kutucuğunu işaretleyiniz.",
                     icon: "error",
                     buttonsStyling: false,
                     confirmButtonText: "Tamam",
                     customClass: {
                         confirmButton: "btn font-weight-bold btn-light-primary"
                     }
+                }).then(function () {
+                    KTUtil.scrollTop();
                 });
+            },
+            success: function (response, status, xhr, $form) {
+                _captchaResponse = "";
+                if (response > 0) {
+                    $.ajax({
+                        method: "post",
+                        url: HOST_URL + '/Customer/Check',
+                        dataType: "json",
+                        contentType: 'application/json',
+                        data: JSON.stringify(model),
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader('Authorization', 'Bearer ' + HOST_TOKEN);
+                        },
+                        error: function (xhr) {
+                            $("#validateCustomer").removeClass('spinner spinner-right spinner-white pr-15')
+                                .attr('disabled', false).text(loTempButtonText);
+                            console.log(xhr);
+                            swal.fire({
+                                text: "Kimlik bilgileri doğrulama esnasında bir problem oluştu lütfen tekrar deneyiniz..",
+                                icon: "error",
+                                buttonsStyling: false,
+                                confirmButtonText: "Tamam",
+                                customClass: {
+                                    confirmButton: "btn font-weight-bold btn-light-primary"
+                                }
+                            }).then(function () {
+                                KTUtil.scrollTop();
+                            });
+                        },
+                        success: function (response, status, xhr, $form) {
+                            $("#validateCustomer").removeClass('spinner spinner-right spinner-white pr-15')
+                                .attr('disabled', false).text(loTempButtonText);
+                            if (response.code > 0) {
+                                checkUserPhone();
+                            } else if (response.code == 0) {
+                                swal.fire({
+                                    text:
+                                        "Teklif başvurunuzu daha önce yapmışsınız. Panele yönlendiriliyorsunuz. Size daha önce yollanan kullanıcı adı ve şifre ile panele giriş yapabilirsiniz.",
+                                    icon: "warning",
+                                    buttonsStyling: false,
+                                    confirmButtonText: "Tamam",
+                                    customClass: {
+                                        confirmButton: "btn font-weight-bold btn-light-primary"
+                                    }
+                                }).then(() => {
+                                    window.location = "/Account/Login";
+                                });
+                            } else {
+                                swal.fire({
+                                    text: "Kimlik bilgileriniz doğrulanamadı. Lütfen bilgilerinizi kontrol ediniz.",
+                                    icon: "error",
+                                    buttonsStyling: false,
+                                    confirmButtonText: "Tamam",
+                                    customClass: {
+                                        confirmButton: "btn font-weight-bold btn-light-primary"
+                                    }
+                                });
+                            }
+
+
+                            // similate 2s delay
+                            //setTimeout(function() {
+                            //    btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
+                            //    showErrorMsg(form, 'danger', 'Incorrect username or password. Please try again.');
+                            //   }, 2000);
+                        }
+                    });
+                } else {
+                    swal.fire({
+                        text: "Lütfen ben robot değilim kutucuğunu işaretleyiniz.",
+                        icon: "error",
+                        buttonsStyling: false,
+                        confirmButtonText: "Tamam",
+                        customClass: {
+                            confirmButton: "btn font-weight-bold btn-light-primary"
+                        }
+                    }).then(function () {
+                        KTUtil.scrollTop();
+                    });
+                }
+
             }
-
-
-            // similate 2s delay
-            //setTimeout(function() {
-            //    btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
-            //    showErrorMsg(form, 'danger', 'Incorrect username or password. Please try again.');
-            //   }, 2000);
-        }
-    });
+        });
+    }, 1000); //captcha bekle
 }
 
-function saveCallback () {
+function saveCallback() {
     var loTempButtonText = $("#submitCallback").text();
     $("#submitCallback").addClass('spinner spinner-right spinner-white pr-15').attr('disabled', true).text("Lütfen Bekleyiniz");
-    var model = objectifyForm($('#newCallbackForm').serializeArray());
-    model.asset_uuid = SELECTED_ASSET;
 
-    $.ajax({
-        method: "post",
-        url: HOST_URL +'/Customer/Callback',
-        dataType: "json",
-        contentType: 'application/json',
-        data: JSON.stringify(model),
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader('Authorization', 'Bearer ' + HOST_TOKEN);
-        },
-        error: function (xhr) {
-            $("#submitCallback").removeClass('spinner spinner-right spinner-white pr-15').attr('disabled', false).text(loTempButtonText);
-            console.log(xhr);
-            swal.fire({
-                text: "Geri aranma talebi oluşturma esnasında bir problem oluştu lütfen tekrar deneyiniz..",
-                icon: "error",
-                buttonsStyling: false,
-                confirmButtonText: "Tamam",
-                customClass: {
-                    confirmButton: "btn font-weight-bold btn-light-primary"
-                }
-            }).then(function () {
-                KTUtil.scrollTop();
-            });
-        },
-        success: function (response, status, xhr, $form) {
-            $("#submitCallback").removeClass('spinner spinner-right spinner-white pr-15').attr('disabled', false).text(loTempButtonText);
-            if (response.code ==200) {
+    setTimeout(function () {
+        var model = objectifyForm($('#newCallbackForm').serializeArray());
+        model.asset_uuid = SELECTED_ASSET;
+        model.GoogleReCaptchaResponse = _captchaResponse;
+        $.ajax({
+            method: "post",
+            url: '/Customer/Callback',
+            dataType: "json",
+            contentType: 'application/json',
+            data: JSON.stringify(model),
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('Authorization', 'Bearer ' + HOST_TOKEN);
+            },
+            error: function (xhr) {
+                _captchaResponse = "";
+                $("#submitCallback").removeClass('spinner spinner-right spinner-white pr-15').attr('disabled', false).text(loTempButtonText);
+                console.log(xhr);
                 swal.fire({
-                    text:"Talebiniz kayıt edildi. Gayrimenkul danışanlarımız en kısa süre içerisinde sizlere geri dönüş sağlayacaktır. Teşekkürler.",
-                    icon: "success",
-                    buttonsStyling: false,
-                    confirmButtonText: "Tamam",
-                    customClass: {
-                        confirmButton: "btn font-weight-bold btn-light-primary"
-                    }
-                }).then(() => {
-                    $("#kt_modal_callback").modal("hide");
-                });
-            } 
-            else {
-                swal.fire({
-                    text: "Talebiniz oluşturulamadı."+response.message,
+                    text: "Geri aranma talebi oluşturma esnasında bir problem oluştu lütfen tekrar deneyiniz..",
                     icon: "error",
                     buttonsStyling: false,
                     confirmButtonText: "Tamam",
                     customClass: {
                         confirmButton: "btn font-weight-bold btn-light-primary"
                     }
+                }).then(function () {
+                    KTUtil.scrollTop();
                 });
+            },
+            success: function (response, status, xhr, $form) {
+                _captchaResponse = "";
+                $("#submitCallback").removeClass('spinner spinner-right spinner-white pr-15').attr('disabled', false).text(loTempButtonText);
+                if (response.id > 0) {
+                    swal.fire({
+                        text: "Talebiniz kayıt edildi. Gayrimenkul danışanlarımız en kısa süre içerisinde sizlere geri dönüş sağlayacaktır. Teşekkürler.",
+                        icon: "success",
+                        buttonsStyling: false,
+                        confirmButtonText: "Tamam",
+                        customClass: {
+                            confirmButton: "btn font-weight-bold btn-light-primary"
+                        }
+                    }).then(() => {
+                        $("#kt_modal_callback").modal("hide");
+                    });
+                } else if (response.id == -2) {
+                    swal.fire({
+                        text: "Lütfen ben robot değilim kutusunu işaretleyiniz. Eğer işaretlediyseniz lütfen sayfayı yenileyiniz!",
+                        icon: "error",
+                        buttonsStyling: false,
+                        confirmButtonText: "Tamam",
+                        customClass: {
+                            confirmButton: "btn font-weight-bold btn-light-primary"
+                        }
+                    }).then(() => {
+                        $("#kt_modal_callback").modal("hide");
+                    });
+                }
+                else {
+                    swal.fire({
+                        text: "Talebiniz oluşturulamadı." + response.message,
+                        icon: "error",
+                        buttonsStyling: false,
+                        confirmButtonText: "Tamam",
+                        customClass: {
+                            confirmButton: "btn font-weight-bold btn-light-primary"
+                        }
+                    });
+                }
+
+
+                // similate 2s delay
+                //setTimeout(function() {
+                //    btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
+                //    showErrorMsg(form, 'danger', 'Incorrect username or password. Please try again.');
+                //   }, 2000);
             }
+        });
+    }, 1000); //captcha bekle
 
 
-            // similate 2s delay
-            //setTimeout(function() {
-            //    btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
-            //    showErrorMsg(form, 'danger', 'Incorrect username or password. Please try again.');
-            //   }, 2000);
-        }
-    });
 }
 
 function checkUserPhone() {
     var loObj = {};
     loObj.phone = $("#phone").val();
     loObj.message_type_system_type_id = 36;
-    sendOtp(loObj, HOST_TOKEN, $("#validateCustomer"), saveCustomerAndSendAgreement, HOST_URL + "/Otp/Send", HOST_URL + "/Otp/Validate", $("kt_modal_offer"));
+    $("#kt_modal_offer_info").modal("hide");
+    sendOtp(loObj, HOST_TOKEN, $("#validateCustomer"), saveCustomerAndSendAgreement, HOST_URL + "/Otp/Send", HOST_URL + "/Otp/Validate", $("#kt_modal_offer"));
 }
 
 function saveCustomerAndSendAgreement() {
@@ -191,7 +272,7 @@ function saveCustomerAndSendAgreement() {
     var model = objectifyForm($('#newCustomerValidationForm').serializeArray());
     model.user_type_system_type_id = Number(model.userType);
     model.identity = Number(model.identity);
-    model.birthdate = new Date($("#birthdate").val()).toLocaleDateString();
+    model.birthdate = $("#birth_date").val();
     model.send_agreement = true;
     model.asset_uuid = SELECTED_ASSET;
 
@@ -317,9 +398,6 @@ function setSubmitValidation() {
                     validators: {
                         notEmpty: {
                             message: 'Mail girilmeden işlem yapılamaz.'
-                        },
-                        emailAddress: {
-                            message: 'Geçerli bir mail adresi girmediniz'
                         }
                     }
                 },
@@ -334,9 +412,6 @@ function setSubmitValidation() {
                     validators: {
                         notEmpty: {
                             message: 'IBAN numarası girilmeden işleme devam edilemez.'
-                        },
-                        iban: {
-                            message: 'Geçerli bir IBAN numarası girmediniz'
                         }
                     }
                 },

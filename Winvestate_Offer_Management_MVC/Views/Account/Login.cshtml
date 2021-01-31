@@ -12,8 +12,8 @@
     <base href="../../../../">
     <meta charset="utf-8" />
     <title>Winvestate Gayrimenkul Teklif Yönetim Paneli</title>
-    <meta name="description" content="Login page example" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="Yönetim Paneli" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=0" />
     <link rel="canonical" href="https://keenthemes.com/metronic" />
     <!--begin::Fonts-->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
@@ -34,104 +34,108 @@
 <!--begin::Body-->
 <body id="kt_body" class="quick-panel-right demo-panel-right offcanvas-right header-fixed header-mobile-fixed subheader-enabled aside-enabled aside-static page-loading">
     <!--begin::Main-->
-<div class="d-flex flex-column flex-root">
-    <!--begin::Login-->
-    <div class="login login-4 login-signin-on d-flex flex-row-fluid" id="kt_login">
-        <div class="d-flex flex-center flex-row-fluid bgi-size-cover bgi-position-top bgi-no-repeat" style="background-image: url('/assets/media/bg/bg-3.jpg');">
-            <div class="login-form text-center p-7 position-relative overflow-hidden">
-                <!--begin::Login Header-->
-                <div class="d-flex flex-center mb-15">
-                    <a href="#">
-                        <img src="~/assets/media/logos/logo_company.png" class="max-h-75px" alt="" />
-                    </a>
-                </div>
-                <!--end::Login Header-->
-                <!--begin::Login Sign in form-->
-                <div class="login-signin">
-                    <div class="mb-20">
-                        <h3>Yönetim Paneli Giriş Ekranı</h3>
-                        <div class="text-muted font-weight-bold">Hesap bilgilerini giriniz</div>
+    <div class="d-flex flex-column flex-root">
+        <!--begin::Login-->
+        <div class="login login-4 login-signin-on d-flex flex-row-fluid" id="kt_login">
+            <div class="d-flex flex-center flex-row-fluid bgi-size-cover bgi-position-top bgi-no-repeat" style="background-image: url('/assets/media/bg/bg-2.jpg');">
+                <div class="login-form text-center p-7 position-relative overflow-hidden">
+                    <!--begin::Login Header-->
+                    <div class="d-flex flex-center mb-15">
+                        <a href="https://winvestate.com">
+                            <img src="~/assets/media/logos/logo_company.png" class="max-h-35px" alt="" />
+                        </a>
                     </div>
-                    <form class="form" id="kt_login_signin_form">
-                        <div class="form-group mb-5">
-                            <input class="form-control h-auto form-control-solid py-4 px-8" type="text" placeholder="Telefon Numarası" name="phone" id="phone" value="@Model.User.phone" autocomplete="off" />
+                    <!--end::Login Header-->
+                    <!--begin::Login Sign in form-->
+                    <div class="login-signin">
+                        <div class="mb-20">
+                            <h3>Yönetim Paneli Giriş Ekranı</h3>
+                            <div class="text-muted font-weight-bold">Hesap bilgilerini giriniz</div>
                         </div>
-                        <div class="form-group mb-5">
-                            <input class="form-control h-auto form-control-solid py-4 px-8" type="password" placeholder="Şifre" name="password" id="password" value="@Model.User.password" />
-                        </div>
-                        <div class="form-group d-flex flex-wrap justify-content-between align-items-center">
-                            <div class="checkbox-inline">
-                                <label class="checkbox m-0 text-muted">
-                                    <input type="checkbox" name="remember" />
-                                    <span></span>Beni Hatırla
-                                </label>
+                        <form class="form" id="kt_login_signin_form">
+                            <div class="form-group mb-5">
+                                <input class="form-control h-auto form-control-solid py-4 px-8" type="text" placeholder="Kullanıcı Adı" name="phone" id="phone" value="@Model.User.phone" autocomplete="off" />
                             </div>
-                            <a href="javascript:;" id="kt_login_forgot" class="text-muted text-hover-primary">Şifreni mi unuttun ?</a>
-                        </div>
-                        <div id="alertInSignIn" role="alert"></div>
-                        <button id="kt_login_signin_submit" class="btn btn-dark font-weight-bold px-9 py-4 my-3 mx-4">Giriş Yap</button>
+                            <div class="form-group mb-5">
+                                <input class="form-control h-auto form-control-solid py-4 px-8" type="password" placeholder="Şifre" name="password" id="password" value="@Model.User.password" />
+                            </div>
+                            <div class="form-group d-flex flex-wrap justify-content-between align-items-center">
+                                <div class="checkbox-inline">
+                                    <label class="checkbox m-0 text-muted">
+                                        @{
+                                            var loClass = string.IsNullOrEmpty(Model.User.password) ? "" : "checked=checked";
+                                        }
+                                        
+                                        <input @loClass type="checkbox" name="remember" id="remember_me"/>
+                                        <span></span>Beni Hatırla
+                                    </label>
+                                </div>
+                                <a href="javascript:;" id="kt_login_forgot" class="text-muted text-hover-primary">Şifreni mi unuttun ?</a>
+                            </div>
+                            <div id="alertInSignIn" role="alert"></div>
+                            <button id="kt_login_signin_submit" class="btn btn-danger font-weight-bold px-9 py-4 my-3 mx-4">Giriş Yap</button>
 
-                    </form>
-                </div>
-                <!--end::Login Sign in form-->
-                <!--begin::Login forgot password form-->
-                <div class="login-forgot">
-                    <div class="mb-20">
-                        <h3>Şifre Sıfırlama ?</h3>
-                        <div class="text-muted font-weight-bold">Lütfen sisteme kayıtlı cep telefonunuzu giriniz</div>
+                        </form>
                     </div>
-                    <form class="form" id="kt_login_forgot_form">
-                        <div class="form-group mb-10">
-                            <input class="form-control form-control-solid h-auto py-4 px-8" type="text" placeholder="Cep Telefonu" name="forgot_phone" id="forgot_phone" autocomplete="off" />
+                    <!--end::Login Sign in form-->
+                    <!--begin::Login forgot password form-->
+                    <div class="login-forgot">
+                        <div class="mb-20">
+                            <h3>Şifre Sıfırlama ?</h3>
+                            <div class="text-muted font-weight-bold">Lütfen sisteme kayıtlı kullanıcı adınızı giriniz</div>
                         </div>
-                        <div class="form-group d-flex flex-wrap flex-center mt-10">
-                            <button id="kt_login_forgot_submit" class="btn btn-primary font-weight-bold px-9 py-4 my-3 mx-2">Sıfırla</button>
-                            <button id="kt_login_forgot_cancel" class="btn btn-light-primary font-weight-bold px-9 py-4 my-3 mx-2">İptal</button>
+                        <form class="form" id="kt_login_forgot_form">
+                            <div class="form-group mb-10">
+                                <input class="form-control form-control-solid h-auto py-4 px-8" type="text" placeholder="Cep Telefonu" name="forgot_phone" id="forgot_phone" autocomplete="off" />
+                            </div>
+                            <div class="form-group d-flex flex-wrap flex-center mt-10">
+                                <button id="kt_login_forgot_submit" class="btn btn-primary font-weight-bold px-9 py-4 my-3 mx-2">Sıfırla</button>
+                                <button id="kt_login_forgot_cancel" class="btn btn-light-primary font-weight-bold px-9 py-4 my-3 mx-2">İptal</button>
+                            </div>
+                            <div id="alertInForgot" role="alert"></div>
+                        </form>
+                    </div>
+                    <!--end::Login forgot password form-->
+                </div>
+            </div>
+        </div>
+        <!--end::Login-->
+    </div>
+
+    <div class="modal fade" id="ModalForUpdatePassword" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Şifre Güncelleme</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i aria-hidden="true" class="ki ki-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="priceForm">
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label>Şifre</label>
+                                <input type="password" class="form-control" name="passwordToUpdate" id="passwordToUpdate" />
+                            </div>
+                            <div class="form-group row">
+                                <label>Şifre Tekrar</label>
+                                <input type="password" class="form-control" name="passwordToUpdate2" id="passwordToUpdate2" />
+                            </div>
                         </div>
-                        <div id="alertInForgot" role="alert"></div>
                     </form>
                 </div>
-                <!--end::Login forgot password form-->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="updatePassword">Kaydet</button>
+                </div>
             </div>
         </div>
     </div>
-    <!--end::Login-->
-</div>
 
-<div class="modal fade" id="ModalForUpdatePassword" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Şifre Güncelleme</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <i aria-hidden="true" class="ki ki-close"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="priceForm">
-                    <div class="card-body">
-                        <div class="form-group row">
-                            <label>Şifre</label>
-                            <input type="password" class="form-control" name="passwordToUpdate" id="passwordToUpdate"/>
-                        </div>
-                        <div class="form-group row">
-                            <label>Şifre Tekrar</label>
-                            <input type="password" class="form-control" name="passwordToUpdate2" id="passwordToUpdate2"/>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="updatePassword">Kaydet</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-@Html.Partial("~/Views/Shared/Otp.cshtml", Model)
+    @Html.Partial("~/Views/Shared/Otp.cshtml", Model)
 
     <!--end::Main-->
-    <script>var HOST_URL = "https://preview.keenthemes.com/metronic/theme/html/tools/preview";</script>
+    <script>var HOST_URL = "@Common.ApiUrl";</script>
     <!--begin::Global Config(global config for global JS scripts)-->
     <script>var KTAppSettings = { "breakpoints": { "sm": 576, "md": 768, "lg": 992, "xl": 1200, "xxl": 1200 }, "colors": { "theme": { "base": { "white": "#ffffff", "primary": "#6993FF", "secondary": "#E5EAEE", "success": "#1BC5BD", "info": "#8950FC", "warning": "#FFA800", "danger": "#F64E60", "light": "#F3F6F9", "dark": "#212121" }, "light": { "white": "#ffffff", "primary": "#E1E9FF", "secondary": "#ECF0F3", "success": "#C9F7F5", "info": "#EEE5FF", "warning": "#FFF4DE", "danger": "#FFE2E5", "light": "#F3F6F9", "dark": "#D6D6E0" }, "inverse": { "white": "#ffffff", "primary": "#ffffff", "secondary": "#212121", "success": "#ffffff", "info": "#ffffff", "warning": "#ffffff", "danger": "#ffffff", "light": "#464E5F", "dark": "#ffffff" } }, "gray": { "gray-100": "#F3F6F9", "gray-200": "#ECF0F3", "gray-300": "#E5EAEE", "gray-400": "#D6D6E0", "gray-500": "#B5B5C3", "gray-600": "#80808F", "gray-700": "#464E5F", "gray-800": "#1B283F", "gray-900": "#212121" } }, "font-family": "Poppins" };</script>
     <!--end::Global Config-->
@@ -149,6 +153,7 @@
         var myIti;
         var _myPhone;
         var _login;
+        var userToUpdate = {};
         jQuery(document).ready(function () {
             $(".alert").hide();
             KTLogin.init();
@@ -210,10 +215,8 @@
                     }
                 });
             } else {
-                var model = {};
-                model.password = MD5(loPasswordToUpdate);
-                model.phone = _myPhone;
-                UpdateUserPassword(model);
+                userToUpdate.password = MD5(loPasswordToUpdate);
+                UpdateUserPassword(userToUpdate);
             }
 
         });
@@ -285,7 +288,7 @@
                             $('#kt_login_signin_submit').addClass('spinner spinner-right spinner-white pr-15').attr('disabled', true).text("Lütfen Bekleyiniz");
 
                             model.password = MD5(model.password);
-                            //model.remember_me = $("#rememberMe").is(":checked");
+                            model.remember_me = $("#remember_me").is(":checked");
 
                             $.ajax({
                                 url: '/Account/Validate',
@@ -368,11 +371,70 @@
                         if (status == 'Valid') {
                             $(".alert").hide();
                             KTUtil.scrollTop();
-                               var loObj = {};
-                            loObj.phone = $("#forgot_phone").val();
-                            _myPhone = $("#forgot_phone").val();
-                            loObj.message_type_system_type_id = 2;
-                            sendOtp(loObj, '@Model.Token', $('#kt_login_forgot_submit'), OpenModalForUpdatePassword,'@Common.SendOtpUrl','@Common.ValidateOtpUrl');
+
+                            var loModel = {};
+                            loModel.phone = $("#forgot_phone").val();
+                            $.ajax({
+                                method: "put",
+                                url: '@Common.ApiUrl/User/Password/Forgot',
+                                contentType: "application/json;charset=utf-8",
+                                data: JSON.stringify(loModel),
+                                traditional: true,
+                                crossDomain: true,
+                                dataType: 'json',
+                                beforeSend: function (xhr) {
+                                    xhr.setRequestHeader('Authorization', 'Bearer @Model.Token');
+                                },
+                                error: function () {
+                                    $('#updatePassword').removeClass('spinner spinner-right spinner-white pr-15').attr('disabled', false).text("Kaydet");
+                                    swal.fire({
+                                        "title": "Hata",
+                                        "text": "İşlem Tamamlanamadı",
+                                        "icon": "error",
+                                        //"confirmButtonClass": "btn btn-secondary"
+                                    }).then(result => {
+                                        if (result.value) {
+
+                                        }
+                                    });
+                                },
+                                success: function (data) {
+                                    $('#updatePassword').removeClass('spinner spinner-right spinner-white pr-15').attr('disabled', false).text("Kaydet");
+                                    if (data.code !== 200) {
+                                        swal.fire({
+                                            "title": "Hata",
+                                            "text": "Şifre sıfırlanamadı. "+data.message,
+                                            "icon": "error",
+                                            //"confirmButtonClass": "btn btn-secondary"
+                                        }).then(result => {
+                                            if (result.value) {
+                                            }
+
+                                        });
+                                    } else {
+                                        userToUpdate = data.data;
+                                        $("#kt_modal_otp").modal("show");
+                                        $("#validateOtp").data("phone", loModel.phone);
+                                        _isOtpSend = true;
+                                        _validateOtp = OpenModalForUpdatePassword;
+                                        _validateApiUrl = HOST_URL + "/Otp/Validate";
+                                        _token =  '@Model.Token';
+                                        var x = setInterval(function () {
+                                            _otpSecond -= 1;
+                                            $("#secondSms").html("Bir sonraki sms için kalan süre " + _otpSecond + " saniye..");
+
+                                            if (_otpSecond < 0) {
+                                                $("#secondSms").html("");
+                                                _otpSecond = 180;
+                                                _isOtpSend = false;
+                                                btn.removeClass('spinner spinner-right spinner-white pr-15').attr('disabled', false).text("Kaydet");
+                                                clearInterval(x);
+                                            }
+                                        }, 1000);
+                                    }
+                                }
+                            });
+
                         } else {
                             showErrorMsg($("#alertInForgot"),
                                 "Bilgilerinizi kontrol ederek tekrar deneyiniz.");
@@ -400,7 +462,7 @@
             };
         }();
 
-        function OpenModalForUpdatePassword() {
+        function  OpenModalForUpdatePassword() {
             $("#ModalForUpdatePassword").modal("show");
         }
 

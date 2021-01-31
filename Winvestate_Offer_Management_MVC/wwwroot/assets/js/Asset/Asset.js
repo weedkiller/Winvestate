@@ -14,24 +14,31 @@ function setAssetVariables(pTypes, pSessionId, pSelectedAsset) {
         _myProcess = "insert";
         _selectedAsset = null;
     }
-    
-    if (_myProcess == "insert") {
-        Dropzone.prototype.defaultOptions.dictDefaultMessage = "Dosyalarınızı yüklemek için buraya taşıyınız";
-        Dropzone.prototype.defaultOptions.dictFallbackMessage = "Tarayıcınızı işleme izin vermemektedir";
-        Dropzone.prototype.defaultOptions.dictFallbackText = "Lütfen dosyalarınızı yüklerken fallback kullanınız.";
-        Dropzone.prototype.defaultOptions.dictFileTooBig = "Dosya çok büyük ({{filesize}}MiB). Maksimum dosya boyutu: {{maxFilesize}}MiB.";
-        Dropzone.prototype.defaultOptions.dictInvalidFileType = "Bu dosya tipini yükleyemezsiniz";
-        Dropzone.prototype.defaultOptions.dictResponseError = "Hata kodu {{statusCode}}.";
-        Dropzone.prototype.defaultOptions.dictCancelUpload = "Yüklemeyi iptal et";
-        Dropzone.prototype.defaultOptions.dictUploadCanceled = "Dosya yükleme iptal edildi.";
-        Dropzone.prototype.defaultOptions.dictCancelUploadConfirmation = "Dosya yüklemeyi iptal etmek istediğinize emin misiniz?";
-        Dropzone.prototype.defaultOptions.dictRemoveFile = "Dosyayı Sil";
-        Dropzone.prototype.defaultOptions.dictRemoveFileConfirmation = "Dosyayı silmek istediğinize emin misiniz";
-        Dropzone.prototype.defaultOptions.dictMaxFilesExceeded = "Daha fazla dosya yükleyemezsiniz.";
-        Dropzone.prototype.defaultOptions.dictFileSizeUnits = "Daha fazla dosya yükleyemezsiniz.";
-        _assetPictureId = 0;
-    }
 
+
+    Dropzone.prototype.defaultOptions.dictDefaultMessage = "Dosyalarınızı yüklemek için buraya taşıyınız";
+    Dropzone.prototype.defaultOptions.dictFallbackMessage = "Tarayıcınızı işleme izin vermemektedir";
+    Dropzone.prototype.defaultOptions.dictFallbackText = "Lütfen dosyalarınızı yüklerken fallback kullanınız.";
+    Dropzone.prototype.defaultOptions.dictFileTooBig = "Dosya çok büyük ({{filesize}}MiB). Maksimum dosya boyutu: {{maxFilesize}}MiB.";
+    Dropzone.prototype.defaultOptions.dictInvalidFileType = "Bu dosya tipini yükleyemezsiniz";
+    Dropzone.prototype.defaultOptions.dictResponseError = "Hata kodu {{statusCode}}.";
+    Dropzone.prototype.defaultOptions.dictCancelUpload = "Yüklemeyi iptal et";
+    Dropzone.prototype.defaultOptions.dictUploadCanceled = "Dosya yükleme iptal edildi.";
+    Dropzone.prototype.defaultOptions.dictCancelUploadConfirmation = "Dosya yüklemeyi iptal etmek istediğinize emin misiniz?";
+    Dropzone.prototype.defaultOptions.dictRemoveFile = "Dosyayı Sil";
+    Dropzone.prototype.defaultOptions.dictRemoveFileConfirmation = "Dosyayı silmek istediğinize emin misiniz";
+    Dropzone.prototype.defaultOptions.dictMaxFilesExceeded = "Daha fazla dosya yükleyemezsiniz.";
+    Dropzone.prototype.defaultOptions.dictFileSizeUnits = "Daha fazla dosya yükleyemezsiniz.";
+    _assetPictureId = 0;
+
+
+
+    $('#myLongExplanation').summernote({
+        height: 250,
+        lang: 'tr-TR'
+    });
+
+    $(".note-editor").addClass("col-lg-10");
 
     $('#category_type_system_type_id').select2({
         placeholder: "Kategori Seçiniz"
@@ -41,9 +48,6 @@ function setAssetVariables(pTypes, pSessionId, pSelectedAsset) {
         placeholder: "Tür Seçiniz"
     });
 
-    $('#agreement_guid').select2({
-        placeholder: "Sözleşme Seçiniz"
-    });
 
     $('#bank_guid').select2({
         placeholder: "Kurum Seçiniz"
@@ -60,8 +64,13 @@ function setAssetVariables(pTypes, pSessionId, pSelectedAsset) {
 
 
     $('#last_offer_date_str').datetimepicker({
-        locale: 'de'
+        locale: 'tr'
     });
+
+    $('#last_announcement_date_str').on('change.datetimepicker',
+        function (e) {
+            $('#last_offer_date_str').val($('#last_announcement_date_str').val());
+        });
 
 
     $("#category_type_system_type_id").change(function () {
@@ -81,9 +90,9 @@ function setAssetVariables(pTypes, pSessionId, pSelectedAsset) {
 
     $('#category_type_system_type_id').val(null).trigger("change");
     $('#bank_guid').val(null).trigger("change");
-    $('#agreement_guid').val(null).trigger("change");
 
-    $('#dropzone_for_asset_images').dropzone({
+
+    var loMyDropzone = $('#dropzone_for_asset_images').dropzone({
         url: "api/File?sessionId=" + pSessionId,
         parallelUploads: 20,
         uploadMultiple: true,
@@ -91,12 +100,13 @@ function setAssetVariables(pTypes, pSessionId, pSelectedAsset) {
         maxFilesize: 10, // MB
         addRemoveLinks: true,
         acceptedFiles: "image/*",
+        timeout: 180000,
         accept: function (file, done) {
             done();
             _assetPictureId = 1;
         }
-    });
 
+    });
     setAssetValidation();
 
     $("#saveAsset").on('click',
@@ -104,7 +114,7 @@ function setAssetVariables(pTypes, pSessionId, pSelectedAsset) {
             e.preventDefault();
             _assetValidation.validate().then(function (status) {
                 if (status == 'Valid') {
-                    if (_assetPictureId == 0 &&_myProcess == "insert") {
+                    if (_assetPictureId == 0 && _myProcess == "insert") {
                         Swal.fire({
                             text: "İşleme devam edebilmek için en az 1 fotoğraf yüklemelesiniz.",
                             icon: "error",
@@ -125,7 +135,7 @@ function setAssetVariables(pTypes, pSessionId, pSelectedAsset) {
 }
 
 
-function SendAssetToServer(model, btn) {
+function SendAssetToServer(model, btn, isDelete) {
     var loTempText = btn.text();
     btn.addClass('spinner spinner-right spinner-white pr-15').attr('disabled', true)
         .text("Lütfen Bekleyiniz");
@@ -154,6 +164,7 @@ function SendAssetToServer(model, btn) {
         success: function (response, status, xhr, $form) {
             btn.removeClass('spinner spinner-right spinner-white pr-15').attr('disabled', false)
                 .text(loTempText);
+            console.log(response);
             if (response.id > 0) {
                 swal.fire({
                     text: "İşlem Başarılı!",
@@ -164,12 +175,12 @@ function SendAssetToServer(model, btn) {
                         confirmButton: "btn font-weight-bold btn-light-primary"
                     }
                 }).then(function () {
-                    if (_myProcess == "insert") {
+                    if (_myProcess == "insert" || isDelete) {
                         window.location = '/Asset/List';
                     } else {
-                        window.location = '/Asset/Info?pId='+model.row_guid;
+                        window.location = '/Asset/Info?pId=' + model.row_guid;
                     }
-                    
+
                 });
             } else {
                 btn.removeClass('spinner spinner-right spinner-white pr-15').attr('disabled', false)
@@ -206,13 +217,35 @@ function SaveAsset() {
     loMyAsset.asset_type_system_type_id = Number(loMyAsset.asset_type_system_type_id);
     loMyAsset.size = Number(loMyAsset.size);
     loMyAsset.starting_amount = Number(loMyAsset.starting_amount.replaceAll(".", ""));
-    loMyAsset.minimum_increate_amout = $("#minimum_increate_amout").val() == null || $("#minimum_increate_amout").val()==="" ? null : Number(loMyAsset.minimum_increate_amout.replaceAll(".", ""));
+    loMyAsset.minimum_increate_amout = $("#minimum_increate_amout").val() == null || $("#minimum_increate_amout").val() === "" ? null : Number(loMyAsset.minimum_increate_amout.replaceAll(".", ""));
     loMyAsset.guarantee_amount = $("#guarantee_amount").val() == null || $("#guarantee_amount").val() === "" ? null : Number(loMyAsset.guarantee_amount.replaceAll(".", ""));
-    loMyAsset.is_compatible_for_credit =  $("#is_compatible_for_credit").is(':checked');
-    loMyAsset.explanation = $("#explanation").val();
-    loMyAsset.last_announcement_date_str = $("#last_announcement_date_str").val()+":00";
+    loMyAsset.is_compatible_for_credit = $("#is_compatible_for_credit").is(':checked');
+    loMyAsset.explanation = $("#myLongExplanation").summernote('code');
+    loMyAsset.last_announcement_date_str = $("#last_announcement_date_str").val() + ":00";
     loMyAsset.first_announcement_date_str = $("#first_announcement_date_str").val() + ":00";
     loMyAsset.last_offer_date_str = $("#last_offer_date_str").val() + ":00";
+
+    var loMyPhotos = [];
+
+    var index = 1;
+    $('#reorder_myUl li').each(function () {
+        var loMyPhoto = {};
+        var loId = $(this).data("id");
+        var loAssetGuid = $(this).data("guid");
+        var loName = $(this).data("name");
+        var loNameOfCheck = "#image_check_" + loId;;
+        loMyPhoto.id = loId;
+        loMyPhoto.is_deleted = $(loNameOfCheck).is(":checked");
+        loMyPhoto.item_order = index;
+        loMyPhoto.asset_uuid = loAssetGuid;
+        loMyPhoto.file_path = loName;
+        index++;
+        loMyPhotos.push(loMyPhoto);
+
+    });
+
+    loMyAsset.asset_photos = loMyPhotos;
+
 
     if (_myProcess == "update") {
         loMyAsset.id = _selectedAsset.id;
@@ -234,6 +267,13 @@ function setAssetValidation() {
                     validators: {
                         notEmpty: {
                             message: 'Gayrimenkul adı girilmeden işleme devam edilemez.'
+                        }
+                    }
+                },
+                asset_no: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Gayrimenkul numarası girilmeden işleme devam edilemez.'
                         }
                     }
                 },
@@ -269,13 +309,6 @@ function setAssetValidation() {
                     validators: {
                         notEmpty: {
                             message: 'Parsel bilgisi girilmelidir.'
-                        }
-                    }
-                },
-                agreement_guid: {
-                    validators: {
-                        notEmpty: {
-                            message: 'Sözleşme seçimi yapılmalıdır.'
                         }
                     }
                 },

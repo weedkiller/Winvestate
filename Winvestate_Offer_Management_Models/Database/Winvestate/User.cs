@@ -13,6 +13,7 @@ namespace Winvestate_Offer_Management_Models.Database.Winvestate
         public string phone { get; set; }
         public string mail { get; set; }
         public string password { get; set; }
+        public int user_type{ get; set; }
 
     }
 }

@@ -1,5 +1,24 @@
 ﻿var loMyAssetList;
 
+$(document).on("click",
+    ".deleteAsset",
+    function () {
+        var loId = $(this).data("id");
+        Swal.fire({
+            title: "Emin misiniz?",
+            text: "Seçtiğiniz gayrimenkul silinecek!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Evet, sil!",
+            cancelButtonText: "İptal Et"
+        }).then(function (result) {
+            if (result.value) {
+                var loSelectedAsset = loMyAssetList.find(x => x.row_guid === loId);
+                loSelectedAsset.is_deleted = true;
+                SendAssetToServer(loSelectedAsset, $(this),true);
+            }
+        });
+    });
 
 
 var AssetListDT = function () {
@@ -55,7 +74,7 @@ var AssetListDT = function () {
             columns: [
                 {
                     field: 'image',
-                    title: '',
+                    title: 'Fotoğraf',
                     width: 100,
                     template: function (data) {
                         var number = KTUtil.getRandomInt(9, 14);
@@ -84,7 +103,7 @@ var AssetListDT = function () {
                     template: function (row) {
                         var output = '<div class="d-flex align-items-center detail" data-id=' + row.row_guid + '>\
                                                 <div class="ml-4">\
-                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ row.asset_no + '</div>\
+                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ row.company_prefix + row.asset_no + '</div>\
                                                 </div>\
                                             </div>';
                         return output;
@@ -117,8 +136,8 @@ var AssetListDT = function () {
                         var output = '<div class="d-flex align-items-center">\
                                                 <div class="ml-4">\
                                                     <div class="text-dark-75 font-weight-bolder mb-0">'+ loDate1.toLocaleDateString() + " " + loDate1.toLocaleTimeString() + '</div>\
-                                                    <div class="text-muted">İlan Başlangıç :' + loDate2.toLocaleDateString() + " " + loDate2.toLocaleTimeString() + '</div>\
-                                                    <div class="text-muted">İlan Bitiş:' + loDate3.toLocaleDateString() + " " + loDate3.toLocaleTimeString() + '</div>\
+                                                    <div class="text-muted">İlan Başlangıç :' + loDate3.toLocaleDateString() + " " + loDate3.toLocaleTimeString() + '</div>\
+                                                    <div class="text-muted">İlan Bitiş:' + loDate2.toLocaleDateString() + " " + loDate2.toLocaleTimeString() + '</div>\
                                                 </div>\
                                             </div>';
                         return output;
@@ -149,7 +168,7 @@ var AssetListDT = function () {
                         <a href="/Asset/AssetDetail?pId='+row.row_guid+'" class="btn btn-sm btn-clean btn-icon" title="Görüntüle">\
                              <i class="flaticon-eye"></i>\
                         </a>\
-                        <a href="javascript:;" class="btn btn-sm btn-clean btn-icon" title="Sil">\
+                        <a href="javascript:;" class="btn btn-sm btn-clean btn-icon deleteAsset" data-id=' + row.row_guid + ' title="Sil">\
                              <i class="flaticon2-trash"></i>\
                         </a>\
                     ';

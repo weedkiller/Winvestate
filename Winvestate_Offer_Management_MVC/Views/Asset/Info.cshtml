@@ -18,7 +18,7 @@
     var _guarantee = Model.Asset?.guarantee_amount.Value.ToString("C0");
     var _minimum = Model.Asset?.minimum_increate_amout.Value.ToString("C0");
     var _explanation = Model.AssetExplanation;
-    var _availableForCredit = Model.Asset?.is_compatible_for_credit.Value==true ? "checked:checked": "";
+    var _availableForCredit = Model.Asset?.is_compatible_for_credit.Value == true ? "checked:checked" : "";
 
 
 }
@@ -94,45 +94,42 @@
                         <div class="form-group row">
                             <label class="col-lg-2 col-form-label">İlan Yayınlama Başlangıç:</label>
                             <div class="col-lg-2">
-                                <input type="text" class="form-control form-control-solid datetimepicker-input" id="first_announcement_date_str" name="first_announcement_date_str" placeholder="Tarih ve Saat Seçiniz"  data-toggle="datetimepicker" data-target="#first_announcement_date_str" value="@_firstAnnouncementDate"/>
+                                <input type="text" class="form-control form-control-solid datetimepicker-input" id="first_announcement_date_str" name="first_announcement_date_str" placeholder="Tarih ve Saat Seçiniz" data-toggle="datetimepicker" data-target="#first_announcement_date_str" value="@_firstAnnouncementDate" />
                                 @*<span class="form-text text-primary">Doğum tarihiniz sisteme kayıt edilmez, yalnızca doğrulama işlemleri için kullanılır.</span>*@
                             </div>
                             <label class="col-lg-2 col-form-label text-right">İlan Yayınlama Bitiş:</label>
                             <div class="col-lg-2">
-                                <input type="text" class="form-control form-control-solid datetimepicker-input" id="last_announcement_date_str" name="last_announcement_date_str" placeholder="Tarih ve Saat Seçiniz"  data-toggle="datetimepicker" data-target="#last_announcement_date_str" value="@_lastAnnouncementDate"/>
-                                       @*<span class="form-text text-primary">Doğum tarihiniz sisteme kayıt edilmez, yalnızca doğrulama işlemleri için kullanılır.</span>*@
+                                <input type="text" class="form-control form-control-solid datetimepicker-input" id="last_announcement_date_str" name="last_announcement_date_str" placeholder="Tarih ve Saat Seçiniz" data-toggle="datetimepicker" data-target="#last_announcement_date_str" value="@_lastAnnouncementDate" />
+                                @*<span class="form-text text-primary">Doğum tarihiniz sisteme kayıt edilmez, yalnızca doğrulama işlemleri için kullanılır.</span>*@
                             </div>
                             <label class="col-lg-2 col-form-label text-right">Son Teklif Tarihi:</label>
                             <div class="col-lg-2">
-                                <input type="text" class="form-control form-control-solid datetimepicker-input" id="last_offer_date_str" placeholder="Tarih ve Saat Seçiniz" name="last_offer_date_str" data-toggle="datetimepicker" data-target="#last_offer_date_str" value="@_lastOfferDate"/>
+                                <input type="text" class="form-control form-control-solid datetimepicker-input" id="last_offer_date_str" placeholder="Tarih ve Saat Seçiniz" name="last_offer_date_str" data-toggle="datetimepicker" data-target="#last_offer_date_str" value="@_lastOfferDate" />
                                 @*<span class="form-text text-primary">Doğum tarihiniz sisteme kayıt edilmez, yalnızca doğrulama işlemleri için kullanılır.</span>*@
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-lg-2 col-form-label">İlan Başlığı:</label>
                             <div class="col-lg-10">
-                                <input class="form-control wv_upper" id="asset_name" type="text" name="asset_name" placeholder="" value="@_assetName"/>
+                                <input class="form-control wv_upper" id="asset_name" type="text" name="asset_name" placeholder="" value="@_assetName" />
                             </div>
+
                         </div>
                         <div class="form-group row">
-                            <label class="col-lg-2 col-form-label">Gayrimenkul Sahibi:</label>
+                            <label class="col-lg-2 col-form-label ">Gayrimenkul Sahibi:</label>
                             <div class="col-lg-4">
                                 <select class="form-control select2" id="bank_guid" name="bank_guid">
                                     @foreach (var loOption in Model.User.banks)
                                     {
-                                        <option value="@loOption.row_guid">@loOption.name</option>
+                                        <option value="@loOption.row_guid">@loOption.bank_name</option>
                                     }
                                 </select>
                             </div>
-                            <label class="col-lg-2 col-form-label text-right ">Kullanılacak Sözleşme:</label>
+                            <label class="col-lg-2 col-form-label text-right">Gayrimenkul Numarası:</label>
                             <div class="col-lg-4">
-                                <select class="form-control select2" id="agreement_guid" name="agreement_guid">
-                                    @foreach (var loOption in Model.User.contracts)
-                                    {
-                                        <option value="@loOption.row_guid">@loOption.document_name</option>
-                                    }
-                                </select>
+                                <input class="form-control wv_upper" id="asset_no" type="text" name="asset_no" placeholder="" value="@_assetNo" />
                             </div>
+
                         </div>
                         <div class="form-group row">
                             <label class="col-lg-2 col-form-label">Kategori:</label>
@@ -165,7 +162,7 @@
                         <div class="form-group row">
                             <label class="col-lg-2 col-form-label">Address:</label>
                             <div class="col-lg-10">
-                                <input class="form-control wv_upper" id="address" type="text" name="address" placeholder="" value="@_address"/>
+                                <input class="form-control wv_upper" id="address" type="text" name="address" placeholder="" value="@_address" />
                             </div>
                         </div>
                         <div class="form-group row">
@@ -175,59 +172,81 @@
                             </div>
                             <label class="col-lg-2 col-form-label text-right ">Parsel:</label>
                             <div class="col-lg-2">
-                                <input class="form-control wv_upper" id="plot_number" type="text" name="plot_number" placeholder="" value="@_plot"/>
+                                <input class="form-control wv_upper" id="plot_number" type="text" name="plot_number" placeholder="" value="@_plot" />
                             </div>
                             <label class="col-lg-2 col-form-label text-right ">M2:</label>
                             <div class="col-lg-2">
-                                <input class="form-control wv_upper" id="size" type="text" name="size" placeholder="" value="@_size"/>
+                                <input class="form-control wv_upper" id="size" type="text" name="size" placeholder="" value="@_size" />
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-lg-2 col-form-label">Hisse:</label>
                             <div class="col-lg-2">
-                                <input class="form-control wv_upper" id="share" type="text" name="share" placeholder="" value="@_share"/>
+                                <input class="form-control wv_upper" id="share" type="text" name="share" placeholder="" value="@_share" />
                             </div>
                             <label class="col-lg-2 col-form-label text-right ">Krediye Uygun:</label>
                             <label class="checkbox">
-                                <input type="checkbox" name="is_compatible_for_credit" id="is_compatible_for_credit" class="mr-5" @_availableForCredit/>
+                                <input type="checkbox" name="is_compatible_for_credit" id="is_compatible_for_credit" class="mr-5" @_availableForCredit />
                                 <span></span>
                             </label>
                         </div>
                         <div class="form-group row">
                             <label class="col-lg-2 col-form-label">Başlangıç Bedeli:</label>
                             <div class="col-lg-2">
-                                <input class="form-control wv_upper priceInput" id="starting_amount" type="text" name="starting_amount" placeholder="" value="@_startAmount"/>
+                                <input class="form-control wv_upper priceInput" id="starting_amount" type="text" name="starting_amount" placeholder="" value="@_startAmount" />
                             </div>
                             <label class="col-lg-2 col-form-label text-right">Teminat Bedeli:</label>
                             <div class="col-lg-2">
-                                <input class="form-control wv_upper priceInput" id="guarantee_amount" type="text" name="guarantee_amount" placeholder="" value="@_guarantee"/>
+                                <input class="form-control wv_upper priceInput" id="guarantee_amount" type="text" name="guarantee_amount" placeholder="" value="@_guarantee" />
                             </div>
                             <label class="col-lg-2 col-form-label text-right">Minimum Artış:</label>
                             <div class="col-lg-2">
-                                <input class="form-control wv_upper priceInput" id="minimum_increate_amout" type="text" name="minimum_increate_amout" placeholder="" value="@_minimum"/>
+                                <input class="form-control wv_upper priceInput" id="minimum_increate_amout" type="text" name="minimum_increate_amout" placeholder="" value="@_minimum" />
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-lg-2 col-form-label">Açıklama</label>
-                            <div class="col-lg-10">
-                                <textarea class="form-control form-control-solid  form-control-sm wv_upper" id="explanation" name="explanation" rows="2" ></textarea>
-                            </div>
+                            <div class="col-lg-10" id="myLongExplanation" name="long_explanation">@Html.Raw(Model.AssetExplanation)</div>
                         </div>
-                        @if (Model.Asset == null)
-                        {
-                            <div class="form-group row">
-                                <label class="col-lg-2 col-form-label ">Fotoğraflarını Yükleyiniz:</label>
-                                <div class="col-lg-10">
-                                    <div class="dropzone dropzone-default dropzone-primary" id="dropzone_for_asset_images">
-                                        <div class="dropzone-msg dz-message needsclick">
-                                            <h3 class="dropzone-msg-title">Dosyaları buraya sürükleyin ya da tıklayınız.</h3>
-                                            <span class="dropzone-msg-desc">En fazla 35 fotoğraf yükleyebilirsiniz.</span>
-                                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-lg-2 col-form-label ">Fotoğraflarını Yükleyiniz:</label>
+                            <div class="col-lg-10">
+                                <div class="dropzone dropzone-default dropzone-primary" id="dropzone_for_asset_images">
+                                    <div class="dropzone-msg dz-message needsclick">
+                                        <h3 class="dropzone-msg-title">Dosyaları buraya sürükleyin ya da tıklayınız.</h3>
+                                        <span class="dropzone-msg-desc">En fazla 35 fotoğraf yükleyebilirsiniz.</span>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        
+
+                        @if (Model.AssetPhotos.Count > 1)
+                        {
+                            <div class="row mt-3">
+                                <label class="form-group font-weight-boldest">Fotoğraflar:</label>
+                                <div class="gallery">
+                                    <ul class="reorder_ul reorder-photos-list" id="reorder_myUl">
+                                        @foreach (var loImage in Model.AssetPhotos.FindAll(x => x.is_thumb == false))
+                                        {
+                                            <li id="image_li_@loImage.id" class="ui-sortable-handle" data-id="@loImage.id" data-name="@loImage.file_path" data-guid="@loImage.asset_uuid">
+                                                <a href="javascript:void(0);" style="float:none;" class="image_link">
+                                                    <img src="~/Uploads/@loImage.file_path">
+                                                </a>
+                                                <label class="checkbox mt-2 text-center">
+                                                    <input id="image_check_@loImage.id" type="checkbox" data-id="@loImage.id" class="py-5" />
+                                                    <span class="mr-1 text-center"></span>
+                                                    Sil
+                                                </label>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
                         }
-                       
+
+
                         <div class="d-flex justify-content-between border-top mt-5 pt-10">
                             <div class="mr-2">
                                 @*<button type="button" class="btn btn-light-primary font-weight-bolder text-uppercase px-9 py-4" data-wizard-type="action-prev">Previous</button>*@
@@ -248,19 +267,28 @@
 @section Scripts {
     <script src="~/assets/js/Asset/Asset.js"></script>
     <script src="~/assets/js/address.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
     <script>
 
         jQuery(document).ready(function () {
             var loUser = JSON.parse('@Html.Raw(Json.Serialize(Model.User))');
             var loAsset = JSON.parse('@Html.Raw(Json.Serialize(Model.Asset))');
-            
+
+            var loUploadedImageCount = Number('@Model.AssetPhotos.Count');
+
+
+            if (loUploadedImageCount > 1) {
+                $("ul.reorder-photos-list").sortable({ tolerance: 'pointer' });
+                $('#reorderHelper').slideDown('slow');
+                $('.image_link').attr("href", "javascript:void(0);");
+                $('.image_link').css("cursor", "move");
+            }
+
             var loMyAddressObj = {};
-           
 
             if (loAsset!= null && loAsset.id > 0) {
                 setAssetVariables(loUser.sys_definitions, loUser.session_id, loAsset);
                 $("#bank_guid").val(loAsset.bank_guid).trigger("change");
-                $("#agreement_guid").val(loAsset.agreement_guid).trigger("change");
                 $("#category_type_system_type_id").val(loAsset.category_type_system_type_id).trigger("change");
                 $("#asset_type_system_type_id").val(loAsset.asset_type_system_type_id).trigger("change");
                 loMyAddressObj.city_id = loAsset.city_id;
@@ -268,14 +296,13 @@
                 setAddressVariables(loMyAddressObj);
                 GetCities();
                 GetDistricts($("#district_id"));
-                $("#explanation").text('@Html.Raw(Model.AssetExplanation)');
             } else {
                 setAssetVariables(loUser.sys_definitions, loUser.session_id);
                 setAddressVariables(loMyAddressObj);
                 GetCities();
             }
 
-            
+
         });
 
 

@@ -9,11 +9,8 @@
             <!--begin::Details-->
             <div class="d-flex align-items-center flex-wrap mr-2">
                 <!--begin::Title-->
-                <h5 class="text-dark font-weight-bold mt-2 mb-2 mr-5">Gayrimenkul Detayı</h5>
+                <a href="/Asset/AssetForOffer" class="btn btn-default font-weight-bold">Listeye Dön</a>
                 <!--end::Title-->
-                <!--begin::Separator-->
-                <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-5 bg-gray-200"></div>
-                <!--end::Separator-->
                 <!--begin::Search Form-->
                 <div class="d-flex align-items-center" id="kt_subheader_search">
                     <span class="text-dark-50 font-weight-bold" id="kt_subheader_total"></span>
@@ -24,7 +21,7 @@
             <!--begin::Toolbar-->
             <div class="d-flex align-items-center">
                 <!--begin::Button-->
-                <a href="/Asset/AssetForOffer" class="btn btn-default font-weight-bold">Listeye Dön</a>
+                
                 <!--end::Button-->
             </div>
             <!--end::Toolbar-->
@@ -35,16 +32,189 @@
     <div class="d-flex flex-column-fluid">
         <!--begin::Container-->
         <div class="container">
+            <div class="row mt-3">
+                <div class="col-xl-8">
+                    <div class="card card-custom">
+                        <div class="card-header card-header-tabs-line h-120px py-4">
+                            <div class="card-toolbar">
+                                <div class="card-title">
+                                    <h6 class="card-label wv_h6_xl">
+                                        @{ var loAmount = Model.Asset.max_offer_amount.HasValue && Model.Asset.max_offer_amount > 0 ? string.Format("{0:N0}", Model.Asset.max_offer_amount) : string.Format("{0:N0}", Model.Asset.starting_amount); }
+                                        @Model.Asset.asset_name
+
+                                        <span class="d-block text-danger font-size-nm">@loAmount TL</span>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="tab-content">
+                                <div class="tab-pane fade show active" id="kt_tab_pane_photos" role="tabpanel" aria-labelledby="kt_tab_pane_photos">
+                                    <div id="image-slider" class="splide">
+                                        <div class="splide__track">
+                                            <ul class="splide__list">
+
+
+                                                @foreach (var loImage in Model.Asset.asset_photos.FindAll(x => x.is_thumb == false))
+                                                {
+                                                    <li class="splide__slide">
+                                                        <img src="~/Uploads/@loImage.file_path">
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-12">
+                                    <label class="mt-6 font-weight-bold ">Açıklama:</label>
+                                    <span class="form-control-plaintext font-weight-normal font-size-nm">@Html.Raw(Model.AssetExplanation)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-4">
+
+                    <!--begin::Card-->
+                    <div class="card card-custom">
+                        <!--begin::Header-->
+                        <div class="card-header h-120px py-4">
+                            <div class="card-title">
+                                <h6 class="card-label wv_h6_sm">
+                                    @Model.Asset.address
+                                </h6>
+                            </div>
+                        </div>
+                        <!--end::Header-->
+                        <!--begin::Body-->
+                        <div class="card-body py-4">
+                            <div class="form-group row my-2">
+                                <label class="col-6 col-form-label font-size-xs ">GM No:</label>
+                                <div class="col-6">
+                                    <span class="form-control-plaintext">
+                                        <span class="font-weight-bolder">@Model.Asset.company_prefix@Model.Asset.asset_no</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group row my-2">
+                                <label class="col-6 col-form-label font-size-xs">Niteliği:</label>
+                                <div class="col-6">
+                                    <span class="form-control-plaintext">
+                                        <span class="font-weight-bolder">@Model.Asset.category / @Model.Asset.asset_type </span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group row my-2">
+                                <label class="col-6 col-form-label font-size-xs">Ada:</label>
+                                <div class="col-6">
+                                    <span class="form-control-plaintext">
+                                        <span class="font-weight-bolder">@Model.Asset.block_number</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group row my-2">
+                                <label class="col-6 col-form-label font-size-xs">Parsel:</label>
+                                <div class="col-6">
+                                    <span class="form-control-plaintext">
+                                        <span class="font-weight-bolder">@Model.Asset.plot_number</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group row my-2">
+                                <label class="col-6 col-form-label font-size-xs">Kullanım Alanı:</label>
+                                <div class="col-6">
+                                    <span class="form-control-plaintext">
+                                        <span class="font-weight-bolder">@Model.Asset.size m²</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group row my-2">
+                                <label class="col-6 col-form-label font-size-xs">Hisse:</label>
+                                <div class="col-6">
+                                    <span class="form-control-plaintext">
+                                        <span class="font-weight-bolder">@Model.Asset.share</span>
+                                    </span>
+                                </div>
+                            </div>
+                            @{
+                                var loResult = Model.Asset.is_compatible_for_credit == true ? "Evet" : "Hayır";
+                            }
+                            <div class="form-group row my-2">
+                                <label class="col-6 col-form-label font-size-xs">Krediye Uygunluk:</label>
+                                <div class="col-6">
+                                    <span class="form-control-plaintext">
+                                        <span class="font-weight-bolder">@loResult</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group row my-2">
+                                <label class="col-6 col-form-label font-size-xs">En Yüksek Teklif(TL):</label>
+                                <div class="col-6">
+                                    <span class="form-control-plaintext">
+                                        @{
+                                            var loMaxOffer = Model.Asset.max_offer_amount.HasValue && Model.Asset.max_offer_amount > 0 ? string.Format("{0:N0}", Model.Asset.max_offer_amount) : Model.Asset.max_offer;
+                                        }
+                                        <span class="font-weight-bolder">@loMaxOffer</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group row my-2">
+                                <label class="col-6 col-form-label font-size-xs">Minimum Artış Tutarı(TL):</label>
+                                <div class="col-6">
+                                    <span class="form-control-plaintext">
+                                        <span class="font-weight-bolder">@string.Format("{0:N0}", Model.Asset.minimum_increate_amout)</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group row my-2">
+                                <label class="col-6 col-form-label font-size-xs">Başlangıç Bedeli(TL):</label>
+                                <div class="col-6">
+                                    <span class="form-control-plaintext">
+                                        <span class="font-weight-bolder">@string.Format("{0:N0}", Model.Asset.starting_amount)</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group row my-2">
+                                <label class="col-6 col-form-label font-size-xs">Teminat Bedeli(TL):</label>
+                                <div class="col-6">
+                                    <span class="form-control-plaintext">
+                                        <span class="font-weight-bolder">@string.Format("{0:N0}", Model.Asset.guarantee_amount)</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group row my-2">
+                                <label class="col-6 col-form-label font-size-xs">E-Teklif Bitiş Tarihi:</label>
+                                <div class="col-6">
+                                    <span class="form-control-plaintext">
+                                        <span class="font-weight-bolder">@Model.Asset.last_announcement_date.Value.ToString("dd.MM.yyyy") - @Model.Asset.last_announcement_date.Value.ToShortTimeString()</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <!--end::Body-->
+                        <!--begin::Footer-->
+                        @*<div class="card-footer">
+                            <a href="#" class="btn btn-primary font-weight-bold mr-2" data-toggle="modal" data-target="#kt_modal_offer_info">E-Teklif Ver</a>
+                        </div>*@
+                        <!--end::Footer-->
+                    </div>
+                    <!--end::Card-->
+                </div>
+
+            </div>
             @if (Model.User == null)
             {
-                <div class="row">
-                    <div class="col-xl-6 mb-10">
+                <div class="row mt-3">
+                    <div class="col-xl-6">
                         <!--begin::Callout-->
                         <div class="card card-custom gutter-b bg-light-dark">
                             <div class="card-body">
                                 <div class="d-flex align-items-center justify-content-between p-4 flex-lg-wrap flex-xl-nowrap">
                                     <div class="d-flex flex-column mr-5">
-                                        <a href="#" class="h4 text-dark text-hover-primary mb-5">Beni Arayın</a>
+                                        <a class="h4 text-dark text-hover-primary mb-5">Beni Arayın</a>
                                         <p class="text-dark-50">Tüm sorularınıza hızlıca cevap vermemiz için lütfen geri aranma talep formumuzu doldurunuz.</p>
                                     </div>
                                     <div class="ml-6 ml-lg-0 ml-xxl-6 flex-shrink-0">
@@ -56,17 +226,17 @@
                         <!--end::Callout-->
                     </div>
 
-                    <div class="col-xl-6 mb-10">
+                    <div class="col-xl-6">
                         <!--begin::Callout-->
                         <div class="card card-custom gutter-b bg-light-primary">
                             <div class="card-body">
                                 <div class="d-flex align-items-center justify-content-between p-4 flex-lg-wrap flex-xl-nowrap">
                                     <div class="d-flex flex-column mr-5">
-                                        <a href="#" type="button" class="h4 text-dark text-hover-primary mb-5" data-toggle="modal" data-target="#kt_modal_offer">E-Teklif</a>
+                                        <a  class="h4 text-dark text-hover-primary mb-5">E-Teklif</a>
                                         <p class="text-dark-50">Kolay ve hızlı teklif vermek için, tüm bilgilerinizi doldurun; daha sonra E-Sözleşme’yi online imzalayın. </p>
                                     </div>
                                     <div class="ml-6 ml-lg-0 ml-xxl-6 flex-shrink-0">
-                                        <a href="#" class="btn font-weight-bolder text-uppercase btn-primary py-4 px-6" data-toggle="modal" data-target="#kt_modal_offer">Teklif Ver</a>
+                                        <a href="#" class="btn font-weight-bolder text-uppercase btn-primary py-4 px-6" data-toggle="modal" data-target="#kt_modal_offer_info">Teklif Ver</a>
                                     </div>
                                 </div>
                             </div>
@@ -75,182 +245,70 @@
                     </div>
                 </div>
             }
-            <div class="row mt-3">
-                <div class="col-xl-8">
-                    <div class="card card-custom">
-                        <div class="card-header card-header-tabs-line">
-                            <div class="card-toolbar">
-                                <ul class="nav nav-tabs nav-bold nav-tabs-line">
-                                    <li class="nav-item">
-                                        <a class="nav-link" data-toggle="tab" href="#kt_tab_pane_photos">
-                                            <span class="nav-icon"><i class="flaticon2-photograph"></i></span>
-                                            <span class="nav-text">Fotoğraflar</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="tab-content">
-                                <div class="tab-pane fade show active" id="kt_tab_pane_photos" role="tabpanel" aria-labelledby="kt_tab_pane_photos">
-                                    <div id="image-slider" class="splide">
-                                        <div class="splide__track">
-                                            <ul class="splide__list">
-
-
-                                                @foreach (var loImage in Model.Asset.asset_photos.FindAll(X => X.is_thumb == false))
-                                                {
-                                                    <li class="splide__slide myImageSize">
-                                                        <img src="~/Uploads/@loImage.file_path">
-                                                    </li>
-                                                }
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xl-4">
-
-                    <!--begin::Card-->
-                    <div class="card card-custom myHeight">
-                        <!--begin::Header-->
-                        <div class="card-header h-auto py-4">
-                            <div class="card-title">
-                                <h6 class="card-label">
-                                    Bilgiler
-                                </h6>
-                            </div>
-                        </div>
-                        <!--end::Header-->
-                        <!--begin::Body-->
-                        <div class="card-body py-4">
-                            <div class="form-group row my-2">
-                                <label class="col-4 col-form-label font-size-xs ">Fiyat:</label>
-                                <div class="col-8">
-                                    <span class="form-control-plaintext">
-                                        <span class="font-weight-bolder">@string.Format("{0:C}", Model.Asset.starting_amount)</span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="form-group row my-2 font-size-xs">
-                                <label class="col-4 col-form-label">İl:</label>
-                                <div class="col-8">
-                                    <span class="form-control-plaintext">
-                                        <span class="font-weight-bolder">@Model.Asset.city</span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="form-group row my-2 font-size-xs">
-                                <label class="col-4 col-form-label">İlçe:</label>
-                                <div class="col-8">
-                                    <span class="form-control-plaintext">
-                                        <span class="font-weight-bolder">@Model.Asset.district</span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="form-group row my-2">
-                                <label class="col-4 col-form-label font-size-xs">Adres:</label>
-                                <div class="col-8">
-                                    <span class="form-control-plaintext">
-                                        <span class="font-weight-bolder">@Model.Asset.address</span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="form-group row my-2">
-                                <label class="col-4 col-form-label font-size-xs">Kategori:</label>
-                                <div class="col-8">
-                                    <span class="form-control-plaintext">
-                                        <span class="font-weight-bolder">@Model.Asset.category / @Model.Asset.asset_type  </span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="form-group row my-2">
-                                <label class="col-4 col-form-label font-size-xs">Ada:</label>
-                                <div class="col-8">
-                                    <span class="form-control-plaintext">
-                                        <span class="font-weight-bolder">@Model.Asset.block_number</span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="form-group row my-2">
-                                <label class="col-4 col-form-label font-size-xs">Parsel:</label>
-                                <div class="col-8">
-                                    <span class="form-control-plaintext">
-                                        <span class="font-weight-bolder">@Model.Asset.plot_number</span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="form-group row my-2">
-                                <label class="col-4 col-form-label font-size-xs">Hisse:</label>
-                                <div class="col-8">
-                                    <span class="form-control-plaintext">
-                                        <span class="font-weight-bolder">@Model.Asset.share</span>
-                                    </span>
-                                </div>
-                            </div>
-                            @{
-                                var loResult = Model.Asset.is_compatible_for_credit == true ? "Evet" : "Hayır";
-                            }
-                            <div class="form-group row my-2">
-                                <label class="col-4 col-form-label font-size-xs">Krediye Uygunluk:</label>
-                                <div class="col-8">
-                                    <span class="form-control-plaintext">
-                                        <span class="font-weight-bolder">@loResult</span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="form-group row my-2">
-                                <label class="col-4 col-form-label font-size-xs">Teminat Bedeli:</label>
-                                <div class="col-8">
-                                    <span class="form-control-plaintext">
-                                        <span class="font-weight-bolder">@Model.Asset.guarantee_amount</span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="form-group row my-2">
-                                <label class="col-4 col-form-label font-size-xs">Minimum Artış Tutarı:</label>
-                                <div class="col-8">
-                                    <span class="form-control-plaintext">
-                                        <span class="font-weight-bolder">@Model.Asset.minimum_increate_amout</span>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <!--end::Body-->
-                        <!--begin::Footer-->
-                        @*<div class="card-footer">
-                            <a href="#" class="btn btn-primary font-weight-bold mr-2">Manage company</a>
-                             <a href="#" class="btn btn-light-primary font-weight-bold">Learn more</a>
-                                        </div>*@
-                        <!--end::Footer-->
-                    </div>
-                    <!--end::Card-->
-                </div>
-
-            </div>
-            <div class="row mt-3">
-                <div class="form-group">
-                    <div class="col-12">
-                        <label class="form-group font-weight-bold ">Açıklama:</label>
-                        <span class="form-control-plaintext font-weight-normal font-size-xs">@Model.Asset.explanation</span>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
 
 </div>
 
+<div class="modal fade" id="kt_modal_offer_info" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content" role="document">
+            <div class="modal-header">
+                <h5 class="modal-title font-weight-bolder">Teklif Vermek İstiyorum</h5>
+            </div>
+            <div class="modal-body">
+                <p><em><strong>Winvestate E-Teklif Sistemi</strong>’ne Hoşgeldiniz.</em></p>
+                <ul class="list-unstyled">
+                    <li>
+                        <em>
+                            -Gayrimenkule teklif verebilmek için, form alanlarını eksiksiz ve hatasız bir şekilde doldurmanız gerekir.
+                            Ardından lütfen size SMS ile gelecek kodu girerek cep telefonunuzu doğrulayın.
+                        </em>
+                    </li>
+                    <li><em>-SMS ile gelen linkten <strong>E-Şartname’yi</strong> okuyun ve imzalayın.</em></li>
+                    <li>
+                        <em>
+                            -İlanda belirtilen <strong>Teminat Bedeli’ni</strong> SMS ile bildirilecek banka hesabına gayrimenkul kodu açıklaması ile yatırıp, dekontunu Winvestate’e ulaştırın.
+                        </em>
+                    </li>
+                    <li>
+                        <em>
+                            -E-Teklif Sistemi’ne giriş yaparak teklif vermek için “kullanıcı adınız” ve “şifreniz” SMS ile gönderilecek.
+                        </em>
+                    </li>
+                </ul>
+                <p><em>Teminatı yatıran, şartnameyi dolduran ve tapu devri yapılacak aynı kişi olmalıdır. Aksi halde malik kurum onayı ve muvafakatname imzalanmazsa satış iptal olur. 1. dereceden akrabalar istisnadır.</em></p>
+                <p>E-Teklif Sistemi hakkındaki tüm sorularınız için linkteki dokümanları inceleyebilirsiniz.</p>
+                <p>
+                    <strong>Winvestate E-Teklif Sistemi Bilgi Dokümanı’nı (Sıkça Sorulan Sorular)</strong> incelemek için <a href="https://winvestate.com/sss" target="_blank">tıklayınız.</a>
+                </p>
+                <p>
+                    <strong>Örnek E-Şartname’yi </strong>incelemek için <a href="https://winvestate.com/e-sartname" target="_blank">tıklayınız.</a>
+                </p>
+                <p>
+                    Gayrimenkuller için detaylı bilgi almak için aşağıdaki numaradan Winvestate’i arayabilirsiniz.
+                    Tel: 0216 290 54 31
+                </p>
+                <p>
+                    <strong>Lütfen Teklif Ver butonuna basın ve E-Teklif Sistemi Başvurusu İçin Formu Doldurun.</strong> 
+                </p>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                <button type="button" class="btn btn-primary" id="" data-toggle="modal" data-target="#kt_modal_offer">Teklif Ver</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div class="modal fade" id="kt_modal_offer" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content" role="document">
             <div class="modal-header">
-                <h5 class="modal-title font-weight-bolder">Başvuru Formu</h5>
+                <h5 class="modal-title font-weight-bolder">Teklif Formu</h5>
             </div>
             <div class="modal-body">
                 <form class="form form--label-right" id="newCustomerValidationForm">
@@ -274,8 +332,8 @@
                     <div class="form-group row company">
                         <label class="col-lg-2 col-form-label">Firma Ünvanı:</label>
                         <div class="col-lg-10">
-                            <input class="form-control wv_upper" id="company_name" type="text" name="company_name" placeholder="" maxlength="50"
-                                   data-fv-string-length___message="Firma ünvanı 50 karakterden fazla olamaz." />
+                            <input class="form-control wv_upper" id="company_name" type="text" name="company_name" placeholder="" maxlength="150"
+                                   data-fv-string-length___message="Firma ünvanı 150 karakterden fazla olamaz." />
                         </div>
                     </div>
                     <div class="form-group row company">
@@ -317,8 +375,8 @@
                             @*<span class="form-text text-primary">Kimlik numaranız sisteme kayıt edilmez, yalnızca doğrulama işlemleri için kullanılır.</span>*@
                         </div>
                         <label class="col-lg-2 col-form-label">Doğum Tarihi:</label>
-                        <div class="col-lg-4" id="dtpicker">
-                            <input class="form-control" id="birthdate" type="date" name="birthdate" />
+                        <div class="col-lg-4">
+                            <input class="form-control date" id="birth_date" type="text" name="birthdate" />
                             @*<span class="form-text text-primary">Doğum tarihiniz sisteme kayıt edilmez, yalnızca doğrulama işlemleri için kullanılır.</span>*@
                         </div>
                     </div>
@@ -337,22 +395,25 @@
                     <div class="form-group row">
                         <label class="col-lg-2 col-form-label">Adres:</label>
                         <div class="col-lg-10">
-                            <textarea class="form-control" rows="3" maxlength="255"
+                            <textarea class="form-control" rows="3" maxlength="255" name="address" id="address"
                                       data-fv-string-length___message="Adres 255 karakterden fazla olamaz"></textarea>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <div class="col-lg-2">
-                            <span class="switch switch-outline switch-icon switch-danger">
-                                <label>
-                                    <input class="mr-2" type="checkbox" name="checkKvkk" id="checkKvkk" />
-                                    <span></span>
-                                </label>
-                            </span>
+                        <div class="checkbox-inline">
+                            <label class="checkbox checkbox-success font-weight-boldest">
+                                <input type="checkbox" name="checkKvkk" id="checkKvkk"/>
+                                <span></span>
+                                Kişisel Verileri Koruma Kanunu aydınlatma metnini okudum, kabul ediyorum
+                            </label>
                         </div>
-                        <p class="col-10 font-weight-boldest"><u>Kişisel Verileri Koruma Kanunu aydınlatma metnini okudum, kabul ediyorum.</u></p>
+                        @*<div class="col-lg-2">
+                            <input data-switch="true" type="checkbox" data-on-text="✓" data-handle-width="10" data-off-text="X" data-on-color="success" data-off-color="danger" name="checkKvkk" id="checkKvkk"/>
+                        </div>
+                        <p class="col-9 font-weight-boldest"><u>Kişisel Verileri Koruma Kanunu aydınlatma metnini okudum, kabul ediyorum.</u></p>*@
 
                     </div>
+                    <div class="g-recaptcha" data-sitekey="6LfrSTsaAAAAADuaeF0wjwS8_gkbR_rtilPIryL0" data-callback="correctCaptcha"></div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -393,6 +454,7 @@
                             @*<span class="form-text text-primary">Girmiş olduğunuz telefon numarasına doğrulama için kod gönderimi sağlanacaktır.</span>*@
                         </div>
                     </div>
+                    <div class="g-recaptcha" data-sitekey="6LfrSTsaAAAAADuaeF0wjwS8_gkbR_rtilPIryL0" data-callback="correctCaptcha"></div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -407,14 +469,6 @@
 
 @section Scripts {
     <script src="~/assets/js/Asset/AssetDetail.js"></script>
-    <script src="https://www.google.com/recaptcha/api.js?render=6LfoijYaAAAAAI7hFmYWzOudX3-8FEGEn_wRdYv4"></script>
-    <script>
-        grecaptcha.ready(function() {
-            grecaptcha.execute('6LfoijYaAAAAAI7hFmYWzOudX3-8FEGEn_wRdYv4', { action: 'contact' }).then(function (token) {
-                $("#captchaInput").val(token);
-            });
-        });
-    </script>
     <script>
         jQuery(document).ready(function() {
             SELECTED_ASSET = '@Model.Asset.row_guid';
@@ -423,10 +477,7 @@
                 new Splide('#image-slider',
                     {
                         'autoplay': true,
-                        'cover': true,
-                        'autoWidth': true,
-                        'rewind': true,
-                        'heightRatio': 0.5,
+                        'rewind':true
                     }).mount();
             }
         });

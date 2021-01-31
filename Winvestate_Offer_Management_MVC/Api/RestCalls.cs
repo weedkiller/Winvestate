@@ -10,12 +10,13 @@ using Winvestate_Offer_Management_Models.Database;
 using Winvestate_Offer_Management_Models.Database.Winvestate;
 using Winvestate_Offer_Management_Models.Mespact;
 using Winvestate_Offer_Management_MVC.Classes;
+using Winvestate_Offer_Management_MVC.Models;
 
 namespace Winvestate_Offer_Management_MVC.Api
 {
     public class RestCalls
     {
-       
+
 
         public static string GetToken()
         {
@@ -26,7 +27,7 @@ namespace Winvestate_Offer_Management_MVC.Api
 
             var loMyBody = new
             {
-                api_key = "LJK1231MVFVNJNJ212312493123VNSDA5158898A",
+                api_key = Common.ApiKey,
                 language = "tr",
             };
 
@@ -161,7 +162,7 @@ namespace Winvestate_Offer_Management_MVC.Api
         public static AssetDto SaveAsset(AssetDto pAsset, string pToken)
         {
             var client = new RestClient(Common.ApiUrl + "/Asset");
-            var request = pAsset.id > 0 ? new RestRequest(Method.PUT) : new RestRequest(Method.POST);   
+            var request = pAsset.id > 0 ? new RestRequest(Method.PUT) : new RestRequest(Method.POST);
             request.AddHeader("Content-Type", "application/json");
             request.RequestFormat = DataFormat.Json;
             request.AddHeader("Authorization", "Bearer " + pToken);
@@ -182,9 +183,9 @@ namespace Winvestate_Offer_Management_MVC.Api
             return loBank;
         }
 
-        public static AssetDto GetAssetById(string pId,string pToken)
+        public static AssetDto GetAssetById(string pId, string pToken)
         {
-            var client = new RestClient(Common.ApiUrl + "/Asset/"+pId);
+            var client = new RestClient(Common.ApiUrl + "/Asset/" + pId);
             var request = new RestRequest(Method.GET);
             request.AddHeader("Content-Type", "application/json");
             request.RequestFormat = DataFormat.Json;
@@ -221,6 +222,30 @@ namespace Winvestate_Offer_Management_MVC.Api
             if (loGenericResult != null && loGenericResult.Code == 200 && loGenericResult.Status.ToLower() == "ok")
             {
                 loCustomer = JsonConvert.DeserializeObject<CustomerDto>(loGenericResult.Data.ToString());
+                return loCustomer;
+            }
+
+            loCustomer.message = loGenericResult?.Message;
+            return loCustomer;
+        }
+
+        public static CallbackRecordDto SaveNewCallback(CallbackRecaptcha pCallback)
+        {
+            var client = new RestClient(Common.ApiUrl + "/Customer/Callback");
+            var request = new RestRequest(Method.POST);
+            request.AddHeader("Content-Type", "application/json");
+            request.RequestFormat = DataFormat.Json;
+            request.AddHeader("Authorization", "Bearer " + GetToken());
+            var loModel = JsonConvert.SerializeObject(pCallback);
+            request.AddJsonBody(loModel);
+            //var responseData = client.Execute(request).Content;
+            var result = client.Execute(request);
+            var loGenericResult = JsonConvert.DeserializeObject<GenericResponseModel>(result.Content);
+            var loCustomer = new CallbackRecordDto();
+
+            if (loGenericResult != null && loGenericResult.Code == 200 && loGenericResult.Status.ToLower() == "ok")
+            {
+                loCustomer = JsonConvert.DeserializeObject<CallbackRecordDto>(loGenericResult.Data.ToString());
                 return loCustomer;
             }
 
@@ -286,6 +311,69 @@ namespace Winvestate_Offer_Management_MVC.Api
             if (loGenericResult != null && loGenericResult.Code == 200 && loGenericResult.Status.ToLower() == "ok")
             {
                 loOffers = JsonConvert.DeserializeObject<List<OfferDto>>(loGenericResult.Data.ToString());
+                return loOffers;
+            }
+
+            return loOffers;
+        }
+
+        public static List<OfferDto> GetActiveOffers(string pToken)
+        {
+            var client = new RestClient(Common.ApiUrl + "/Offer/Active");
+            var request = new RestRequest(Method.GET);
+            request.AddHeader("Content-Type", "application/json");
+            request.RequestFormat = DataFormat.Json;
+            request.AddHeader("Authorization", "Bearer " + pToken);
+            //var responseData = client.Execute(request).Content;
+            var result = client.Execute(request);
+            var loGenericResult = JsonConvert.DeserializeObject<GenericResponseModel>(result.Content);
+            var loOffers = new List<OfferDto>();
+
+            if (loGenericResult != null && loGenericResult.Code == 200 && loGenericResult.Status.ToLower() == "ok")
+            {
+                loOffers = JsonConvert.DeserializeObject<List<OfferDto>>(loGenericResult.Data.ToString());
+                return loOffers;
+            }
+
+            return loOffers;
+        }
+
+        public static List<CallbackRecordDto> GetNewCallbackRecords(string pToken)
+        {
+            var client = new RestClient(Common.ApiUrl + "/Customer/ActiveCallback");
+            var request = new RestRequest(Method.GET);
+            request.AddHeader("Content-Type", "application/json");
+            request.RequestFormat = DataFormat.Json;
+            request.AddHeader("Authorization", "Bearer " + pToken);
+            //var responseData = client.Execute(request).Content;
+            var result = client.Execute(request);
+            var loGenericResult = JsonConvert.DeserializeObject<GenericResponseModel>(result.Content);
+            var loCallbackRecords = new List<CallbackRecordDto>();
+
+            if (loGenericResult != null && loGenericResult.Code == 200 && loGenericResult.Status.ToLower() == "ok")
+            {
+                loCallbackRecords = JsonConvert.DeserializeObject<List<CallbackRecordDto>>(loGenericResult.Data.ToString());
+                return loCallbackRecords;
+            }
+
+            return loCallbackRecords;
+        }
+
+        public static List<AssetDto> GetOfferedAssets(string pToken)
+        {
+            var client = new RestClient(Common.ApiUrl + "/Asset/Offered");
+            var request = new RestRequest(Method.GET);
+            request.AddHeader("Content-Type", "application/json");
+            request.RequestFormat = DataFormat.Json;
+            request.AddHeader("Authorization", "Bearer " + pToken);
+            //var responseData = client.Execute(request).Content;
+            var result = client.Execute(request);
+            var loGenericResult = JsonConvert.DeserializeObject<GenericResponseModel>(result.Content);
+            var loOffers = new List<AssetDto>();
+
+            if (loGenericResult != null && loGenericResult.Code == 200 && loGenericResult.Status.ToLower() == "ok")
+            {
+                loOffers = JsonConvert.DeserializeObject<List<AssetDto>>(loGenericResult.Data.ToString());
                 return loOffers;
             }
 

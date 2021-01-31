@@ -185,13 +185,13 @@ namespace Winvestate_Offer_Management_API.Middleware
                 QueryString = queryString,
                 RequestBody = requestBody,
                 ResponseBody = responseBody,
-                ApplicationName = "FibimiTestAPI",
+                ApplicationName = "WinvestateTest",
                 ApiCaller = pUser,
                 IpAddress = pIpAdress
             };
 
 #if PROD
-            loApiLog.ApplicationName = "MesPactApiProd";
+            loApiLog.ApplicationName = "WinvestateProd";
 #endif
 
             _ = Task.Run(() => WriteLogs(loApiLog));

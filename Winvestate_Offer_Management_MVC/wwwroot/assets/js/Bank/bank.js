@@ -6,6 +6,12 @@ var loMyProcess;
 $(document).ready(function () {
     setBankValidation();
 
+    $('#mespact_agreement_uuid').select2({
+        placeholder: "Sözleşme Seçiniz"
+    });
+
+    $('#mespact_agreement_uuid').val(null).trigger("change");
+
     $(".addBank").on('click',
         function (e) {
             e.preventDefault();
@@ -24,11 +30,40 @@ $(document).ready(function () {
 
     $(document).on("click",
         ".deleteBank",
-        function () {
+        function (e) {
+            e.preventDefault();
             var loId = $(this).data("id");
-            loSelectedBank = loMyBankList.find(x => x.row_guid === loId);
-            loSelectedBank.is_deleted = true;
-            SendBankToServer(loSelectedBank, $(this));
+
+            Swal.fire({
+                title: "Emin misiniz?",
+                text: "Seçtiğiniz kurum silinecek!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Evet, sil!",
+                cancelButtonText: "İptal Et"
+            }).then(function (result) {
+                if (result.value) {
+                    loSelectedBank = loMyBankList.find(x => x.row_guid === loId);
+                    loSelectedBank.is_deleted = true;
+                    SendBankToServer(loSelectedBank, $(this));
+                }
+            });
+           
+        });
+
+    $(document).on("click",
+        "#togglePassword",
+        function (e) {
+            e.preventDefault();
+            if ($("#authorized_password").hasClass("password")) {
+                $("#authorized_password").removeClass("password");
+                $("#authorized_password").addClass("text");
+                $("#authorized_password").attr('type', 'text');
+            } else {
+                $("#authorized_password").addClass("password");
+                $("#authorized_password").removeClass("text");
+                $("#authorized_password").attr('type', 'password');
+            }
         });
 
     $(document).on("click",
@@ -50,9 +85,23 @@ $(document).ready(function () {
     $('#kt_modal_add_bank').on('show.bs.modal',
         function (e) {
             if (loMyProcess === "update") {
-                $("#bank_name").val(loSelectedBank.name);
+                $("#name").val(loSelectedBank.name);
+                $("#authorized_name").val(loSelectedBank.authorized_name);
+                $("#authorized_surname").val(loSelectedBank.authorized_surname);
+                $("#authorized_phone").val(loSelectedBank.authorized_phone);
+                $("#authorized_mail").val(loSelectedBank.authorized_mail);
+                $('#mespact_agreement_uuid').val(loSelectedBank.mespact_agreement_uuid).trigger("change");
+                $("#authorized_password").val(loSelectedBank.authorized_password);
+                $("#company_prefix").val(loSelectedBank.company_prefix);
+                $('input[name="sale_in_company"]').val(loSelectedBank.sale_in_company);
             } else {
-                $("#bank_name").val("");
+                $("#name").val("");
+                $("#authorized_name").val("");
+                $("#authorized_surname").val("");
+                $("#authorized_phone").val("");
+                $("#authorized_mail").val("");
+                $("#authorized_password").val("");
+                $("#company_prefix").val("");
             }
         });
 });
@@ -130,9 +179,15 @@ function SaveBank() {
     if (loMyProcess == "update") {
         loMyBank.id = loSelectedBank.id;
         loMyBank.row_guid = loSelectedBank.row_guid;
-    } 
 
+        if (loSelectedBank.password != $("#authorized_password").val()) {
+            loMyBank.authorized_password = MD5($("#authorized_password").val());
+        }
+    } else {
+        loMyBank.authorized_password = MD5($("#authorized_password").val());
+    }
 
+    loMyBank.sale_in_company = $('input[name="sale_in_company"]:checked').val() == 'true';
     SendBankToServer(loMyBank, $("#saveBank"));
 }
 
@@ -146,6 +201,41 @@ function setBankValidation() {
                     validators: {
                         notEmpty: {
                             message: 'İsim girilmeden işleme devam edilemez.'
+                        }
+                    }
+                },
+                mespact_agreement_uuid: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Sözleşme seçilmeden işleme devam edilemez.'
+                        }
+                    }
+                },
+                authorized_name: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Yetkili adı girilmeden işleme devam edilemez.'
+                        }
+                    }
+                },
+                authorized_surname: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Yetkili soyadı girilmeden işleme devam edilemez.'
+                        }
+                    }
+                },
+                authorized_mail: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Yetkili mail adresi girilmeden işleme devam edilemez.'
+                        }
+                    }
+                },
+                authorized_password: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Yetkili şifresi girilmeden işleme devam edilemez.'
                         }
                     }
                 }
@@ -214,9 +304,31 @@ var KTDatatableBank= function () {
             // columns definition
             columns: [
                 {
-                    field: 'name',
+                    field: 'bank_name',
                     title: 'Adı',
-                    width: 'auto'
+                    width: '250'
+                },
+                {
+                    field: 'name_aut',
+                    title: 'Yetkili Kişi',
+                    width: 'auto',
+                    template: function (row) {
+                        return row.authorized_name + " " + row.authorized_surname;
+                    }
+                },
+                {
+                    field: 'surname_aut',
+                    title: 'Yetkili İletişim',
+                    template: function (row) {
+                        var output = '<div class="d-flex align-items-center detail" data-id=' + row.authorized_phone + '>\
+                                                <div class="ml-4">\
+                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ row.authorized_phone + '</div>\
+                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ row.authorized_second_phone + '-' + row.authorized_dial_code+'</div>\
+                                                    <div class="text-muted">' + row.authorized_mail + '</div>\
+                                                </div>\
+                                            </div>';
+                        return output;
+                    }
                 },
                 {
                     field: 'Actions',

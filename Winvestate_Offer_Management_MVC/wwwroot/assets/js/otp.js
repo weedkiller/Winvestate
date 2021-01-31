@@ -115,11 +115,11 @@ function sendOtp(pObj, pToken, btn, pValidate, pOtpUrl, pValidateUrl,pToClose) {
                     }
                 });
             } else {
+                _isOtpSend = true;
                 if (pToClose) {
                     pToClose.modal("hide");
                 }
                 $("#kt_modal_otp").modal("show");
-                _isOtpSend = true;
                 var x = setInterval(function () {
                     _otpSecond -= 1;
                     $("#secondSms").html("Bir sonraki sms için kalan süre " + _otpSecond + " saniye..");

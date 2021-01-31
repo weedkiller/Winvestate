@@ -36,7 +36,14 @@ namespace Winvestate_Offer_Management_MVC.Controllers
         public IActionResult Dashboard()
         {
             var loUser = HttpContext.Session.GetObject<UserDto>("User");
-            return View(new HomeViewModel { User = loUser, Offers = RestCalls.GetAllOffers(loUser.token) });
+            loUser.active_offers = RestCalls.GetActiveOffers(loUser.token);
+
+            if (loUser.user_type < 3)
+            {
+                loUser.offered_assets = RestCalls.GetOfferedAssets(loUser.token);
+            }
+
+            return View(new HomeViewModel { User = loUser, Offers = RestCalls.GetAllOffers(loUser.token), ActiveCallbackRecords = RestCalls.GetNewCallbackRecords(loUser.token) });
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

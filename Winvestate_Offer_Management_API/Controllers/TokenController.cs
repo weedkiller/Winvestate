@@ -28,7 +28,7 @@ namespace Winvestate_Offer_Management_API.Controllers
                 user.language = "tr";
             }
 
-            var loToken = HelperMethods.GenerateToken(loUserId.ToString());
+            var loToken = HelperMethods.GenerateToken(loUserId.ToString(),0);
             var loGeneratedToken = new GeneratedToken
             {
                 token = loToken,

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Winvestate_Offer_Management_API.Api;
 using Winvestate_Offer_Management_API.Classes;
 using Winvestate_Offer_Management_API.Database;
@@ -17,6 +18,7 @@ namespace Winvestate_Offer_Management_API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
+    [EnableCors("AllowOrigin")]
     public class OfferController : ControllerBase
     {
         [HttpGet("Summary")]
@@ -37,7 +39,52 @@ namespace Winvestate_Offer_Management_API.Controllers
             return loGenericResponse;
         }
 
-        [HttpPost("Confirm")]
+        [HttpGet("Active")]
+        public ActionResult<GenericResponseModel> GetActiveOffers()
+        {
+            var loUserId = HelperMethods.GetApiUserIdFromToken(HttpContext.User.Identity);
+            var loUserType = HelperMethods.GetUserTypeFromToken(HttpContext.User.Identity);
+            var loGenericResponse = new GenericResponseModel
+            {
+                Code = -1,
+                Status = "Fail"
+            };
+
+            var loResult = new List<OfferDto>();
+
+            if (loUserType == 1 || loUserType == 2)
+            {
+                loResult = GetData.GetAllActiveOffers();
+                foreach (var offerDto in loResult)
+                {
+                    offerDto.history = GetData.GetOfferHistoryByAssetId(offerDto.asset_uuid.ToString());
+                }
+            }
+            else if (loUserType == 3)
+            {
+                loResult = GetData.GetActiveOfferByCustomerId(loUserId.ToString());
+                foreach (var offerDto in loResult)
+                {
+                    offerDto.history = GetData.GetOfferHistoryByOfferId(offerDto.row_guid.ToString());
+                }
+            }
+            else if (loUserType == 4)
+            {
+                loResult = GetData.GetActiveOffersByBankId(loUserId.ToString());
+                foreach (var offerDto in loResult)
+                {
+                    offerDto.history = GetData.GetOfferHistoryByAssetId(offerDto.asset_uuid.ToString());
+                }
+            }
+
+            loGenericResponse.Code = 200;
+            loGenericResponse.Status = "OK";
+            loGenericResponse.Data = loResult;
+
+            return loGenericResponse;
+        }
+
+        [HttpPost("ConfirmSubmit")]
         public ActionResult<GenericResponseModel> ConfirmSubmit([FromBody] OfferDto pOffer)
         {
             var loUserId = HelperMethods.GetApiUserIdFromToken(HttpContext.User.Identity);
@@ -64,24 +111,112 @@ namespace Winvestate_Offer_Management_API.Controllers
             }
 
             loResult.offer_state_type_system_type_id = (int)OfferStateTypes.WaitingOffer;
-            loResult.row_update_date=DateTime.Now;
+            loResult.row_update_date = DateTime.Now;
             loResult.row_update_user = loUserId;
 
             //Crud<Offer>.Update(loResult, out _);
 
-            var loPassword = HelperMethods.RandomOtp();
-            loCustomer.password = HelperMethods.Md5OfString(loPassword);
-            loCustomer.row_update_date = loResult.row_update_date;
-            loCustomer.row_update_user = loUserId;
+            var loPassword = "";
+            var loMessageContent = "";
+            if (string.IsNullOrEmpty(loCustomer.password))
+            {
+                loPassword = HelperMethods.RandomOtp();
+                loMessageContent =
+                    string.Format(
+                        "Sayın müşterimiz teklif vermek istediğiniz gayrimenkule ait başvurunuz onaylanmıştır. Teklif vermek için {0} adresini ziyaret edebilirsiniz. Sisteme giriş için kullanıcı adınız: kimlik numaranız, şifreniz: {1}'dir. Mesaj tarihi: {2}", Common.CustomerUrl, loPassword, DateTime.Now);
+
+                loCustomer.password = HelperMethods.Md5OfString(loPassword);
+                loCustomer.row_update_date = loResult.row_update_date;
+                loCustomer.row_update_user = loUserId;
+                Crud<Customer>.Update(loCustomer, out _);
+            }
+            else
+            {
+                loMessageContent =
+                    string.Format(
+                        "Sayın müşterimiz teklif vermek istediğiniz gayrimenkule ait başvurunuz onaylanmıştır. Teklif vermek için {0} adresini ziyaret edebilirsiniz. Sisteme giriş için kullanıcı adınız olarak kimlik numaranızı ve daha önce oluşturduğunuz şifreyi kullanabilirsiniz. Mesaj tarihi: {1}", Common.CustomerUrl, DateTime.Now);
+
+            }
 
             Crud<Offer>.Update(loResult, out _);
-            Crud<Customer>.Update(loCustomer, out _);
-
-            var loMessageContent =
-                string.Format(
-                    "Sayın müşterimiz teklif vermek istediğiniz gayrimenkule ait başvurunuz onaylaşnmıştır. Teklif vermek için {0} adresini ziyaret edebilirsiniz. Sisteme giriş için kullanıcı adınız kimlik numaranız, şifreniz {1}'dir. Mesaj tarihi: {2}","https://winvestate.mesnetbilisim.com.tr/Account/Login",loPassword,DateTime.Now);
 
             RestCalls.SendSms(loMessageContent, loCustomer.phone);
+
+            loGenericResponse.Code = 200;
+            loGenericResponse.Status = "OK";
+            loGenericResponse.Data = loResult;
+
+            return loGenericResponse;
+        }
+
+        [HttpPost("New")]
+        public ActionResult<GenericResponseModel> NewOffer([FromBody] OfferHistory pOfferHistory)
+        {
+            var loUserId = HelperMethods.GetApiUserIdFromToken(HttpContext.User.Identity);
+            var loGenericResponse = new GenericResponseModel
+            {
+                Code = -1,
+                Status = "Fail"
+            };
+
+            var loOffer = GetData.GetOfferById(pOfferHistory.offer_uuid.ToString());
+
+            if (loOffer == null)
+            {
+                loGenericResponse.Message = "Kayıtlı teklif bulunamadı!";
+                return loGenericResponse;
+            }
+
+            if (loOffer.price >= pOfferHistory.amount)
+            {
+                loGenericResponse.Message = "Lütfen güncel tekflinizden daha yüksek bir teklif veriniz.";
+                return loGenericResponse;
+            }
+
+            var loAsset = GetData.GetAssetById(loOffer.asset_uuid.ToString());
+
+            if (!loAsset.max_offer_amount.HasValue || pOfferHistory.amount >= loAsset.max_offer_amount + loAsset.minimum_increate_amout.Value)
+            {
+                loOffer.price = pOfferHistory.amount;
+                loAsset.max_offer_amount = pOfferHistory.amount;
+                pOfferHistory.row_create_date = DateTime.Now;
+                loAsset.row_update_date = pOfferHistory.row_create_date;
+                loOffer.row_update_date = pOfferHistory.row_create_date;
+
+
+                var loId = Crud<OfferHistory>.InsertNewOffer(pOfferHistory, loOffer, loAsset);
+
+                if (loId > 0)
+                {
+                    Task.Run(() => HelperMethods.SendNewOfferInformation(pOfferHistory.offer_uuid));
+                    loGenericResponse.Code = 200;
+                    loGenericResponse.Status = "OK";
+                }
+                else
+                {
+                    loGenericResponse.Message = "Teklif kaydı esnasında bir problem oluştu. Lütfen tekrar deneyiniz.";
+                }
+
+                return loGenericResponse;
+            }
+
+            loGenericResponse.Code = -2;
+            loGenericResponse.Message = "Sizden önce teklif yükseltilmiş. Lütfen teklifinizi gözden geçiriniz.";
+            return loGenericResponse;
+        }
+
+        [HttpGet("List/{pId}")]
+        public ActionResult<GenericResponseModel> GetAssetOfferList(string pId)
+        {
+            var loUserId = HelperMethods.GetApiUserIdFromToken(HttpContext.User.Identity);
+            var loUserType = HelperMethods.GetUserTypeFromToken(HttpContext.User.Identity);
+            var loGenericResponse = new GenericResponseModel
+            {
+                Code = -1,
+                Status = "Fail"
+            };
+
+            var loResult = GetData.GetOfferHistoryByAssetId(pId).OrderByDescending(x => x.row_create_date);
 
             loGenericResponse.Code = 200;
             loGenericResponse.Status = "OK";
@@ -93,7 +228,7 @@ namespace Winvestate_Offer_Management_API.Controllers
         [HttpPost("Resend")]
         public ActionResult<GenericResponseModel> ResendAgreementLink([FromBody] OfferDto pOffer)
         {
-           return RestCalls.SendAgreementLinkAgain(pOffer.mespact_session_uuid);
+            return RestCalls.SendAgreementLinkAgain(pOffer.mespact_session_uuid);
         }
     }
 }

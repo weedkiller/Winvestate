@@ -30,4 +30,10 @@
     <ProjectReference Include="..\Winvestate_Offer_Management_Models\Winvestate_Offer_Management_Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="winvestate_new_cr_mail.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

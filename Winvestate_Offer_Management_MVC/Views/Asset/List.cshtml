@@ -92,16 +92,12 @@
 
 @section Scripts {
     <script src="~/assets/js/Asset/AssetForList.js"></script>
+    <script src="~/assets/js/Asset/Asset.js"></script>
     <script>
 
         jQuery(document).ready(function () {
             var loUser = JSON.parse('@Html.Raw(Json.Serialize(Model.User))');
             AssetListDT.init();
         });
-
-
-
-
-
     </script>
 }

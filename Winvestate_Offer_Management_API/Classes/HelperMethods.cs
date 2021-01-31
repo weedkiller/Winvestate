@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -50,6 +51,20 @@ namespace Winvestate_Offer_Management_API.Classes
             return loUserId;
         }
 
+        public static int GetUserTypeFromToken(System.Security.Principal.IIdentity pIdentity)
+        {
+            var loUserType = -1;
+
+            if (!(pIdentity is ClaimsIdentity identity)) return loUserType;
+
+            var loTemp = identity.Claims.FirstOrDefault(x => x.Type.ToLower().Contains("gender"))?.Value;
+            if (!int.TryParse(loTemp, out loUserType))
+            {
+                loUserType = -1;
+            }
+            return loUserType;
+        }
+
         public static string SerializePhone(string pPhone)
         {
             if (string.IsNullOrEmpty(pPhone))
@@ -72,11 +87,12 @@ namespace Winvestate_Offer_Management_API.Classes
             return "+90" + pPhone;
         }
 
-        public static string GenerateToken(string pUserId)
+        public static string GenerateToken(string pUserId, int pUserType)
         {
             var someClaims = new[]{
                 new Claim(JwtRegisteredClaimNames.NameId,pUserId),
                 new Claim(JwtRegisteredClaimNames.Birthdate,DateTime.Now.ToShortDateString()),
+                new Claim(JwtRegisteredClaimNames.Gender,pUserType.ToString()),
             };
 
             var token = new JwtSecurityToken
@@ -269,12 +285,13 @@ namespace Winvestate_Offer_Management_API.Classes
         public static void SendToDocumentToSign(Customer pCustomer, Offer pOffer)
         {
             var loAsset = GetData.GetAssetById(pOffer.asset_uuid.ToString());
+            var loCompany = GetData.GetBankById(loAsset.bank_guid.ToString());
             var loSendToSignModel = new SendToSign
             {
                 document_to_sign = new DocumentToSign
                 {
                     participant_guid = Common.MespactWinvestateUser,
-                    document_type_guid = loAsset.agreement_guid.ToString(),
+                    document_type_guid = loCompany.mespact_agreement_uuid.ToString(),
                     erp_id = pOffer.agreement_uuid.ToString(),
                     participant_callback_url = Common.CallbackUrl
                 },
@@ -289,7 +306,7 @@ namespace Winvestate_Offer_Management_API.Classes
                 mail = pCustomer.mail,
                 phone_number = SerializePhone(pCustomer.phone),
                 user_type_system_type_id = pCustomer.user_type_system_type_id == 2 ? 1 : 4,
-                document_template_key = ((int)ThkAgreement.FieldsAgreementv3.Imzaci).ToString()
+                document_template_key = ((int)ThkAgreement.ThkSatisSartname.Imzaci).ToString()
             };
             loSendToSignModel.document_sign_flows.Add(loSignFlow);
 
@@ -304,42 +321,60 @@ namespace Winvestate_Offer_Management_API.Classes
             var loDocumentTemplateKey7 = new DocumentTemplate();
             var loDocumentTemplateKey8 = new DocumentTemplate();
             var loDocumentTemplateKey9 = new DocumentTemplate();
+            var loDocumentTemplateKey10 = new DocumentTemplate();
+            var loDocumentTemplateKey11 = new DocumentTemplate();
+            var loDocumentTemplateKey12 = new DocumentTemplate();
 
-            loDocumentTemplateKey1.document_template_key = ((int)ThkAgreement.FieldsAgreementv3.Il).ToString();
-            loDocumentTemplateKey1.document_template_value = loAsset.city;
+            loDocumentTemplateKey1.document_template_key = ((int)ThkAgreement.ThkSatisSartname.Tarih).ToString();
+            loDocumentTemplateKey1.document_template_value = DateTime.Now.ToString("dd.MM.yyyy");
             loDocumentTemplateKeys.Add(loDocumentTemplateKey1);
 
-            loDocumentTemplateKey2.document_template_key = ((int)ThkAgreement.FieldsAgreementv3.Ilce).ToString();
-            loDocumentTemplateKey2.document_template_value = loAsset.district;
+            loDocumentTemplateKey2.document_template_key = ((int)ThkAgreement.ThkSatisSartname.GmNo).ToString();
+            loDocumentTemplateKey2.document_template_value = loAsset.company_prefix+loAsset.asset_no;
             loDocumentTemplateKeys.Add(loDocumentTemplateKey2);
 
-            loDocumentTemplateKey3.document_template_key = ((int)ThkAgreement.FieldsAgreementv3.Adres).ToString();
-            loDocumentTemplateKey3.document_template_value = loAsset.address;
+            loDocumentTemplateKey3.document_template_key = ((int)ThkAgreement.ThkSatisSartname.Il).ToString();
+            loDocumentTemplateKey3.document_template_value = loAsset.city;
             loDocumentTemplateKeys.Add(loDocumentTemplateKey3);
 
-            loDocumentTemplateKey4.document_template_key = ((int)ThkAgreement.FieldsAgreementv3.Ada).ToString();
-            loDocumentTemplateKey4.document_template_value = loAsset.block_number;
+            loDocumentTemplateKey4.document_template_key = ((int)ThkAgreement.ThkSatisSartname.Ilce).ToString();
+            loDocumentTemplateKey4.document_template_value = loAsset.district;
             loDocumentTemplateKeys.Add(loDocumentTemplateKey4);
 
-            loDocumentTemplateKey5.document_template_key = ((int)ThkAgreement.FieldsAgreementv3.Parsel).ToString();
-            loDocumentTemplateKey5.document_template_value = loAsset.plot_number;
+            loDocumentTemplateKey5.document_template_key = ((int)ThkAgreement.ThkSatisSartname.Ada).ToString();
+            loDocumentTemplateKey5.document_template_value = loAsset.block_number;
             loDocumentTemplateKeys.Add(loDocumentTemplateKey5);
 
-            loDocumentTemplateKey6.document_template_key = ((int)ThkAgreement.FieldsAgreementv3.Yuzolcum).ToString();
-            loDocumentTemplateKey6.document_template_value = loAsset.size.Value.ToString(CultureInfo.InvariantCulture) + "m2";
+            loDocumentTemplateKey6.document_template_key = ((int)ThkAgreement.ThkSatisSartname.Parsel).ToString();
+            loDocumentTemplateKey6.document_template_value = loAsset.plot_number;
             loDocumentTemplateKeys.Add(loDocumentTemplateKey6);
 
-            loDocumentTemplateKey7.document_template_key = ((int)ThkAgreement.FieldsAgreementv3.TasinmazNitelik).ToString();
-            loDocumentTemplateKey7.document_template_value = "";
+            loDocumentTemplateKey7.document_template_key = ((int)ThkAgreement.ThkSatisSartname.Adres).ToString();
+            loDocumentTemplateKey7.document_template_value = loAsset.address;
             loDocumentTemplateKeys.Add(loDocumentTemplateKey7);
 
-            loDocumentTemplateKey8.document_template_key = ((int)ThkAgreement.FieldsAgreementv3.BagimsizBolumNo).ToString();
-            loDocumentTemplateKey5.document_template_value = "";
+            loDocumentTemplateKey8.document_template_key = ((int)ThkAgreement.ThkSatisSartname.Adsoyad).ToString();
+            loDocumentTemplateKey8.document_template_value = string.IsNullOrEmpty(pCustomer.company_name)
+                ? pCustomer.customer_name + " " + pCustomer.customer_surname
+                : pCustomer.company_name;
             loDocumentTemplateKeys.Add(loDocumentTemplateKey8);
 
-            loDocumentTemplateKey9.document_template_key = ((int)ThkAgreement.FieldsAgreementv3.Kat).ToString();
-            loDocumentTemplateKey9.document_template_value = "";
+            loDocumentTemplateKey9.document_template_key = ((int)ThkAgreement.ThkSatisSartname.TcKimlik).ToString();
+            loDocumentTemplateKey9.document_template_value = string.IsNullOrEmpty(pCustomer.tax_no) ? pCustomer.identity_no : pCustomer.tax_no;
             loDocumentTemplateKeys.Add(loDocumentTemplateKey9);
+
+            loDocumentTemplateKey10.document_template_key = ((int)ThkAgreement.ThkSatisSartname.Posta).ToString();
+            loDocumentTemplateKey10.document_template_value = pCustomer.address ?? "";
+            loDocumentTemplateKeys.Add(loDocumentTemplateKey10);
+
+            loDocumentTemplateKey11.document_template_key = ((int)ThkAgreement.ThkSatisSartname.Gsm).ToString();
+            loDocumentTemplateKey11.document_template_value = pCustomer.phone;
+            loDocumentTemplateKeys.Add(loDocumentTemplateKey11);
+
+            loDocumentTemplateKey12.document_template_key = ((int)ThkAgreement.ThkSatisSartname.Eposta).ToString();
+            loDocumentTemplateKey12.document_template_value = pCustomer.mail;
+            loDocumentTemplateKeys.Add(loDocumentTemplateKey12);
+
 
             loSendToSignModel.document_templates = loDocumentTemplateKeys;
             var loResult = RestCalls.SendCustomerAgreement(loSendToSignModel);
@@ -349,6 +384,57 @@ namespace Winvestate_Offer_Management_API.Classes
                 var loOfferToUpdate = GetData.GetOfferById(pOffer.row_guid.ToString());
                 loOfferToUpdate.mespact_session_uuid = loSendToSign.document_to_sign.row_guid;
                 Crud<Offer>.Update(loOfferToUpdate, out _);
+            }
+        }
+
+        public static void SendNewCallBackRecord(CallbackRecord pCallbackRecord)
+        {
+            var loAsset = GetData.GetAssetById(pCallbackRecord.asset_uuid.ToString());
+            var loMailContent = File.ReadAllText("winvestate_new_cr_mail.html");
+            loMailContent = loMailContent.Replace("@CustomerName@", pCallbackRecord.applicant_name + " " + pCallbackRecord.applicant_surname);
+            loMailContent = loMailContent.Replace("@CustomerPhone@", pCallbackRecord.applicant_phone);
+            loMailContent = loMailContent.Replace("@AssetName@", loAsset.asset_no + " " + loAsset.asset_name);
+            loMailContent = loMailContent.Replace("@OperationDate@", pCallbackRecord.row_create_date.Value.ToString("f"));
+            loMailContent = loMailContent.Replace("@AssetLink@", "https://e-teklif.winvestate.com/Asset/AssetDetail?pId="+pCallbackRecord.asset_uuid);
+
+            RestCalls.SendMail(loMailContent, Common.InfoMailList, "Yeni Geri Aranma Talebi");
+        }
+
+        public static void SendNewOfferInformation(Guid pId)
+        {
+            var loOffer = GetData.GetOfferById(pId.ToString());
+
+            SendNewOfferSmsInformation(loOffer);
+
+            var loAsset = GetData.GetAssetById(loOffer.asset_uuid.ToString());
+            var loCustomer = GetData.GetCustomerById(loOffer.owner_uuid.ToString());
+            var loCompany = GetData.GetBankById(loAsset.bank_guid.ToString());
+
+            var loMailContent = File.ReadAllText("winvestate_new_offer.html");
+            loMailContent = loMailContent.Replace("@AssetNo@", loAsset.asset_no.ToString());
+            loMailContent = loMailContent.Replace("@AssetName@", loAsset.asset_name);
+            loMailContent = loMailContent.Replace("@CustomerName@", loCustomer.customer_name + " " + loCustomer.customer_surname);
+            loMailContent = loMailContent.Replace("@CustomerPhone@", loCustomer.phone);
+            loMailContent = loMailContent.Replace("@OperationDate@", loOffer.row_create_date.Value.ToString("f"));
+            loMailContent = loMailContent.Replace("@OfferAmount@", loOffer.price.Value.ToString("C0") + " TL");
+
+            var loSender = Common.InfoMailList + ";" + loCompany.authorized_mail;
+
+            RestCalls.SendMail(loMailContent, loSender, loCustomer.customer_name + " " + loCustomer.customer_surname + "-" + loAsset.asset_no + " " + "Yeni Teklif");
+        }
+
+        public static void SendNewOfferSmsInformation(Offer pOffer)
+        {
+            var loAssetOffers = GetData.GetActiveOfferByAssetId(pOffer.asset_uuid.ToString());
+            var loCustomer = GetData.GetCustomerById(pOffer.owner_uuid.ToString());
+
+            foreach (var loAssetOffer in loAssetOffers)
+            {
+                if (loAssetOffer.customer_phone == loCustomer.phone) continue;
+
+                RestCalls.SendSms(
+                    "Değerli müşterimiz, teklif vermiş olduğunuz gayrimenkule yeni bir teklif verilmiştir. Yeni teklifi görüntülemek ve teklifinizi yükseltmek için lütfen web sitemizi ziyaret ediniz İlan bağlantısı : https://e-teklif.winvestate.com/Asset/AssetDetail?pId="+pOffer.asset_uuid+". Mesaj Tarihi: " + DateTime.Now,
+                    loAssetOffer.customer_phone);
             }
         }
     }

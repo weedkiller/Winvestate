@@ -28,6 +28,14 @@ namespace Winvestate_Offer_Management_API.Controllers
                 Code = -1
             };
 
+            if (pObject.asset_photos == null || !pObject.asset_photos.Any())
+            {
+                loGenericResponse.Status = "Fail";
+                loGenericResponse.Code = -1;
+                loGenericResponse.Message = "Gayrimenkul fotoğraflarında bir problem oldu!. Tekrar yükleme yapın!";
+                return loGenericResponse;
+            }
+
             pObject.row_create_date = DateTime.Now;
             pObject.row_create_user = loUserId;
             pObject.row_guid = Guid.NewGuid();
@@ -37,8 +45,8 @@ namespace Winvestate_Offer_Management_API.Controllers
             pObject.district = pObject.district?.ToUpper();
             pObject.address = pObject.address?.ToUpper();
             pObject.share = pObject.share?.ToUpper();
-            pObject.explanation = pObject.explanation?.ToUpper();
             pObject.asset_name = pObject.asset_name?.ToUpper();
+            pObject.asset_no = pObject.asset_no?.ToUpper();
 
             if (pObject.first_announcement_date == null)
             {
@@ -236,10 +244,16 @@ namespace Winvestate_Offer_Management_API.Controllers
             loData.district = pObject.district?.ToUpper();
             loData.address = pObject.address?.ToUpper();
             loData.share = pObject.share?.ToUpper();
-            loData.explanation = pObject.explanation?.ToUpper();
             loData.asset_name = pObject.asset_name?.ToUpper();
+            loData.asset_no = pObject.asset_no?.ToUpper();
 
-            var loResult = Crud<Asset>.Update(loData, out _);
+            if (pObject.asset_photos != null && pObject.asset_photos.Any())
+            {
+                loData.asset_photos = pObject.asset_photos;
+            }
+            
+
+            var loResult = Crud<Asset>.UpdateAsset(loData);
 
             if (loResult)
             {
@@ -281,8 +295,8 @@ namespace Winvestate_Offer_Management_API.Controllers
             return loGenericResponse;
         }
 
-        [HttpGet("List")]
-        public ActionResult<GenericResponseModel> GetAllList()
+        [HttpGet("Offered")]
+        public ActionResult<GenericResponseModel> GetOfferedAssets()
         {
             var loGenericResponse = new GenericResponseModel
             {
@@ -290,7 +304,43 @@ namespace Winvestate_Offer_Management_API.Controllers
                 Status = "Fail"
             };
 
-            var loResult = GetData.GetAssetForListing();
+            var loResult = GetData.GetOfferedAssets();
+
+            if (!loResult.Any())
+            {
+                loGenericResponse.Message = "Kayıtlı gayrimenkul bulunamadı";
+                return loGenericResponse;
+            }
+
+            foreach (var assetDto in loResult)
+            {
+                assetDto.history = GetData.GetOfferHistoryByAssetId(assetDto.row_guid.ToString());
+            }
+
+            loGenericResponse.Code = 200;
+            loGenericResponse.Status = "OK";
+            loGenericResponse.Data = loResult;
+
+            return loGenericResponse;
+        }
+
+        [HttpGet("List")]
+        public ActionResult<GenericResponseModel> GetAllList()
+        {
+            var loUserType = HelperMethods.GetUserTypeFromToken(HttpContext.User.Identity);
+            var loUserId = HelperMethods.GetApiUserIdFromToken(HttpContext.User.Identity);
+            var loGenericResponse = new GenericResponseModel
+            {
+                Code = -1,
+                Status = "Fail"
+            };
+
+            var loResult = loUserType switch
+            {
+                1 => GetData.GetAllAssets(),
+                2 => GetData.GetAllAssetsForUser(loUserId.ToString()),
+                _ => GetData.GetAllAssetsForCompany(loUserId.ToString())
+            };
 
             if (!loResult.Any())
             {

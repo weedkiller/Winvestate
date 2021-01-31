@@ -39,7 +39,7 @@ namespace Winvestate_Offer_Management_MVC.Classes
             }
         }
 
-        public static void DeleteFiles(List<AssetPhoto> files)
+        public static void DeleteFiles(List<AssetPhoto> files,string pBasePath)
         {
             if (!files.Any()) return;
 
@@ -47,7 +47,7 @@ namespace Winvestate_Offer_Management_MVC.Classes
             {
                 foreach (var pFileModel in files)
                 {
-                    File.Delete(pFileModel.file_path);
+                    File.Delete(pBasePath+pFileModel.file_path);
                 }
 
                 return;

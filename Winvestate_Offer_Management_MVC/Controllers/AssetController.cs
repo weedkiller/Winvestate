@@ -23,17 +23,18 @@ namespace Winvestate_Offer_Management_MVC.Controllers
         {
             _environment = environment;
         }
+
         [SessionTimeout]
+        [CheckAuthorize]
         public IActionResult Info(string pId)
         {
             var loUser = HttpContext.Session.GetObject<UserDto>("User");
             loUser.session_id = Guid.NewGuid().ToString();
-            loUser.contracts = RestCalls.GetContractTypes(loUser.token);
             HttpContext.Session.SetObject("User", loUser);
 
             if (string.IsNullOrEmpty(pId))
             {
-                return View(new HomeViewModel { User = loUser });
+                return View(new HomeViewModel { User = loUser,AssetPhotos = new List<AssetPhoto>()});
             }
 
             var loAsset = RestCalls.GetAssetById(pId, loUser.token);
@@ -44,7 +45,7 @@ namespace Winvestate_Offer_Management_MVC.Controllers
             };
 
             loModel.AssetExplanation = loModel.Asset.explanation;
-            loModel.AssetPhotos = loModel.Asset.asset_photos;
+            loModel.AssetPhotos = loModel.Asset.asset_photos ?? new List<AssetPhoto>();
             loModel.Asset.explanation = "";
             loModel.Asset.asset_photos = new List<AssetPhoto>();
             return View(loModel);
@@ -52,14 +53,13 @@ namespace Winvestate_Offer_Management_MVC.Controllers
 
         [HttpPost]
         [SessionTimeout]
+        [CheckAuthorize]
         public JsonResult Save([FromBody] AssetDto pAsset)
         {
             var loUser = HttpContext.Session.GetObject<UserDto>("User");
 
             var loAssetFiles = new List<AssetPhoto>();
             var loFileListToSave = new List<FileModel>();
-
-            
 
             if (Directory.Exists(_environment.WebRootPath + "\\" + "Uploads\\Temp\\" + loUser.session_id))
             {
@@ -102,7 +102,7 @@ namespace Winvestate_Offer_Management_MVC.Controllers
 
                 pAsset.asset_photos.ForEach(x => x.file_path = x.file_path.Replace(",", "\\"));
 
-                HelperMethods.DeleteFiles(pAsset.asset_photos.FindAll(x => x.is_deleted == true));
+                HelperMethods.DeleteFiles(pAsset.asset_photos.FindAll(x => x.is_deleted), _environment.WebRootPath + "\\" + "Uploads\\");
 
                 //var loAsset = RestCalls.UpdateAsset(pAsset, loUser.token);
 
@@ -110,8 +110,16 @@ namespace Winvestate_Offer_Management_MVC.Controllers
 
                 if (!string.IsNullOrEmpty(loAsset.message) || loAsset.id <= 0) return Json(loAsset);
 
-                if (loFileListToSave.Any()) // yeni kayıt varsa sil templeri!
-                    Directory.Delete(Path.Combine(_environment.WebRootPath, "Uploads\\Temp\\" + loUser.session_id), true); // temp resimleri sil
+                try
+                {
+                    if (loFileListToSave.Any()) // yeni kayıt varsa sil templeri!
+                        Directory.Delete(Path.Combine(_environment.WebRootPath, "Uploads\\Temp\\" + loUser.session_id), true); // temp resimleri sil
+                }
+                catch(Exception)
+                {
+                    //ignored;
+                }
+               
 
                 return Json(loAsset);
 
@@ -120,20 +128,15 @@ namespace Winvestate_Offer_Management_MVC.Controllers
             return Json(new AssetDto());
         }
 
-
+        
         public IActionResult AssetForOffer()
         {
             HttpContext.Session.Remove("User");
             return View(new HomeViewModel { Token = RestCalls.GetToken() });
         }
 
-        public IActionResult Test()
-        {
-            HttpContext.Session.Remove("User");
-            return View(new HomeViewModel { Token = RestCalls.GetToken() });
-        }
-
         [SessionTimeout]
+        [CheckAuthorize]
         public IActionResult List()
         {
             var loUser = HttpContext.Session.GetObject<UserDto>("User");
