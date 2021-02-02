@@ -77,14 +77,14 @@ namespace Winvestate_Offer_Management_API.Controllers
                 pObject.row_create_user = pObject.row_guid;
                 pObject.is_deleted = false;
                 pObject.is_active = true;
-                pObject.identity_no = pObject.identity.ToString();
-                pObject.address = pObject.address?.ToUpper();
-                pObject.customer_name = pObject.customer_name?.ToUpper();
-                pObject.customer_surname = pObject.customer_surname?.ToUpper();
-                pObject.company_name = pObject.company_name?.ToUpper();
-                pObject.iban = pObject.iban?.ToUpper();
-                pObject.tax_office = pObject.tax_office?.ToUpper();
-                pObject.tax_no = pObject.tax_no?.ToUpper();
+                pObject.identity_no = pObject.identity.ToString().Trim();
+                pObject.address = pObject.address?.ToUpper().Trim();
+                pObject.customer_name = pObject.customer_name?.ToUpper().Trim();
+                pObject.customer_surname = pObject.customer_surname?.ToUpper().Trim();
+                pObject.company_name = pObject.company_name?.ToUpper().Trim();
+                pObject.iban = pObject.iban?.ToUpper().Trim();
+                pObject.tax_office = pObject.tax_office?.ToUpper().Trim();
+                pObject.tax_no = pObject.tax_no?.ToUpper().Trim();
                 pObject.phone = HelperMethods.SerializePhone(pObject.phone?.ToUpper());
                 pObject.mail = pObject.mail?.ToLower();
             }

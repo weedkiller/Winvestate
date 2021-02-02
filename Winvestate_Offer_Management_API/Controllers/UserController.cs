@@ -171,12 +171,14 @@ namespace Winvestate_Offer_Management_API.Controllers
             {
                 var loCustomer = GetData.GetCustomerById(loLogin.row_guid.ToString());
                 loOtp.phone = loCustomer.phone;
+                loUser.phone = loCustomer.phone;
 
             }
             else // 4 Kurum
             {
                 var loCompany = GetData.GetBankById(loLogin.row_guid.ToString());
                 loOtp.phone = loCompany.authorized_phone;
+                loUser.phone = loCompany.authorized_phone;
             }
 
             loOtp.message_type_system_type_id = 2;

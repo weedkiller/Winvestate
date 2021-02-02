@@ -118,12 +118,13 @@ namespace Winvestate_Offer_Management_API.Controllers
 
             var loPassword = "";
             var loMessageContent = "";
+            var loUserNameType = loCustomer.user_type_system_type_id == 1 ? "kimlik numaranız" : "vergi numaranız";
             if (string.IsNullOrEmpty(loCustomer.password))
             {
                 loPassword = HelperMethods.RandomOtp();
                 loMessageContent =
                     string.Format(
-                        "Sayın müşterimiz teklif vermek istediğiniz gayrimenkule ait başvurunuz onaylanmıştır. Teklif vermek için {0} adresini ziyaret edebilirsiniz. Sisteme giriş için kullanıcı adınız: kimlik numaranız, şifreniz: {1}'dir. Mesaj tarihi: {2}", Common.CustomerUrl, loPassword, DateTime.Now);
+                        "Sayın müşterimiz teklif vermek istediğiniz gayrimenkule ait başvurunuz onaylanmıştır. Teklif vermek için {0} adresini ziyaret edebilirsiniz. Sisteme giriş için kullanıcı adınız: {3}, şifreniz: {1}'dir. Mesaj tarihi: {2}", Common.CustomerUrl, loPassword, DateTime.Now, loUserNameType);
 
                 loCustomer.password = HelperMethods.Md5OfString(loPassword);
                 loCustomer.row_update_date = loResult.row_update_date;
@@ -134,7 +135,7 @@ namespace Winvestate_Offer_Management_API.Controllers
             {
                 loMessageContent =
                     string.Format(
-                        "Sayın müşterimiz teklif vermek istediğiniz gayrimenkule ait başvurunuz onaylanmıştır. Teklif vermek için {0} adresini ziyaret edebilirsiniz. Sisteme giriş için kullanıcı adınız olarak kimlik numaranızı ve daha önce oluşturduğunuz şifreyi kullanabilirsiniz. Mesaj tarihi: {1}", Common.CustomerUrl, DateTime.Now);
+                        "Sayın müşterimiz teklif vermek istediğiniz gayrimenkule ait başvurunuz onaylanmıştır. Teklif vermek için {0} adresini ziyaret edebilirsiniz. Sisteme giriş için kullanıcı adınız olarak {2} ve daha önce oluşturduğunuz şifreyi kullanabilirsiniz. Mesaj tarihi: {1}", Common.CustomerUrl, DateTime.Now, loUserNameType);
 
             }
 

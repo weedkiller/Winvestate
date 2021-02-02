@@ -53,12 +53,10 @@
                                     <div id="image-slider" class="splide">
                                         <div class="splide__track">
                                             <ul class="splide__list">
-
-
-                                                @foreach (var loImage in Model.Asset.asset_photos.FindAll(x => x.is_thumb == false))
+                                                @foreach (var loImage in Model.Asset.asset_photos.FindAll(x => x.is_thumb == false).OrderBy(x=>x.item_order))
                                                 {
-                                                    <li class="splide__slide">
-                                                        <img src="~/Uploads/@loImage.file_path">
+                                                    <li class="splide__slide centeredDiv">
+                                                        <img src="~/Uploads/@loImage.file_path" class="centerMyImage">
                                                     </li>
                                                 }
                                             </ul>
@@ -155,7 +153,7 @@
                                 <div class="col-6">
                                     <span class="form-control-plaintext">
                                         @{
-                                            var loMaxOffer = Model.Asset.max_offer_amount.HasValue && Model.Asset.max_offer_amount > 0 ? string.Format("{0:N0}", Model.Asset.max_offer_amount) : Model.Asset.max_offer;
+                                            var loMaxOffer = Model.Asset.max_offer_amount.HasValue && Model.Asset.max_offer_amount > 0 ? string.Format("{0:N0}", Model.Asset.max_offer_amount) :  string.Format("{0:N0}", Model.Asset.starting_amount);
                                         }
                                         <span class="font-weight-bolder">@loMaxOffer</span>
                                     </span>
@@ -477,7 +475,7 @@
                 new Splide('#image-slider',
                     {
                         'autoplay': true,
-                        'rewind':true
+                        'rewind':true,
                     }).mount();
             }
         });

@@ -71,7 +71,7 @@ function setDataToSelect(myDropdown, msg, selectedVal, filter) {
         myDropdown.append(
             $('<option>',
                 {
-                    value: -1,
+                    value: " ",
                     text: "HEPSİ"
                 },
                 '</option>'));

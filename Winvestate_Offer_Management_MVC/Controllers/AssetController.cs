@@ -34,7 +34,7 @@ namespace Winvestate_Offer_Management_MVC.Controllers
 
             if (string.IsNullOrEmpty(pId))
             {
-                return View(new HomeViewModel { User = loUser,AssetPhotos = new List<AssetPhoto>()});
+                return View(new HomeViewModel { User = loUser, AssetPhotos = new List<AssetPhoto>() });
             }
 
             var loAsset = RestCalls.GetAssetById(pId, loUser.token);
@@ -115,11 +115,11 @@ namespace Winvestate_Offer_Management_MVC.Controllers
                     if (loFileListToSave.Any()) // yeni kayıt varsa sil templeri!
                         Directory.Delete(Path.Combine(_environment.WebRootPath, "Uploads\\Temp\\" + loUser.session_id), true); // temp resimleri sil
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     //ignored;
                 }
-               
+
 
                 return Json(loAsset);
 
@@ -128,11 +128,12 @@ namespace Winvestate_Offer_Management_MVC.Controllers
             return Json(new AssetDto());
         }
 
-        
+
         public IActionResult AssetForOffer()
         {
             HttpContext.Session.Remove("User");
-            return View(new HomeViewModel { Token = RestCalls.GetToken() });
+            var loToken = RestCalls.GetToken();
+            return View(new HomeViewModel { Token = loToken, Cities = RestCalls.GetCities(loToken) });
         }
 
         [SessionTimeout]

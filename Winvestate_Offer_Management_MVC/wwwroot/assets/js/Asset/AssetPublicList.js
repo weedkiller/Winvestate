@@ -1,5 +1,10 @@
 ﻿var loMyAssetList;
-var datatable
+var datatable;
+
+$(".text-uppercase").keyup(function () {
+    this.value = this.value.toLocaleUpperCase();
+    console.log(this.value);
+});
 
 var AssetForOfferDT = function () {
     // Private functions
@@ -85,6 +90,10 @@ var AssetForOfferDT = function () {
                     title: 'Fotoğraf',
                     width: 80,
                     autoHide: false,
+                    responsive: {
+                        visible: 'md',
+                        hidden: 'sm'
+                    },
                     template: function (data) {
                         var number = KTUtil.getRandomInt(9, 14);
                         var loImagePath = "/uploads/" + data.thumb_path.replaceAll("\\", "//");
@@ -102,29 +111,36 @@ var AssetForOfferDT = function () {
                         return output;
                     },
                 }, {
-                    field: 'city_id',
+                    field: 'city',
                     title: 'No1',
-                    visible: false,
-                    autoHide: false
+                    autoHide: false,
+                    visible:false
                 }, {
-                    field: 'district_id',
+                    field: 'district',
                     title: 'No2',
-                    visible: false,
-                    autoHide: false
+                    autoHide: false,
+                    visible: false
                 }, {
                     field: 'full_asset_no',
                     title: 'asset_no',
                     visible: false,
                     autoHide: false
+                },
+                {
+                    field: 'category',
+                    title: 'No3',
+                    autoHide: false,
+                    visible: false
                 }, {
+                    field: 'asset_type',
+                    title: 'No4',
+                    visible: false,
+                    autoHide: false
+                },{
                     field: '',
                     title: 'Gayrimenkul No',
                     width: 170,
                     autoHide: false,
-                    responsive: {
-                        visible: 'lg',
-                        hidden: 'sm'
-                    },
                     template: function (row) {
                         var output = '<a href="/Asset/AssetDetail?pId=' + row.row_guid + '" class="d-flex align-items-center detail" data-id=' + row.row_guid + '>\
                                                 <div class="ml-4">\
@@ -136,9 +152,14 @@ var AssetForOfferDT = function () {
                     }
                 },
                 {
-                    field: 'city',
+                    field: 'city_district',
                     title: 'İl-İlçe',
-                    width:150,
+                    width: 150,
+                    autoHide: false,
+                    responsive: {
+                        visible: 'lg',
+                        hidden: 'sm'
+                    },
                     template: function (row) {
                         var loSize = row.size + "m2";
                         var loAddress = row.city + ' ' + row.district;
@@ -153,7 +174,7 @@ var AssetForOfferDT = function () {
                     }
                 },
                 {
-                    field: 'category',
+                    field: 'category_type',
                     title: 'Kategori',
                     width: 100,
                     responsive: {
@@ -176,6 +197,10 @@ var AssetForOfferDT = function () {
                     title: 'Son Teklif (TL)',
                     width: 150,
                     autoHide: false,
+                    responsive: {
+                        visible: 'lg',
+                        hidden: 'sm'
+                    },
                     template: function (row) {
                         var output = '';
                         var loAmount = row.max_offer;
@@ -205,16 +230,12 @@ var AssetForOfferDT = function () {
         });
 
         $('#city_id').on('change', function () {
-            if ($("#city_id option:selected").val() == -1) {
-                window.location.reload();
-            } else {
-                datatable.search($("#city_id option:selected").val(), 'city_id');
-            }
-
+            var loTextToSearch = $("#city_id option:selected").val() == -1 ? "" : $("#city_id option:selected").text();
+            datatable.search(loTextToSearch, 'city');
         });
 
         $('#district_id').on('change', function () {
-            datatable.search($("#district_id option:selected").val(), 'district_id');
+            datatable.search($("#district_id option:selected").text(), 'district');
         });
 
         $('#kt_datatable_search_status, #kt_datatable_search_type').selectpicker();

@@ -90,8 +90,8 @@ ul, ol, li {
     float: left;
     margin: 10px 7px;
     background: none;
-    width: 135px;
-    height: 120px;
+    width: 150px;
+    height: 200px;
 }
 
 .gallery img {
@@ -126,12 +126,18 @@ ul, ol, li {
     height: 35rem;
 }
 
-.splide__slide img {
-    width: 100% !important;
-    height: auto !important;
-}
 
 .myHeight {
     height: 45rem !important;
 }
 
+.centerMyImage {
+    width: 50%;
+}
+
+.centeredDiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 450px;
+}

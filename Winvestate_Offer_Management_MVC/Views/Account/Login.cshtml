@@ -54,7 +54,7 @@
                         </div>
                         <form class="form" id="kt_login_signin_form">
                             <div class="form-group mb-5">
-                                <input class="form-control h-auto form-control-solid py-4 px-8" type="text" placeholder="Kullanıcı Adı" name="phone" id="phone" value="@Model.User.phone" autocomplete="off" />
+                                <input class="form-control h-auto form-control-solid py-4 px-8" type="text" placeholder="Tc Kimlik/Vergi No" name="phone" id="phone" value="@Model.User.phone" autocomplete="off" />
                             </div>
                             <div class="form-group mb-5">
                                 <input class="form-control h-auto form-control-solid py-4 px-8" type="password" placeholder="Şifre" name="password" id="password" value="@Model.User.password" />
@@ -82,11 +82,11 @@
                     <div class="login-forgot">
                         <div class="mb-20">
                             <h3>Şifre Sıfırlama ?</h3>
-                            <div class="text-muted font-weight-bold">Lütfen sisteme kayıtlı kullanıcı adınızı giriniz</div>
+                            <div class="text-muted font-weight-bold">Lütfen sisteme kayıtlı Tc kimlik veya vergi numaranızı giriniz</div>
                         </div>
                         <form class="form" id="kt_login_forgot_form">
                             <div class="form-group mb-10">
-                                <input class="form-control form-control-solid h-auto py-4 px-8" type="text" placeholder="Cep Telefonu" name="forgot_phone" id="forgot_phone" autocomplete="off" />
+                                <input class="form-control form-control-solid h-auto py-4 px-8" type="text" placeholder="TC Kimlik/Vergi No" name="forgot_phone" id="forgot_phone" autocomplete="off" />
                             </div>
                             <div class="form-group d-flex flex-wrap flex-center mt-10">
                                 <button id="kt_login_forgot_submit" class="btn btn-primary font-weight-bold px-9 py-4 my-3 mx-2">Sıfırla</button>
@@ -257,7 +257,7 @@
                             phone: {
                                 validators: {
                                     notEmpty: {
-                                        message: 'Lütfen sisteme kayıtlı cep telefonunuzu giriniz'
+                                        message: 'Lütfen sisteme kayıtlı kimlik numaranızı giriniz'
                                     }
                                 }
                             },
@@ -344,7 +344,7 @@
                             phone: {
                                 validators: {
                                     notEmpty: {
-                                        message: 'Cep Telefonu Girilmesi Zorunludur'
+                                        message: 'Kimlik Numarası Girilmesi Zorunludur'
                                     },
                                     remote: {
 
@@ -414,7 +414,7 @@
                                     } else {
                                         userToUpdate = data.data;
                                         $("#kt_modal_otp").modal("show");
-                                        $("#validateOtp").data("phone", loModel.phone);
+                                        $("#validateOtp").data("phone", userToUpdate.phone);
                                         _isOtpSend = true;
                                         _validateOtp = OpenModalForUpdatePassword;
                                         _validateApiUrl = HOST_URL + "/Otp/Validate";

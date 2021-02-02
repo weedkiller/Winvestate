@@ -149,26 +149,26 @@ namespace Winvestate_Offer_Management_API.Controllers
                 return loGenericResponse;
             }
 
-            if (pObject.first_announcement_date == null)
-            {
-                if (DateTime.TryParse(pObject.first_announcement_date_str, out var loFirstAnnonce))
-                    pObject.first_announcement_date = loFirstAnnonce;
-                else
-                {
-                    loGenericResponse.Status = "Fail";
-                    loGenericResponse.Code = -1;
-                    loGenericResponse.Message = "İlan yayın başlangıç tarihi girilmeden işleme devam edilemez.";
-                    return loGenericResponse;
-                }
+            //if (pObject.first_announcement_date == null)
+            //{
+            //    if (DateTime.TryParse(pObject.first_announcement_date_str, out var loFirstAnnonce))
+            //        pObject.first_announcement_date = loFirstAnnonce;
+            //    else
+            //    {
+            //        loGenericResponse.Status = "Fail";
+            //        loGenericResponse.Code = -1;
+            //        loGenericResponse.Message = "İlan yayın başlangıç tarihi girilmeden işleme devam edilemez.";
+            //        return loGenericResponse;
+            //    }
 
-                if ((loData.row_create_date.Value - pObject.first_announcement_date.Value).TotalMinutes > 2)
-                {
-                    loGenericResponse.Status = "Fail";
-                    loGenericResponse.Code = -1;
-                    loGenericResponse.Message = "Geçmiş tarihili ilan başlatılamaz.";
-                    return loGenericResponse;
-                }
-            }
+            //    if ((loData.row_create_date.Value - pObject.first_announcement_date.Value).TotalMinutes > 2)
+            //    {
+            //        loGenericResponse.Status = "Fail";
+            //        loGenericResponse.Code = -1;
+            //        loGenericResponse.Message = "Geçmiş tarihili ilan başlatılamaz.";
+            //        return loGenericResponse;
+            //    }
+            //}
 
             if (pObject.last_announcement_date == null)
             {
@@ -235,7 +235,7 @@ namespace Winvestate_Offer_Management_API.Controllers
             loData.last_announcement_date = pObject.last_announcement_date ?? loData.last_announcement_date;
             loData.last_offer_date = pObject.last_offer_date ?? loData.last_offer_date;
             loData.agreement_guid = pObject.agreement_guid ?? loData.agreement_guid;
-            loData.first_announcement_date = pObject.first_announcement_date ?? loData.first_announcement_date;
+            //ilan başlangıç tarihi değiştirilemez loData.first_announcement_date = pObject.first_announcement_date ?? loData.first_announcement_date;
             loData.asset_name = pObject.asset_name ?? loData.asset_name;
             loData.bank_guid = pObject.bank_guid ?? loData.bank_guid;
             loData.row_update_date = DateTime.Now;

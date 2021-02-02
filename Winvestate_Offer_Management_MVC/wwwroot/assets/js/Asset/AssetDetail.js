@@ -85,7 +85,8 @@ function checkUserIdentity() {
                         confirmButton: "btn font-weight-bold btn-light-primary"
                     }
                 }).then(function () {
-                    KTUtil.scrollTop();
+                    grecaptcha.reset(0);
+                    grecaptcha.reset(1);
                 });
             },
             success: function (response, status, xhr, $form) {
@@ -113,7 +114,8 @@ function checkUserIdentity() {
                                     confirmButton: "btn font-weight-bold btn-light-primary"
                                 }
                             }).then(function () {
-                                KTUtil.scrollTop();
+                                grecaptcha.reset(0);
+                                grecaptcha.reset(1);
                             });
                         },
                         success: function (response, status, xhr, $form) {
@@ -143,6 +145,9 @@ function checkUserIdentity() {
                                     customClass: {
                                         confirmButton: "btn font-weight-bold btn-light-primary"
                                     }
+                                }).then(() => {
+                                    grecaptcha.reset(0);
+                                    grecaptcha.reset(1);
                                 });
                             }
 
@@ -164,6 +169,8 @@ function checkUserIdentity() {
                             confirmButton: "btn font-weight-bold btn-light-primary"
                         }
                     }).then(function () {
+                        $("#validateCustomer").removeClass('spinner spinner-right spinner-white pr-15')
+                            .attr('disabled', false).text(loTempButtonText);
                         KTUtil.scrollTop();
                     });
                 }
@@ -203,7 +210,8 @@ function saveCallback() {
                         confirmButton: "btn font-weight-bold btn-light-primary"
                     }
                 }).then(function () {
-                    KTUtil.scrollTop();
+                    grecaptcha.reset(0);
+                    grecaptcha.reset(1);
                 });
             },
             success: function (response, status, xhr, $form) {
@@ -219,6 +227,8 @@ function saveCallback() {
                             confirmButton: "btn font-weight-bold btn-light-primary"
                         }
                     }).then(() => {
+                        grecaptcha.reset(0);
+                        grecaptcha.reset(1);
                         $("#kt_modal_callback").modal("hide");
                     });
                 } else if (response.id == -2) {
@@ -231,6 +241,8 @@ function saveCallback() {
                             confirmButton: "btn font-weight-bold btn-light-primary"
                         }
                     }).then(() => {
+                        grecaptcha.reset(0);
+                        grecaptcha.reset(1);
                         $("#kt_modal_callback").modal("hide");
                     });
                 }
@@ -243,6 +255,9 @@ function saveCallback() {
                         customClass: {
                             confirmButton: "btn font-weight-bold btn-light-primary"
                         }
+                    }).then(() => {
+                        grecaptcha.reset(0);
+                        grecaptcha.reset(1);
                     });
                 }
 

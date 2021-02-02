@@ -8,7 +8,7 @@ namespace Winvestate_Offer_Management_API.Database
     public static class Queries
     {
         public static string ValidateUser = "select * from vw_logins where user_name = '@P01' and upper(password)= upper('@P02')";
-        public static string CheckUser = "select * from vw_logins where phone = '@P01'";
+        public static string CheckUser = "select * from vw_logins where user_name = '@P01'";
         public static string GetAllUsers = "select * from winvestate_user where is_deleted=false and is_active=true order by COALESCE(row_update_date,row_create_date) desc";
         public static string GetUserById = "select * from winvestate_user where   row_guid::text='@P01' and is_deleted=false and is_active=true";
         public static string GetUserByPhone = "Select * from winvestate_user where phone='@P01' and is_deleted=false and is_active=true";

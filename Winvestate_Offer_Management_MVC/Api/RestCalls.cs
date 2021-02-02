@@ -317,6 +317,27 @@ namespace Winvestate_Offer_Management_MVC.Api
             return loOffers;
         }
 
+        public static List<AddressKeyValue> GetCities(string pToken)
+        {
+            var client = new RestClient(Common.ApiUrl + "/Address/City");
+            var request = new RestRequest(Method.GET);
+            request.AddHeader("Content-Type", "application/json");
+            request.RequestFormat = DataFormat.Json;
+            request.AddHeader("Authorization", "Bearer " + pToken);
+            //var responseData = client.Execute(request).Content;
+            var result = client.Execute(request);
+            var loGenericResult = JsonConvert.DeserializeObject<GenericResponseModel>(result.Content);
+            var loCities = new List<AddressKeyValue>();
+
+            if (loGenericResult != null && loGenericResult.Code == 200)
+            {
+                loCities = JsonConvert.DeserializeObject<List<AddressKeyValue>>(loGenericResult.Data.ToString());
+                return loCities;
+            }
+
+            return loCities;
+        }
+
         public static List<OfferDto> GetActiveOffers(string pToken)
         {
             var client = new RestClient(Common.ApiUrl + "/Offer/Active");

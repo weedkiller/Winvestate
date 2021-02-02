@@ -45,7 +45,7 @@
                             @if (loOffer.history.Any())
                             {
                                 string loClassForLastOffer = loOffer.price.Value == loOffer.max_offer_amount ? "text-success" : "text-danger";
-                                string loStatusOfOffer = loOffer.price.Value == loOffer.max_offer_amount ? " (Kazanıyor) " : " (Kaybediyor) ";
+                                string loStatusOfOffer = loOffer.price.Value == loOffer.max_offer_amount ? " (En Yüksek Teklif) " : " (Daha Yüksek Teklif Var) ";
                                 <label class="form-control text-dark font-weight-boldest">Son Teklifim (TL): <span class="@loClassForLastOffer">@loOffer.price.Value.ToString("N0") @loStatusOfOffer</span></label>
                                 <label class="form-control text-dark">Son Teklif Verdiğim Tarih: <span class="text-danger">@loOffer.history.OrderByDescending(x => x.row_create_date).ToList()[0].row_create_date.ToString("F")</span></label>
                             }

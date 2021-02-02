@@ -10,11 +10,12 @@ namespace Winvestate_Offer_Management_MVC.Models
 {
     public class ViewModelBase
     {
+        public List<AddressKeyValue> Cities { get; set; }
         public UserDto User { get; set; }
-        public AssetDto Asset{ get; set; }
-        public List<AssetPhoto> AssetPhotos{ get; set; }
-        public List<OfferDto> Offers{ get; set; }
-        public List<CallbackRecordDto> ActiveCallbackRecords{ get; set; }
+        public AssetDto Asset { get; set; }
+        public List<AssetPhoto> AssetPhotos { get; set; }
+        public List<OfferDto> Offers { get; set; }
+        public List<CallbackRecordDto> ActiveCallbackRecords { get; set; }
         public string Token { get; set; }
         public string AssetExplanation { get; set; }
     }
