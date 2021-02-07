@@ -16,7 +16,7 @@ namespace Winvestate_Offer_Management_MVC.Controllers
     {
         [HttpPost]
         [SessionTimeout]
-        [OnlyAdmin]
+        [OnlyWinvestate]
         public Bank Save([FromBody] BankDto pBank)
         {
             var loUser = HttpContext.Session.GetObject<UserDto>("User");
@@ -31,7 +31,7 @@ namespace Winvestate_Offer_Management_MVC.Controllers
             return loBankToSave;
         }
 
-        [OnlyAdmin]
+        [OnlyWinvestate]
         public IActionResult List()
         {
             var loUser = HttpContext.Session.GetObject<UserDto>("User");

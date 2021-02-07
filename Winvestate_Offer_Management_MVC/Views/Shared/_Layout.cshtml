@@ -119,6 +119,25 @@
                                                 <span class="menu-text">Gayrimenkulleri Listele</span>
                                             </a>
                                         </li>
+                                        @if (Model.User != null && (Model.User.user_type == 1 || Model.User.user_type == 2))
+                                            {
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="/Asset/Callback" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot">
+                                                    <span></span>
+                                                </i>
+                                                <span class="menu-text">Geri Aranma Talepleri</span>
+                                            </a>
+                                        </li>
+                                            }
+                                        <li class="menu-item" aria-haspopup="true">
+                                            <a href="/Asset/Sold" class="menu-link">
+                                                <i class="menu-bullet menu-bullet-dot">
+                                                    <span></span>
+                                                </i>
+                                                <span class="menu-text">Satılan Mülkler</span>
+                                            </a>
+                                        </li>
                                     </ul>
                                 </div>
                             </li>
@@ -128,6 +147,14 @@
                                     <span class="menu-text">Teklifler</span>
                                 </a>
                             </li>
+                            <li class="menu-item" aria-haspopup="true">
+                                <a href="/Offer/Signed" class="menu-link">
+                                    <i class="menu-icon flaticon-home"></i>
+                                    <span class="menu-text">İmzalanan Şartnameler</span>
+                                </a>
+                            </li>
+                            @if (Model.User != null && (Model.User.user_type == 1 || Model.User.user_type == 2))
+                                {
                             <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
                                 <a href="javascript:;" class="menu-link menu-toggle">
                                     <i class="menu-icon flaticon-layers"></i>
@@ -194,8 +221,6 @@
                                     </ul>
                                 </div>
                             </li>
-                            @if (Model.User != null && (Model.User.user_type == 1 || Model.User.user_type == 2))
-                                {
                             <li class="menu-item" aria-haspopup="true">
                                 <a href="/Asset/AssetForOffer" class="menu-link">
                                     <i class="menu-icon flaticon-home"></i>
@@ -243,7 +268,7 @@
 
                             <!--end::Aside Toggle-->
                             <!--begin::Logo-->
-                            
+
                             <a href="https://winvestate.com">
                                 <img alt="Logo" src="assets/media/logos/logo_company.png" class="logo-sticky max-h-35px" />
                             </a>
@@ -417,7 +442,7 @@
     <script src="~/assets/js/Asset/AssetPublicList.js"></script>
     <script src="~/assets/js/otp.js"></script>
     }
-    else
+    else if (Model.User.user_type == 1 || Model.User.user_type == 2)
     {
     <script src="~/assets/js/user/user.js"></script>
     <script src="~/assets/js/bank/bank.js"></script>

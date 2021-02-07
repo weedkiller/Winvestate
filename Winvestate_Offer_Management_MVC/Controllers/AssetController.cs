@@ -53,7 +53,7 @@ namespace Winvestate_Offer_Management_MVC.Controllers
 
         [HttpPost]
         [SessionTimeout]
-        [CheckAuthorize]
+        [OnlyAdmin]
         public JsonResult Save([FromBody] AssetDto pAsset)
         {
             var loUser = HttpContext.Session.GetObject<UserDto>("User");
@@ -137,8 +137,22 @@ namespace Winvestate_Offer_Management_MVC.Controllers
         }
 
         [SessionTimeout]
-        [CheckAuthorize]
+        [OnlyAdmin]
         public IActionResult List()
+        {
+            var loUser = HttpContext.Session.GetObject<UserDto>("User");
+            return View(new HomeViewModel { User = loUser });
+        }
+
+        [OnlyWinvestate]
+        public IActionResult Callback()
+        {
+            var loUser = HttpContext.Session.GetObject<UserDto>("User");
+            return View(new HomeViewModel { User = loUser });
+        }
+
+        [OnlyAdmin]
+        public IActionResult Sold()
         {
             var loUser = HttpContext.Session.GetObject<UserDto>("User");
             return View(new HomeViewModel { User = loUser });

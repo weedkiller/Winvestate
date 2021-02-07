@@ -163,12 +163,12 @@ var AssetForOfferDT = function () {
                     template: function (row) {
                         var loSize = row.size + "m2";
                         var loAddress = row.city + ' ' + row.district;
-                        var output = '<div class="d-flex align-items-left detail" data-id=' + row.row_guid + '>\
+                        var output = '<a href="/Asset/AssetDetail?pId=' + row.row_guid + '" class="d-flex align-items-center detail" data-id=' + row.row_guid + '>\
                                                 <div class="ml-4">\
                                                     <div class="text-dark-75 font-weight-bolder mb-0">'+ loAddress + '</div>\
                                                     <div class="text-muted">' + loSize + '</div>\
                                                 </div>\
-                                            </div>';
+                                            </a>';
 
                         return output;
                     }

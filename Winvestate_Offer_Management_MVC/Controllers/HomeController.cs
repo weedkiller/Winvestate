@@ -36,9 +36,8 @@ namespace Winvestate_Offer_Management_MVC.Controllers
         public IActionResult Dashboard()
         {
             var loUser = HttpContext.Session.GetObject<UserDto>("User");
-            loUser.active_offers = RestCalls.GetActiveOffers(loUser.token);
 
-            if (loUser.user_type < 3)
+            if (loUser.user_type < 3 || loUser.user_type == 4)
             {
                 loUser.offered_assets = RestCalls.GetOfferedAssets(loUser.token);
             }

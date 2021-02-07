@@ -6,82 +6,120 @@
 }
 
 
-<div class="row">
-    <div class="col-xl-12">
-        <div class="card card-custom gutter-b">
-            <div class="card-header">
-                <div class="card-title">
-                    <h3 class="card-label">
-                        Teklif Verebileceğim Gayrimenkuller
-                    </h3>
-                </div>
-            </div>
-            <div class="card-body">
-                @foreach (var loOffer in Model.User.active_offers)
-                {
-                    var loAssetName = string.IsNullOrEmpty(loOffer.asset_name) ? loOffer.asset_no : loOffer.asset_no + "-" + loOffer.asset_name;
-                    <div class="card card-custom mb-5">
-                        <div class="card-header">
-                            <div class="card-title">
-                                <h5>
-                                    @loOffer.customer_full_name
-                                    <small>(@loOffer.customer_phone)</small>
-                                </h5>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            @{
-                                var loMaximumAmount = loOffer.max_offer_amount <= 0 ? loOffer.starting_amount.ToString("N0") : loOffer.max_offer_amount.ToString("N0");
-                                loMinimumAmountForOffer = loOffer.max_offer_amount <= 0 ? loOffer.starting_amount : loOffer.max_offer_amount + loOffer.minimum_increate_amout;
-
-                            }
-                            <label class="form-control text-dark">Gayrimenkul: <span class="text-danger">@loAssetName</span></label>
-                            <label class="form-control text-dark">E-Teklif Kapanış Tarihi: <span class="text-danger">@loOffer.last_offer_date</span></label>
-                            <label class="form-control text-dark">Başlangıç Teklif Tutarı (TL): <span class="text-danger">@loOffer.starting_amount.ToString("N0") </span></label>
-                            <label class="form-control text-dark">Minimum Teklif Yükseltme Tutarı (TL): <span class="text-danger">@loOffer.minimum_increate_amout.ToString("N0") </span></label>
-                            <label class="form-control text-dark">Başvuru Tarihi: <span class="text-danger">@loOffer.row_create_date.Value </span></label>
-                            <label class="form-control text-dark">Gayrimenkule Verilen Son Teklif (TL): <span class="text-danger">@loMaximumAmount</span></label>
-
-                            @if (loOffer.history.Any())
-                            {
-                                string loClassForLastOffer = loOffer.price.Value == loOffer.max_offer_amount ? "text-success" : "text-danger";
-                                string loStatusOfOffer = loOffer.price.Value == loOffer.max_offer_amount ? " (En Yüksek Teklif) " : " (Daha Yüksek Teklif Var) ";
-                                <label class="form-control text-dark font-weight-boldest">Son Teklifim (TL): <span class="@loClassForLastOffer">@loOffer.price.Value.ToString("N0") @loStatusOfOffer</span></label>
-                                <label class="form-control text-dark">Son Teklif Verdiğim Tarih: <span class="text-danger">@loOffer.history.OrderByDescending(x => x.row_create_date).ToList()[0].row_create_date.ToString("F")</span></label>
-                            }
-                            <a target="_blank" href="@Common.MespactLinkUrl/Document/showDocument?id=@loOffer.mespact_session_uuid" data-id="@loOffer.row_guid.ToString()" class="btn btn-light-danger font-weight-bold align-right">Şartnameyi Görüntüle</a>
-                            <a href="#" data-id="@loOffer.row_guid" data-minimum="@loMinimumAmountForOffer" class="btn btn-light-success font-weight-bold align-right openOfferPage">Teklif Ver</a>
-
-                            @if (loOffer.history.Count > 1)
-                            {
-                                <a href="#" id="show_offer_detail_@loOffer.id" class="btn btn-light-warning font-weight-bold align-right showOtherOffers" data-id="@loOffer.id">Diğer Tekliflerimi Görüntüle</a>
-                                <div class="timeline timeline-2 mt-2 hide" id="offer_detail_@loOffer.id">
-                                    <div class="timeline-bar"></div>
-                                    @foreach (var offerHistory in loOffer.history.OrderByDescending(x => x.row_create_date))
-                                    {
-                                        <div class="timeline-item">
-                                            <div class="timeline-badge"></div>
-                                            <div class="timeline-content d-flex align-items-center justify-content-between">
-                                                <span class="mr-3">
-                                                    <a>@offerHistory.amount.ToString("N0") TL</a>
-                                                </span>
-                                                <span class="text-muted text-right">@offerHistory.row_create_date.ToString("F")</span>
-                                            </div>
-                                        </div>
-                                    }
-
-                                </div>
-                            }
-
-
-
-                        </div>
+@if (Model.Offers != null && Model.Offers.Any())
+{
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card card-custom gutter-b" data-card="true">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3 class="card-label">
+                            Başvurular(@Model.Offers.Count Adet)
+                        </h3>
                     </div>
-                }
+                </div>
+                <div class="card-body py-0">
+                    <!--begin::Table-->
+                    <div class="table-responsive">
+                        <table class="table table-head-custom table-vertical-center" id="kt_advance_table_widget_3">
+                            <thead>
+                                <tr class="text-uppercase">
+                                    <th style="min-width: 150px"></th>
+                                    <th style="min-width: 100px">Gayrimenkul</th>
+                                    <th style="min-width: 100px">Başvuru Tarihi</th>
+                                    <th style="min-width: 100px">Son Teklif Tarihi</th>
+                                    <th style="min-width: 120px">Durum</th>
+                                    <th style="min-width: 160px">Verilen Son Teklif (TL)</th>
+                                    <th style="min-width: 100px">Minimum Teklif Yükseltme Tutarı (TL)</th>
+                                    <th style="min-width: 160px">Son Teklifim (TL)</th>
+                                    <th style="min-width: 160px">İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var loOffer in Model.Offers)
+                                {
+                                    var loMaximumAmount = loOffer.max_offer_amount <= 0 ? loOffer.starting_amount.ToString("N0") : loOffer.max_offer_amount.ToString("N0");
+                                    loMinimumAmountForOffer = loOffer.max_offer_amount <= 0 ? loOffer.starting_amount : loOffer.max_offer_amount + loOffer.minimum_increate_amout;
+                                    var loloMyLastOffer = loOffer.price == null ? "-" : loOffer.price.Value.ToString("N0");
+                                    var loloMyLastDate = loOffer.price == null ? "-" : loOffer.history.OrderByDescending(x => x.row_create_date).ToList()[0].row_create_date.ToString("F");
+
+                                <tr>
+                                    @if (loOffer.asset_state_id == 0)
+                                    {
+                                        <td>
+                                            <a href="#" data-id="@loOffer.row_guid" data-minimum="@loMinimumAmountForOffer" class="btn btn-light-success font-weight-bold align-right openOfferPage">Yeni Teklif Ver</a>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            -
+                                        </td>
+                                    }
+                                    <td>
+                                        <a target="_blank" href="https://e-teklif.winvestate.com/Asset/AssetDetail?pId=@loOffer.asset_uuid" class="text-dark-75 font-weight-bolder text-hover-primary font-size-lg">@string.Concat(loOffer.company_prefix, loOffer.asset_no) - @loOffer.asset_name</a>
+                                    </td>
+                                    <td>
+                                        <span class="text-dark-75 font-weight-bolder d-block font-size-lg">@loOffer.row_create_date.Value.ToString("f")</span>
+                                    </td>
+                                    <td>
+                                        <span class="text-dark-75 font-weight-bolder d-block font-size-lg">@loOffer.last_offer_date.ToString("F")</span>
+                                    </td>
+                                    <td>
+                                        <span class="text-dark-75 font-weight-bolder d-block font-size-lg">@loOffer.offer_state</span>
+                                    </td>
+                                    <td>
+                                        <span class="text-dark-75 font-weight-bolder d-block font-size-lg">@loMaximumAmount</span>
+                                    </td>
+                                    <td>
+                                        <span class="text-dark-75 font-weight-bolder d-block font-size-lg">@loOffer.minimum_increate_amout.ToString("N0")</span>
+                                    </td>
+                                    <td>
+                                        <span class="text-dark-75 font-weight-bolder d-block font-size-lg text-center">@loloMyLastOffer</span>
+                                        <span class="text-muted font-weight-bolder d-block font-size-sm text-center">@loloMyLastDate</span>
+                                    </td>
+                                    <td>
+                                        <a target="_blank" href="@Common.MespactLinkUrl/Document/showDocument?id=@loOffer.mespact_session_uuid" data-id="@loOffer.row_guid.ToString()" class="btn btn-icon btn-light btn-hover-primary btn-sm" title="Şartnameyi Görüntüle">
+                                            <i class="flaticon-edit-1"></i>
+                                        </a>
+                                        <a href="/Offer/DownloadDocument?pId=@loOffer.mespact_session_uuid" class="btn btn-icon btn-light btn-hover-primary btn-sm mr-2" title="Şartnameyi İndir">
+                                            <i class="flaticon-download"></i>
+                                        </a>
+                                        @if (loOffer.history.Count > 0)
+                                        {
+                                            <a href="#" id="show_offer_detail_@loOffer.id" class="btn btn-icon btn-light btn-hover-primary btn-sm showOtherOffers" data-id="@loOffer.id" title="Bu gayrimenkule ait tüm tekliflerimi görüntüle">
+                                                <i class="flaticon-list"></i>
+                                            </a>
+                                            <div class="timeline timeline-2 mt-2 hide" id="offer_detail_@loOffer.id">
+                                                <div class="timeline-bar"></div>
+                                                @foreach (var offerHistory in loOffer.history.OrderByDescending(x => x.row_create_date))
+                                                {
+                                                    <div class="timeline-item">
+                                                        <div class="timeline-badge"></div>
+                                                        <div class="timeline-content d-flex align-items-center justify-content-between">
+                                                            <span class="mr-3">
+                                                                <a>@offerHistory.amount.ToString("N0") TL</a>
+                                                            </span>
+                                                            <span class="text-muted text-right">@offerHistory.row_create_date.ToString("F")</span>
+                                                        </div>
+                                                    </div>
+                                                }
+
+                                            </div>
+                                        }
+
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <!--end::Table-->
+                </div>
             </div>
         </div>
     </div>
-</div>
+}
 
 <div class="modal fade" id="kt_modal_new_offer" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-md">
@@ -108,10 +146,3 @@
         </div>
     </div>
 </div>
-
-@section Scripts{
-    <script>
-        jQuery(document).ready(function () {
-        });
-    </script>
-}

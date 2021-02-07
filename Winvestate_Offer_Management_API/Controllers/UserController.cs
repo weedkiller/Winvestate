@@ -166,6 +166,7 @@ namespace Winvestate_Offer_Management_API.Controllers
             if (loLogin.user_type == 1 || loLogin.user_type == 2) //1 Winvestate admin 2 Winvestate user
             {
                 loOtp.phone = loLogin.phone;
+                loUser.phone = loLogin.phone;
             }
             else if (loLogin.user_type == 3) //Müşteri
             {
@@ -223,6 +224,7 @@ namespace Winvestate_Offer_Management_API.Controllers
             loUser.phone = pUser.phone ?? loUser.phone;
             loUser.is_active = pUser.is_active ?? loUser.is_active;
             loUser.is_deleted = pUser.is_deleted ?? loUser.is_deleted;
+            loUser.user_type = pUser.user_type ?? loUser.user_type;
             loUser.password = loUser.password.ToUpper();
             loUser.name = loUser.name.ToUpper();
             loUser.surname = loUser.surname.ToUpper();

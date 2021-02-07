@@ -21,7 +21,9 @@ namespace Winvestate_Offer_Management_API.Classes
         public static readonly string SenderHost = "mail.mesnetbilisim.com.tr";
         public static readonly int SenderPort = 587;
         public static string InfoMailList = "emre.akarsu@mesnetbilisim.com.tr";
+        public static string OfferMail = "emre.akarsu@mesnetbilisim.com.tr";
         public static string CustomerUrl = "https://winvestate.mesnetbilisim.com.tr/";
+        public static string BitlyLink = "d4bbed60e7a7786929a2f43da3f264dc8e8a6f46";
 
         public static readonly string MespactWinvestateUser = "54df5cfc-e986-4e1d-896b-a159e4ed5068";
 
@@ -34,6 +36,7 @@ namespace Winvestate_Offer_Management_API.Classes
             Connection.ConnectionStringForWinvestate = "Server=192.168.200.200;Port=5432;Database=winvestate;User Id=winvestate;Password=2021Winvestate*!-;";
             InfoMailList =
                 "cuneyt.kurekci@winvestate.com;zafer.karahan@winvestate.com;serkan.yilmaz@winvestate.com;metin.uzel@winvestate.com;busra.ozdemir@winvestate.com;esma.kurekci@winvestate.com";
+            OfferMail = "esma.kurekci@winvestate.com";
             CustomerUrl = "https://e-teklif.winvestate.com";
         }
 

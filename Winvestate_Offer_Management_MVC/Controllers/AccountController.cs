@@ -52,7 +52,7 @@ namespace Winvestate_Offer_Management_MVC.Controllers
             {
                 var loRememberedPassword = Request.Cookies["password"];
 
-                if (string.IsNullOrEmpty(loRememberedPassword) || pUser.password != loRememberedPassword)
+                if (string.IsNullOrEmpty(loRememberedPassword) || pUser.password != Cipher.DecryptString(loRememberedPassword))
                 {
                     pUser.password = pUser.password.ToUpper();
                 }
@@ -61,13 +61,17 @@ namespace Winvestate_Offer_Management_MVC.Controllers
                     pUser.password = Cipher.DecryptString(loRememberedPassword);
                 }
             }
+            else
+            {
+                Response.Cookies.Delete("password");
+            }
 
             var loUser = RestCalls.ValidateUser(pUser);
             if (loUser.id <= 0) return loUser;
 
             loUser.password = pUser.password;
             loUser.session_id = Guid.NewGuid().ToString();
-            
+
             if (loUser.user_type != 3)
             {
                 loUser.banks = RestCalls.GetAllBanks(loUser.token);
@@ -97,7 +101,7 @@ namespace Winvestate_Offer_Management_MVC.Controllers
 
         [HttpPost]
         [SessionTimeout]
-        [OnlyAdmin]
+        [OnlyWinvestate]
         public UserDto Save([FromBody] UserDto pUser)
         {
             var loUser = HttpContext.Session.GetObject<UserDto>("User");
@@ -106,7 +110,7 @@ namespace Winvestate_Offer_Management_MVC.Controllers
             return loUserToSave;
         }
 
-        [OnlyAdmin]
+        [OnlyWinvestate]
         public IActionResult List()
         {
             var loUser = HttpContext.Session.GetObject<UserDto>("User");

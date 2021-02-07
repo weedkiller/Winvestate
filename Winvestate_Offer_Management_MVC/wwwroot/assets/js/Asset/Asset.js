@@ -134,6 +134,35 @@ function setAssetVariables(pTypes, pSessionId, pSelectedAsset) {
         });
 }
 
+$(".approveSale").on('click',
+    function (e) {
+        e.preventDefault();
+        var btn = $(this);
+        Swal.fire({
+            title: "Onaylıyor Musunuz?",
+            text: "Satış işlemi tamamlanacak",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Evet!",
+            cancelButtonText: "İptal Et"
+        }).then(function (result) {
+            if (result.value) {
+                setAssetSold(btn);
+            }
+
+        });
+    });
+
+
+function setAssetSold(btn) {
+    var loAsset = {};
+    loAsset.id = 1;
+    loAsset.row_guid = btn.data("id");
+    loAsset.is_sold = true;
+
+    SendAssetToServer(loAsset, btn, true);
+}
+
 
 function SendAssetToServer(model, btn, isDelete) {
     var loTempText = btn.text();
@@ -220,6 +249,7 @@ function SaveAsset() {
     loMyAsset.minimum_increate_amout = $("#minimum_increate_amout").val() == null || $("#minimum_increate_amout").val() === "" ? null : Number(loMyAsset.minimum_increate_amout.replaceAll(".", ""));
     loMyAsset.guarantee_amount = $("#guarantee_amount").val() == null || $("#guarantee_amount").val() === "" ? null : Number(loMyAsset.guarantee_amount.replaceAll(".", ""));
     loMyAsset.is_compatible_for_credit = $("#is_compatible_for_credit").is(':checked');
+    loMyAsset.show_last_offer_date = $("#show_last_offer_date").is(':checked');
     loMyAsset.explanation = $("#myLongExplanation").summernote('code');
     loMyAsset.last_announcement_date_str = $("#last_announcement_date_str").val() + ":00";
     loMyAsset.first_announcement_date_str = $("#first_announcement_date_str").val() + ":00";

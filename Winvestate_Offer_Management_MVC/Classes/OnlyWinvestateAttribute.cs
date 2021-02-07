@@ -9,12 +9,12 @@ using Winvestate_Offer_Management_MVC.Session;
 
 namespace Winvestate_Offer_Management_MVC.Classes
 {
-    public class CheckAuthorizeAttribute : ActionFilterAttribute
+    public class OnlyWinvestateAttribute : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             var loUser = filterContext.HttpContext.Session.GetObject<User>("User");
-            if (loUser == null || loUser.user_type > 2)// Kurum ekleme yalnızca winvestate.
+            if (loUser == null || loUser.user_type == 3 || loUser.user_type == 4)// Müşteri ve kurum diğer ekranlara gidemesin.
             {
                 filterContext.Result = new RedirectResult("~/Account/Login");
                 return;

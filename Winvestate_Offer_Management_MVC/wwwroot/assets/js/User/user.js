@@ -2,6 +2,7 @@
 var loMyUserList = [];
 var loSelectedUser;
 var loMyProcess;
+var callbackRecord = {};
 
 $(document).ready(function () {
     setUserValidation();
@@ -42,7 +43,7 @@ $(document).ready(function () {
                 }
             });
 
-          
+
         });
 
     $(document).on("click",
@@ -79,13 +80,7 @@ $(document).ready(function () {
                 $("#mail").val(loSelectedUser.mail);
                 $("#phone").val(loSelectedUser.phone);
                 $("#password").val(loSelectedUser.password);
-                if (loSelectedUser.user_type == 1) {
-                    $("#authorize_full").attr('checked', 'checked');
-                    $("#authorize_standart").removeAttr('checked', 'checked');
-                } else {
-                    $("#authorize_standart").attr('checked', 'checked');
-                    $("#authorize_full").removeAttr('checked', 'checked');
-                }
+                $('input[name="user_type"][value=' + loSelectedUser.user_type + ']').attr('checked', 'checked');
 
             } else {
                 $("#name").val("");
@@ -133,20 +128,29 @@ $(document).ready(function () {
         }
 
     });
+
+    $('#saveCallbackRecord').on('click', function (e) {
+        e.preventDefault();
+
+        callbackRecord.note = $("#cb_note").val();
+        SendCallbackRecordToServer(callbackRecord, $(this));
+    });
 });
+
+
 
 function UpdateUserPassword(model) {
     $('#updatePassword').addClass('spinner spinner-right spinner-white pr-15').attr('disabled', true).text("Kaydet");
     $.ajax({
         method: "put",
-        url: HOST_URL+'/User/Password',
+        url: HOST_URL + '/User/Password',
         contentType: "application/json;charset=utf-8",
         data: JSON.stringify(model),
         traditional: true,
         crossDomain: true,
         dataType: 'json',
         beforeSend: function (xhr) {
-            xhr.setRequestHeader('Authorization', 'Bearer '+HOST_TOKEN);
+            xhr.setRequestHeader('Authorization', 'Bearer ' + HOST_TOKEN);
         },
         error: function () {
             $('#updatePassword').removeClass('spinner spinner-right spinner-white pr-15').attr('disabled', false).text("Kaydet");
@@ -187,6 +191,73 @@ function UpdateUserPassword(model) {
 
                 });
             }
+        }
+    });
+}
+
+function SendCallbackRecordToServer(model, btn) {
+    var loTempText = btn.text();
+    btn.addClass('spinner spinner-right spinner-white pr-15').attr('disabled', true)
+        .text("Lütfen Bekleyiniz");
+    $.ajax({
+        method: "PUT",
+        url: HOST_URL + '/Customer/ChangeCallback',
+        // sample custom headers
+        headers: { 'Authorization': 'Bearer ' + HOST_TOKEN },
+        dataType: "json",
+        contentType: 'application/json',
+        data: JSON.stringify(model),
+        error: function (xhr) {
+            btn.removeClass('spinner spinner-right spinner-white pr-15').attr('disabled', false)
+                .text(loTempText);
+            console.log(xhr);
+            swal.fire({
+                text: "İşlem esnasında bir problem oluştu lütfen daha sonra tekrar deneyiniz.",
+                icon: "error",
+                buttonsStyling: false,
+                confirmButtonText: "Tamam",
+                customClass: {
+                    confirmButton: "btn font-weight-bold btn-light-primary"
+                }
+            }).then(function () {
+                KTUtil.scrollTop();
+            });
+        },
+        success: function (response, status, xhr, $form) {
+            btn.removeClass('spinner spinner-right spinner-white pr-15').attr('disabled', false)
+                .text(loTempText);
+            if (response.code == 200) {
+                swal.fire({
+                    text: "İşlem Başarılı!",
+                    icon: "success",
+                    buttonsStyling: false,
+                    confirmButtonText: "Tamam",
+                    customClass: {
+                        confirmButton: "btn font-weight-bold btn-light-primary"
+                    }
+                }).then(function () {
+                    window.location = '/Home/Dashboard';
+                });
+            } else {
+                btn.removeClass('spinner spinner-right spinner-white pr-15').attr('disabled', false)
+                    .text(loTempText);
+                swal.fire({
+                    text: "İşlem esnasında bir problem oluştu: " + response.message,
+                    icon: "error",
+                    buttonsStyling: false,
+                    confirmButtonText: "Tamam",
+                    customClass: {
+                        confirmButton: "btn font-weight-bold btn-light-primary"
+                    }
+                });
+            }
+
+
+            // similate 2s delay
+            //setTimeout(function() {
+            //    btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
+            //    showErrorMsg(form, 'danger', 'Incorrect username or password. Please try again.');
+            //   }, 2000);
         }
     });
 }
@@ -344,6 +415,22 @@ function setUserValidation() {
         });
 
 }
+
+$(document).on("click",
+    ".changeCallbackStatus",
+    function (e) {
+        e.preventDefault();
+        var loId = $(this).data("id");
+        var loType = $(this).data("type");
+
+        callbackRecord = {};
+        callbackRecord.row_guid = loId;
+        callbackRecord.callback_record_state_type_system_type_id = Number(loType);
+
+        $("#modalCallbackRecordNote").modal("show");
+
+
+    });
 
 var KTDatatableAutoColumnHideDemo = function () {
     // Private functions

@@ -3,7 +3,7 @@
 }
 
 .wv_h6_xl {
-    font-size:1.5rem !important
+    font-size: 1.5rem !important
 }
 
 .wv_h6_sm {
@@ -15,7 +15,7 @@
 }
 
 .bg-gray-winv {
-    background-color: #D9D9D9 !important; 
+    background-color: #D9D9D9 !important;
 }
 
 .myImageSize {
@@ -51,12 +51,12 @@ ul, ol, li {
     white-space: nowrap;
 }
 
-.reorder_link:hover {
-    color: #fff;
-    border: solid 2px #3675B4;
-    background: #3675B4;
-    box-shadow: none;
-}
+    .reorder_link:hover {
+        color: #fff;
+        border: solid 2px #3675B4;
+        background: #3675B4;
+        box-shadow: none;
+    }
 
 #reorder-helper {
     margin: 18px 10px;
@@ -78,25 +78,25 @@ ul, ol, li {
     margin-top: 15px;
 }
 
-.gallery ul {
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
-}
+    .gallery ul {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+    }
 
-.gallery ul li {
-    padding: 7px;
-    border: 2px solid #ccc;
-    float: left;
-    margin: 10px 7px;
-    background: none;
-    width: 150px;
-    height: 200px;
-}
+        .gallery ul li {
+            padding: 7px;
+            border: 2px solid #ccc;
+            float: left;
+            margin: 10px 7px;
+            background: none;
+            width: 150px;
+            height: 200px;
+        }
 
-.gallery img {
-    width: 120px;
-}
+    .gallery img {
+        width: 120px;
+    }
 
 /* notice box */
 .notice, .notice a {
@@ -109,9 +109,9 @@ ul, ol, li {
     margin-top: 20px;
 }
 
-.notice a {
-    font-weight: bold;
-}
+    .notice a {
+        font-weight: bold;
+    }
 
 .notice_error {
     background: #E46360;
@@ -140,4 +140,14 @@ ul, ol, li {
     justify-content: center;
     align-items: center;
     height: 450px;
+}
+
+.splide__pagination__page {
+    width: 12px !important;
+    height: 12px !important;
+    background: #D9D9D9 !important;
+}
+
+.checkbox-black {
+    border-color: #000 !important;
 }

@@ -12,6 +12,7 @@ using Winvestate_Offer_Management_API.Database;
 using Winvestate_Offer_Management_Models;
 using Winvestate_Offer_Management_Models.Database.Winvestate;
 using Winvestate_Offer_Management_Models.Enums.Offer;
+using Winvestate_Offer_Management_Models.Mespact;
 
 namespace Winvestate_Offer_Management_API.Controllers
 {
@@ -24,6 +25,8 @@ namespace Winvestate_Offer_Management_API.Controllers
         [HttpGet("Summary")]
         public ActionResult<GenericResponseModel> GetOfferSummary()
         {
+            var loUserId = HelperMethods.GetApiUserIdFromToken(HttpContext.User.Identity);
+            var loUserType = HelperMethods.GetUserTypeFromToken(HttpContext.User.Identity);
             var loGenericResponse = new GenericResponseModel
             {
                 Code = -1,
@@ -31,6 +34,18 @@ namespace Winvestate_Offer_Management_API.Controllers
             };
 
             var loResult = GetData.GetOfferSummary();
+
+            loResult = loUserType switch
+            {
+                3 => loResult.FindAll(x => x.owner_uuid == loUserId),
+                4 => loResult.FindAll(x => x.bank_guid == loUserId),
+                _ => loResult
+            };
+
+            foreach (var offerDto in loResult)
+            {
+                offerDto.history = GetData.GetOfferHistoryByOfferId(offerDto.row_guid.ToString());
+            }
 
             loGenericResponse.Code = 200;
             loGenericResponse.Status = "OK";
@@ -133,9 +148,10 @@ namespace Winvestate_Offer_Management_API.Controllers
             }
             else
             {
+                var loUrl = Bitly.Shorten(Common.CustomerUrl);
                 loMessageContent =
                     string.Format(
-                        "Sayın müşterimiz teklif vermek istediğiniz gayrimenkule ait başvurunuz onaylanmıştır. Teklif vermek için {0} adresini ziyaret edebilirsiniz. Sisteme giriş için kullanıcı adınız olarak {2} ve daha önce oluşturduğunuz şifreyi kullanabilirsiniz. Mesaj tarihi: {1}", Common.CustomerUrl, DateTime.Now, loUserNameType);
+                        "Sayın müşterimiz teklif vermek istediğiniz gayrimenkule ait başvurunuz onaylanmıştır. Teklif vermek için {0} adresini ziyaret edebilirsiniz. Sisteme giriş için kullanıcı adınız olarak {2} ve daha önce oluşturduğunuz şifreyi kullanabilirsiniz. Mesaj tarihi: {1}", loUrl, DateTime.Now, loUserNameType);
 
             }
 
@@ -230,6 +246,12 @@ namespace Winvestate_Offer_Management_API.Controllers
         public ActionResult<GenericResponseModel> ResendAgreementLink([FromBody] OfferDto pOffer)
         {
             return RestCalls.SendAgreementLinkAgain(pOffer.mespact_session_uuid);
+        }
+
+        [HttpGet("Signed/{pId}")]
+        public ActionResult<PdfContent> GetSignedDocument(string pId)
+        {
+            return RestCalls.GetSignedDocument(pId);
         }
     }
 }

@@ -401,5 +401,21 @@ namespace Winvestate_Offer_Management_MVC.Api
             return loOffers;
         }
 
+        public static PdfContent GetSignedDocument(string pId, string pToken)
+        {
+            var client = new RestClient(Common.ApiUrl + "/Offer/Signed/" + pId);
+            var request = new RestRequest(Method.GET);
+            request.AddHeader("Content-Type", "application/json");
+            request.RequestFormat = DataFormat.Json;
+            request.AddHeader("Authorization", "Bearer " + pToken);
+            //var responseData = client.Execute(request).Content;
+            var result = client.Execute(request);
+
+            return JsonConvert.DeserializeObject<PdfContent>(result.Content);
+
+        }
+
+
+
     }
 }

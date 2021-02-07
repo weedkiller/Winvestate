@@ -26,7 +26,7 @@ namespace Winvestate_Offer_Management_API.Database
         public static string GetActiveCallBackRecords = "select * from winvestate_callback_record where is_active=true order by COALESCE(row_update_date,row_create_date) desc";
         public static string GetAllTypes = "select id,type_value_tr as type_value,type_name,COALESCE( list_order,0) list_order from sys_type";
         public static string GetAssetsForListing = "select * from vw_asset_for_listing order by COALESCE(row_update_date,row_create_date) desc";
-        public static string GetAllAssets = "select * from vw_all_assets order by COALESCE(row_update_date,row_create_date) desc";
+        public static string GetAllAssets = "select * from vw_all_assets order by city";
         public static string GetAllAssetsForUser = "select * from vw_all_assets where row_create_user::text='@P01' order by COALESCE(row_update_date,row_create_date) desc";
         public static string GetAllAssetsForCompany = "select * from vw_all_assets where bank_guid::text='@P01' order by COALESCE(row_update_date,row_create_date) desc";
         public static string GetOfferByOwnerAndAssetId = "select * from winvestate_offer where  owner_uuid::text='@P01' and  asset_uuid::text='@P02' and  is_deleted=false and is_active=true";
@@ -39,11 +39,10 @@ namespace Winvestate_Offer_Management_API.Database
         public static string GetActiveOffersByAssetId = "select * from vw_active_offers where asset_uuid::text ='@P01' order by COALESCE(row_update_date,row_create_date) desc";
         public static string GetOfferHistoryByOfferId = "select * from winvestate_offer_history where offer_uuid::text ='@P01' order by row_create_date desc";
         public static string GetOfferHistoryByAssetId = "select * from vw_offer_history where asset_uuid::text ='@P01' order by row_create_date desc";
-        public static string GetNewCallbackRecords = "select * from vw_callback_records where callback_record_state_type_system_type_id =43  order by COALESCE(row_update_date,row_create_date) desc";
-        public static string GetOfferedAssets = "select * from vw_asset_for_listing where max_offer_amount > 0  order by COALESCE(row_update_date,row_create_date) desc";
+        public static string GetNewCallbackRecords = "select * from vw_callback_records where callback_record_state_type_system_type_id in(43,44)  order by COALESCE(row_update_date,row_create_date) desc";
+        public static string GetAllCalbacks = "select * from vw_callback_records order by COALESCE(row_update_date,row_create_date) desc";
+        public static string GetOfferedAssets = "select * from vw_all_assets where max_offer_amount > 0  and state_id in (0,1) order by COALESCE(row_update_date,row_create_date) desc";
         public static string GetCities = "select * from mesnet_cities order by text";
         public static string GetDistricts = "select * from mesnet_districts where city_id='@P01' order by text";
-
-
     }
 }

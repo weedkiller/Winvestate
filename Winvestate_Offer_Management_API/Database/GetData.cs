@@ -430,7 +430,16 @@ namespace Winvestate_Offer_Management_API.Database
             return !result.Any() ? new List<CallbackRecordDto>() : result;
         }
 
+        public static List<CallbackRecordDto> GetAllCallbacks()
+        {
+            var loQuery = Queries.GetAllCalbacks;
 
+            using var connection = Connection.ConnectionWinvestate();
+            if (!Connection.OpenConnection(connection)) return null;
+
+            var result = connection.Query<CallbackRecordDto>(loQuery).ToList();
+            return !result.Any() ? new List<CallbackRecordDto>() : result;
+        }
 
     }
 }

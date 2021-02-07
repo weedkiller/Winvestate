@@ -19,5 +19,9 @@ namespace Winvestate_Offer_Management_Models.Database.Winvestate
         public string authorized_dial_code { get; set; }
         public Guid? mespact_agreement_uuid { get; set; }
         public bool? sale_in_company { get; set; }
+        public bool? is_enable_pre_offer { get; set; }
+        public string agreement_link { get; set; }
+
+
     }
 }

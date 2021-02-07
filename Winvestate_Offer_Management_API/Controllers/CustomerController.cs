@@ -53,7 +53,7 @@ namespace Winvestate_Offer_Management_API.Controllers
             }
 
             var loCheckUserHasRegistered = GetData.GetCustomerByIdentity(pObject.identity.ToString());
-            if (loCheckUserHasRegistered != null && loCheckUserHasRegistered.user_type_system_type_id ==pObject.user_type_system_type_id)
+            if (loCheckUserHasRegistered != null && loCheckUserHasRegistered.user_type_system_type_id == pObject.user_type_system_type_id)
             {
                 loCheckUserHasRegistered.send_agreement = pObject.send_agreement;
                 loCheckUserHasRegistered.asset_uuid = pObject.asset_uuid;
@@ -110,6 +110,7 @@ namespace Winvestate_Offer_Management_API.Controllers
                     row_create_user = pObject.row_create_user,
                     row_guid = Guid.NewGuid(),
                     agreement_uuid = Guid.NewGuid(),
+                    pre_offer_price = pObject.pre_offer_price,
                     is_active = true,
                     is_deleted = false
                 };
@@ -242,9 +243,8 @@ namespace Winvestate_Offer_Management_API.Controllers
             return loGenericResponse;
         }
 
-        [HttpPost("CloseCallback")]
-        [HttpPut]
-        public ActionResult<GenericResponseModel> CloseCallbackRecord([FromBody] CallbackRecord pObject)
+        [HttpPut("ChangeCallback")]
+        public ActionResult<GenericResponseModel> ChangeCallbackRecord([FromBody] CallbackRecord pObject)
         {
             var loUserId = HelperMethods.GetApiUserIdFromToken(HttpContext.User.Identity);
             var loGenericResponse = new GenericResponseModel
@@ -265,7 +265,9 @@ namespace Winvestate_Offer_Management_API.Controllers
 
             loCallbackRecord.row_update_date = DateTime.Now;
             loCallbackRecord.row_update_user = loUserId;
-            loCallbackRecord.is_active = false;
+            loCallbackRecord.callback_record_state_type_system_type_id =
+                pObject.callback_record_state_type_system_type_id;
+            loCallbackRecord.note = pObject.note;
             var loResult = Crud<CallbackRecord>.Update(loCallbackRecord, out _);
 
             if (!loResult)
@@ -283,7 +285,7 @@ namespace Winvestate_Offer_Management_API.Controllers
         }
 
         [HttpGet("ActiveCallback")]
-        public ActionResult<GenericResponseModel> GetAllCallbacks()
+        public ActionResult<GenericResponseModel> GetActiveCallbacks()
         {
             var loGenericResponse = new GenericResponseModel
             {
@@ -292,6 +294,30 @@ namespace Winvestate_Offer_Management_API.Controllers
             };
 
             var loResult = GetData.GetNewCallbackRecords();
+
+            if (!loResult.Any())
+            {
+                loGenericResponse.Message = "Kayıtlı geri aranma talebi bulunamadı";
+                return loGenericResponse;
+            }
+
+            loGenericResponse.Code = 200;
+            loGenericResponse.Status = "OK";
+            loGenericResponse.Data = loResult;
+
+            return loGenericResponse;
+        }
+
+        [HttpGet("Callback")]
+        public ActionResult<GenericResponseModel> GetAllCallbacks()
+        {
+            var loGenericResponse = new GenericResponseModel
+            {
+                Code = -1,
+                Status = "Fail"
+            };
+
+            var loResult = GetData.GetAllCallbacks();
 
             if (!loResult.Any())
             {

@@ -35,6 +35,13 @@ namespace Winvestate_Offer_Management_API.Controllers
                 return loGenericResponse;
             }
 
+            if (!string.IsNullOrEmpty(pObject.company_prefix) && pObject.company_prefix.Length > 5)
+            {
+                loGenericResponse.Message = "Kurum kısaltması 5 karakteri geçemez.";
+                return loGenericResponse;
+            }
+
+            loObj.is_enable_pre_offer = pObject.is_enable_pre_offer;
             loObj.bank_name = pObject.bank_name ?? loObj.bank_name;
             loObj.company_prefix = pObject.company_prefix ?? loObj.company_prefix;
             loObj.authorized_mail = pObject.authorized_mail ?? loObj.authorized_mail;
@@ -42,16 +49,22 @@ namespace Winvestate_Offer_Management_API.Controllers
             loObj.authorized_name = pObject.authorized_name ?? loObj.authorized_name;
             loObj.authorized_surname = pObject.authorized_surname ?? loObj.authorized_surname;
             loObj.authorized_phone = pObject.authorized_phone ?? loObj.authorized_phone;
+            loObj.authorized_second_phone = pObject.authorized_second_phone ?? loObj.authorized_second_phone;
+            loObj.authorized_dial_code = pObject.authorized_dial_code ?? loObj.authorized_dial_code;
             loObj.bank_name = pObject.bank_name ?? loObj.bank_name;
+            loObj.agreement_link = pObject.agreement_link ?? loObj.agreement_link;
             loObj.mespact_agreement_uuid = pObject.mespact_agreement_uuid ?? loObj.mespact_agreement_uuid;
             loObj.sale_in_company = pObject.sale_in_company ?? loObj.sale_in_company;
+            loObj.is_enable_pre_offer = pObject.is_enable_pre_offer ?? loObj.is_enable_pre_offer;
             loObj.is_active = pObject.is_active ?? loObj.is_active;
             loObj.is_deleted = pObject.is_deleted ?? loObj.is_deleted;
             loObj.bank_name = loObj.bank_name.ToUpper();
             loObj.authorized_name = loObj.authorized_name.ToUpper();
             loObj.authorized_surname = loObj.authorized_surname.ToUpper();
             loObj.authorized_mail = loObj.authorized_mail.ToLower();
+            loObj.agreement_link = loObj.agreement_link.ToLower();
             loObj.authorized_phone = HelperMethods.SerializePhone(loObj.authorized_phone);
+            loObj.authorized_second_phone = HelperMethods.SerializePhone(loObj.authorized_second_phone);
             loObj.row_update_date = DateTime.Now;
             loObj.row_update_user = loUserId;
 
@@ -79,18 +92,27 @@ namespace Winvestate_Offer_Management_API.Controllers
                 loGenericResponse.Message = "Kurum adı girilmeden işleme devam edilemez";
                 return loGenericResponse;
             }
+
+            if (!string.IsNullOrEmpty(pObject.company_prefix) && pObject.company_prefix.Length > 5)
+            {
+                loGenericResponse.Message = "Kurum kısaltması 5 karakteri geçemez.";
+                return loGenericResponse;
+            }
+
             pObject.row_create_date = DateTime.Now;
             pObject.row_create_user = loUserId;
             pObject.row_guid = Guid.NewGuid();
             pObject.is_deleted = false;
             pObject.is_active = true;
             pObject.bank_name = string.IsNullOrEmpty(pObject.bank_name) ? "" : pObject.bank_name.ToUpper();
+            pObject.company_prefix = string.IsNullOrEmpty(pObject.company_prefix) ? "" : pObject.company_prefix.ToUpper();
             pObject.authorized_name = string.IsNullOrEmpty(pObject.authorized_name) ? "" :  pObject.authorized_name.ToUpper();
             pObject.authorized_surname = string.IsNullOrEmpty(pObject.authorized_surname) ? "" : pObject.authorized_surname.ToUpper();
             pObject.authorized_mail = string.IsNullOrEmpty(pObject.authorized_mail) ? "" : pObject.authorized_mail.ToLower();
             pObject.authorized_password = string.IsNullOrEmpty(pObject.authorized_password) ? "" : pObject.authorized_password.ToUpper();
             pObject.authorized_phone = string.IsNullOrEmpty(pObject.authorized_phone) ? "" : HelperMethods.SerializePhone(pObject.authorized_phone);
             pObject.authorized_second_phone = string.IsNullOrEmpty(pObject.authorized_second_phone) ? "" : HelperMethods.SerializePhone(pObject.authorized_second_phone);
+            pObject.agreement_link = string.IsNullOrEmpty(pObject.agreement_link) ? "" : pObject.agreement_link.ToLower();
             var loResult = Crud<Bank>.Insert(pObject, out _);
 
 

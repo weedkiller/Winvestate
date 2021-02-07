@@ -15,7 +15,7 @@ $(document).on("click",
             if (result.value) {
                 var loSelectedAsset = loMyAssetList.find(x => x.row_guid === loId);
                 loSelectedAsset.is_deleted = true;
-                SendAssetToServer(loSelectedAsset, $(this),true);
+                SendAssetToServer(loSelectedAsset, $(this), true);
             }
         });
     });
@@ -112,7 +112,7 @@ var AssetListDT = function () {
                 {
                     field: 'city',
                     title: 'İl-İlçe',
-                    template: function(row) {
+                    template: function (row) {
                         var loSize = row.size + "m2";
                         var loAddress = row.city + ' ' + row.district;
                         var output = '<div class="d-flex align-items-left detail" data-id=' + row.row_guid + '>\
@@ -162,10 +162,10 @@ var AssetListDT = function () {
                     autoHide: false,
                     template: function (row) {
                         return '\
-                        <a href="/Asset/Info?pId='+ row.row_guid +'"class="btn btn-sm btn-clean btn-icon mr-2" title="Güncelle">\
+                        <a href="/Asset/Info?pId='+ row.row_guid + '"class="btn btn-sm btn-clean btn-icon mr-2" title="Güncelle">\
                            <i class="flaticon-edit"></i>\
                         </a>\
-                        <a href="/Asset/AssetDetail?pId='+row.row_guid+'" class="btn btn-sm btn-clean btn-icon" title="Görüntüle">\
+                        <a href="/Asset/AssetDetail?pId='+ row.row_guid + '" class="btn btn-sm btn-clean btn-icon" title="Görüntüle">\
                              <i class="flaticon-eye"></i>\
                         </a>\
                         <a href="javascript:;" class="btn btn-sm btn-clean btn-icon deleteAsset" data-id=' + row.row_guid + ' title="Sil">\
@@ -173,6 +173,131 @@ var AssetListDT = function () {
                         </a>\
                     ';
                     },
+                }
+            ]
+        });
+
+        $('#kt_datatable_search_status, #kt_datatable_search_type').selectpicker();
+
+    };
+
+    return {
+        // public functions
+        init: function () {
+            $('#state_id').select2({
+                placeholder: "Durum Seçiniz"
+            });
+
+            demo();
+        },
+    };
+}();
+
+var SoldAssetListDT = function () {
+    // Private functions
+
+    // basic demo
+    var demo = function () {
+
+        var datatable = $('#kt_datatable').KTDatatable({
+            // datasource definition
+            data: {
+                type: 'remote',
+                source: {
+                    read: {
+                        method: 'GET',
+                        contentType: 'application/json',
+                        url: HOST_URL + '/Asset/Sold',
+                        // sample custom headers
+                        headers: { 'Authorization': 'Bearer ' + HOST_TOKEN },
+                        map: function (raw) {
+                            //console.log(raw);
+                            // sample data mapping
+                            if (raw.code === 200) {
+                                loMyAssetList = raw.data;
+                            } else {
+                                loMyAssetList = [];
+                            }
+                            return loMyAssetList;
+                        },
+                    },
+                },
+                pageSize: 10, // display 20 records per page
+            },
+
+            // layout definition
+            layout: {
+                scroll: false, // enable/disable datatable scroll both horizontal and vertical when needed.
+                footer: false, // display/hide footer
+            },
+
+            // column sorting
+            sortable: true,
+
+            pagination: true,
+
+            search: {
+                input: $('#kt_datatable_search_query'),
+                delay: 400,
+                key: 'generalSearch'
+            },
+
+            // columns definition
+            columns: [
+                {
+                    field: 'bank_name',
+                    title: 'Kurum Adı',
+                },
+                {
+                    field: 'asset_no',
+                    title: 'Gayrimenkul No',
+                    template: function (row) {
+                        var output = '<div class="d-flex align-items-center detail" data-id=' + row.row_guid + '>\
+                                                <div class="ml-4">\
+                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ row.company_prefix + row.asset_no + '</div>\
+                                                    <div class="text-muted font-size-xs">' + row.asset_name + '</div>\
+                                                </div>\
+                                            </div>';
+                        return output;
+                    }
+                },
+                {
+                    field: 'last_offer_date',
+                    title: 'Satış Tarihi',
+                    width: 240,
+                    template: function (row) {
+                        var loDate1 = new Date(row.asset_update_date);
+                        var output = '<div class="d-flex align-items-center detail" data-id=' + row.row_guid + '>\
+                                                <div class="ml-4">\
+                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ loDate1.toLocaleDateString() + " " + loDate1.toLocaleTimeString() + '</div>\
+                                                </div>\
+                                            </div>';
+                        return output;
+                    }
+                },
+                {
+                    field: 'buyer',
+                    title: 'Satın Alan',
+                    template: function (row) {
+                        var output = '<div class="d-flex align-items-left detail" data-id=' + row.row_guid + '>\
+                                                <div class="ml-4">\
+                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ row.customer_full_name + '</div>\
+                                                </div>\
+                                            </div>';
+                        return output;
+                    }
+                },
+                {
+                    field: 'amount',
+                    title: 'Satış Fiyatı',
+                    template: function (row) {
+                        var output = '<div class="d-flex align-items-left detail" data-id=' + row.row_guid + '>\
+                                                <div class="ml-4">\
+                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ row.max_offer_amount.toLocaleString("tr") + " TL" + '</div>\
+                                                </div>\
+                                            </div>';
+                        return output;
+                    }
                 }
             ]
         });

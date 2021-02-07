@@ -61,7 +61,7 @@ namespace Winvestate_Offer_Management_API.Api
 
         public static GenericResponseModel SendAgreementLinkAgain(string pMespactSessionId)
         {
-            var client = new RestClient(_mespactApiUrl + "/Document/SignLink/"+ pMespactSessionId);
+            var client = new RestClient(_mespactApiUrl + "/Document/SignLink/" + pMespactSessionId);
             var request = new RestRequest(Method.POST);
             request.AddHeader("Authorization", "Bearer " + GetMespactToken());
             request.AddHeader("Content-Type", "application/json");
@@ -92,6 +92,25 @@ namespace Winvestate_Offer_Management_API.Api
             }
 
             return loDocuments;
+        }
+
+        public static PdfContent GetSignedDocument(string pDoc2SignId)
+        {
+            var client = new RestClient(_mespactApiUrl + "/Document/Pdf/Signed/" + pDoc2SignId);
+            var request = new RestRequest(Method.GET);
+            request.AddHeader("Content-Type", "application/json");
+            request.AddHeader("Authorization", "Bearer " + GetMespactToken());
+            request.RequestFormat = DataFormat.Json;
+
+            //var responseData = client.Execute(request).Content;
+            var result = client.Execute(request);
+            var loGenericResult = JsonConvert.DeserializeObject<GenericResponseModel>(result.Content);
+
+            if (loGenericResult != null && loGenericResult.Code == 200 && loGenericResult.Status.ToLower() == "ok")
+            {
+                return JsonConvert.DeserializeObject<PdfContent>(loGenericResult.Data.ToString());
+            }
+            return new PdfContent();
         }
         public static List<AddressKeyValue> GetCities()
         {

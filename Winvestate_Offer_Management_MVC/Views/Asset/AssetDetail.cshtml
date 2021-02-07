@@ -183,14 +183,17 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class="form-group row my-2">
-                                <label class="col-6 col-form-label font-size-xs">E-Teklif Bitiş Tarihi:</label>
-                                <div class="col-6">
-                                    <span class="form-control-plaintext">
-                                        <span class="font-weight-bolder">@Model.Asset.last_announcement_date.Value.ToString("dd.MM.yyyy") - @Model.Asset.last_announcement_date.Value.ToShortTimeString()</span>
-                                    </span>
+                            @if (Model.Asset.show_last_offer_date.HasValue  && Model.Asset.show_last_offer_date.Value)
+                            {
+                                <div class="form-group row my-2">
+                                    <label class="col-6 col-form-label font-size-xs">E-Teklif Bitiş Tarihi:</label>
+                                    <div class="col-6">
+                                        <span class="form-control-plaintext">
+                                            <span class="font-weight-bolder">@Model.Asset.last_announcement_date.Value.ToString("dd.MM.yyyy") - @Model.Asset.last_announcement_date.Value.ToShortTimeString()</span>
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
+                            }
                         </div>
                         <!--end::Body-->
                         <!--begin::Footer-->
@@ -282,7 +285,7 @@
                     <strong>Winvestate E-Teklif Sistemi Bilgi Dokümanı’nı (Sıkça Sorulan Sorular)</strong> incelemek için <a href="https://winvestate.com/sss" target="_blank">tıklayınız.</a>
                 </p>
                 <p>
-                    <strong>Örnek E-Şartname’yi </strong>incelemek için <a href="https://winvestate.com/e-sartname" target="_blank">tıklayınız.</a>
+                    <strong>Örnek E-Şartname’yi </strong>incelemek için <a href="@Model.Asset.agreement_link" target="_blank">tıklayınız.</a>
                 </p>
                 <p>
                     Gayrimenkuller için detaylı bilgi almak için aşağıdaki numaradan Winvestate’i arayabilirsiniz.
@@ -397,11 +400,22 @@
                                       data-fv-string-length___message="Adres 255 karakterden fazla olamaz"></textarea>
                         </div>
                     </div>
+                    @if (Model.Asset.is_enable_pre_offer)
+                    {
+                        <div class="form-group row">
+                            <label class="col-lg-2 col-form-label">Ön Teklif Tutarı:</label>
+                            <div class="col-lg-4">
+                                <input class="form-control priceInput" id="pre_offer_price" type="text" name="pre_offer_price" placeholder="" />
+                                @*<span class="form-text text-primary">Girmiş olduğunuz telefon numarasına doğrulama için kod gönderimi sağlanacaktır.</span>*@
+                            </div>
+                        </div>
+                    }
+
                     <div class="form-group row">
-                        <div class="checkbox-inline">
-                            <label class="checkbox checkbox-success font-weight-boldest">
+                        <div class="checkbox-inline ml-4">
+                            <label class="checkbox checkbox-outline checkbox-outline-2x checkbox-success">
                                 <input type="checkbox" name="checkKvkk" id="checkKvkk"/>
-                                <span></span>
+                                <span class="checkbox-black"></span>
                                 Kişisel Verileri Koruma Kanunu aydınlatma metnini okudum, kabul ediyorum
                             </label>
                         </div>

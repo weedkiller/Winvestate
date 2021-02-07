@@ -173,42 +173,30 @@ namespace Winvestate_Offer_Management_API.Controllers
             if (pObject.last_announcement_date == null)
             {
                 if (DateTime.TryParse(pObject.last_announcement_date_str, out var loLastAnnonce))
-                    pObject.last_announcement_date = loLastAnnonce;
-                else
                 {
-                    loGenericResponse.Status = "Fail";
-                    loGenericResponse.Code = -1;
-                    loGenericResponse.Message = "İlan yayın bitiş tarihi girilmeden işleme devam edilemez.";
-                    return loGenericResponse;
-                }
-
-                if (pObject.last_announcement_date < pObject.first_announcement_date)
-                {
-                    loGenericResponse.Status = "Fail";
-                    loGenericResponse.Code = -1;
-                    loGenericResponse.Message = "İlanın bitiş tarihi başlangıç tarihinden önce olamaz";
-                    return loGenericResponse;
+                    loData.last_announcement_date = loLastAnnonce;
+                    if (loData.last_announcement_date < loData.first_announcement_date)
+                    {
+                        loGenericResponse.Status = "Fail";
+                        loGenericResponse.Code = -1;
+                        loGenericResponse.Message = "İlanın bitiş tarihi başlangıç tarihinden önce olamaz";
+                        return loGenericResponse;
+                    }
                 }
             }
 
             if (pObject.last_offer_date == null)
             {
                 if (DateTime.TryParse(pObject.last_offer_date_str, out var loOffer))
-                    pObject.last_offer_date = loOffer;
-                else
                 {
-                    loGenericResponse.Status = "Fail";
-                    loGenericResponse.Code = -1;
-                    loGenericResponse.Message = "İlan son teklif tarihi girilmeden işleme devam edilemez.";
-                    return loGenericResponse;
-                }
-
-                if (pObject.last_offer_date < pObject.last_announcement_date)
-                {
-                    loGenericResponse.Status = "Fail";
-                    loGenericResponse.Code = -1;
-                    loGenericResponse.Message = "Son teklif tarihi, ilan bitiş tarihinden önce olamaz";
-                    return loGenericResponse;
+                    loData.last_offer_date = loOffer;
+                    if (loData.last_offer_date < loData.last_announcement_date)
+                    {
+                        loGenericResponse.Status = "Fail";
+                        loGenericResponse.Code = -1;
+                        loGenericResponse.Message = "Son teklif tarihi, ilan bitiş tarihinden önce olamaz";
+                        return loGenericResponse;
+                    }
                 }
             }
 
@@ -232,26 +220,27 @@ namespace Winvestate_Offer_Management_API.Controllers
             loData.guarantee_amount = pObject.guarantee_amount ?? loData.guarantee_amount;
             loData.is_compatible_for_credit = pObject.is_compatible_for_credit ?? loData.is_compatible_for_credit;
             loData.thumb_path = pObject.thumb_path ?? loData.thumb_path;
-            loData.last_announcement_date = pObject.last_announcement_date ?? loData.last_announcement_date;
-            loData.last_offer_date = pObject.last_offer_date ?? loData.last_offer_date;
             loData.agreement_guid = pObject.agreement_guid ?? loData.agreement_guid;
+            loData.is_sold = pObject.is_sold ?? loData.is_sold;
+            loData.free_text_no = pObject.free_text_no ?? loData.free_text_no;
+            loData.show_last_offer_date = pObject.show_last_offer_date ?? loData.show_last_offer_date;
             //ilan başlangıç tarihi değiştirilemez loData.first_announcement_date = pObject.first_announcement_date ?? loData.first_announcement_date;
             loData.asset_name = pObject.asset_name ?? loData.asset_name;
             loData.bank_guid = pObject.bank_guid ?? loData.bank_guid;
             loData.row_update_date = DateTime.Now;
             loData.row_update_user = loUserId;
-            loData.city = pObject.city.ToUpper();
-            loData.district = pObject.district?.ToUpper();
-            loData.address = pObject.address?.ToUpper();
-            loData.share = pObject.share?.ToUpper();
-            loData.asset_name = pObject.asset_name?.ToUpper();
-            loData.asset_no = pObject.asset_no?.ToUpper();
+            loData.city = loData.city.ToUpper();
+            loData.district = loData.district?.ToUpper();
+            loData.address = loData.address?.ToUpper();
+            loData.share = loData.share?.ToUpper();
+            loData.asset_name = loData.asset_name?.ToUpper();
+            loData.asset_no = loData.asset_no?.ToUpper();
 
             if (pObject.asset_photos != null && pObject.asset_photos.Any())
             {
                 loData.asset_photos = pObject.asset_photos;
             }
-            
+
 
             var loResult = Crud<Asset>.UpdateAsset(loData);
 
@@ -298,6 +287,8 @@ namespace Winvestate_Offer_Management_API.Controllers
         [HttpGet("Offered")]
         public ActionResult<GenericResponseModel> GetOfferedAssets()
         {
+            var loUserId = HelperMethods.GetApiUserIdFromToken(HttpContext.User.Identity);
+            var loUserType = HelperMethods.GetUserTypeFromToken(HttpContext.User.Identity);
             var loGenericResponse = new GenericResponseModel
             {
                 Code = -1,
@@ -311,6 +302,13 @@ namespace Winvestate_Offer_Management_API.Controllers
                 loGenericResponse.Message = "Kayıtlı gayrimenkul bulunamadı";
                 return loGenericResponse;
             }
+
+
+            loResult = loUserType switch
+            {
+                4 => loResult.FindAll(x => x.bank_guid == loUserId),
+                _ => loResult
+            };
 
             foreach (var assetDto in loResult)
             {
@@ -347,6 +345,41 @@ namespace Winvestate_Offer_Management_API.Controllers
                 loGenericResponse.Message = "Kayıtlı gayrimenkul bulunamadı";
                 return loGenericResponse;
             }
+
+            loGenericResponse.Code = 200;
+            loGenericResponse.Status = "OK";
+            loGenericResponse.Data = loResult;
+
+            return loGenericResponse;
+        }
+
+        [HttpGet("Sold")]
+        public ActionResult<GenericResponseModel> GetAllSoldAssets()
+        {
+            var loUserType = HelperMethods.GetUserTypeFromToken(HttpContext.User.Identity);
+            var loUserId = HelperMethods.GetApiUserIdFromToken(HttpContext.User.Identity);
+            var loGenericResponse = new GenericResponseModel
+            {
+                Code = -1,
+                Status = "Fail"
+            };
+
+            var loResult = GetData.GetOfferSummary();
+
+            loResult = loUserType switch
+            {
+                3 => loResult.FindAll(x => x.owner_uuid == loUserId),
+                4 => loResult.FindAll(x => x.bank_guid == loUserId),
+                _ => loResult
+            };
+
+            if (!loResult.Any())
+            {
+                loGenericResponse.Message = "Kayıtlı gayrimenkul bulunamadı";
+                return loGenericResponse;
+            }
+
+            loResult = loResult.FindAll(x => x.asset_state_id == 5);
 
             loGenericResponse.Code = 200;
             loGenericResponse.Status = "OK";

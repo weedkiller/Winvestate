@@ -11,9 +11,9 @@ namespace Winvestate_Offer_Management_Models.Database.Winvestate
         public string asset_no { get; set; }
         public string asset_name { get; set; }
         public int? city_id { get; set; }
-        public string city{ get; set; }
+        public string city { get; set; }
         public int? district_id { get; set; }
-        public string district{ get; set; }
+        public string district { get; set; }
         public int? category_type_system_type_id { get; set; }
         public int? asset_type_system_type_id { get; set; }
         public decimal? size { get; set; }
@@ -24,8 +24,11 @@ namespace Winvestate_Offer_Management_Models.Database.Winvestate
         public string explanation { get; set; }
         public decimal? starting_amount { get; set; }
         public string thumb_path { get; set; }
+        public string free_text_no { get; set; }
         public decimal? max_offer_amount { get; set; }
         public bool? is_compatible_for_credit { get; set; }
+        public bool? show_last_offer_date { get; set; }
+        public bool? is_sold { get; set; }
         public decimal? minimum_increate_amout { get; set; }
         public decimal? guarantee_amount { get; set; }
         public DateTime? last_announcement_date { get; set; }

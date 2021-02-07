@@ -67,6 +67,12 @@ $(document).on("click", "#validateOtp", function () {
 
 });
 
+$('#otp').on('keydown', function (e) {
+    if (e.which == 13) {
+        e.preventDefault();
+    }
+});
+
 function sendOtp(pObj, pToken, btn, pValidate, pOtpUrl, pValidateUrl,pToClose) {
     _validateApiUrl = pValidateUrl;
     _validateOtp = pValidate;

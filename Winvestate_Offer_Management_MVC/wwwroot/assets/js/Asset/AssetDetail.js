@@ -287,6 +287,11 @@ function saveCustomerAndSendAgreement() {
     var model = objectifyForm($('#newCustomerValidationForm').serializeArray());
     model.user_type_system_type_id = Number(model.userType);
     model.identity = Number(model.identity);
+
+    if (model.pre_offer_price) {
+        model.pre_offer_price = Number(model.pre_offer_price.replaceAll(".", ""));
+    }
+    
     model.birthdate = $("#birth_date").val();
     model.send_agreement = true;
     model.asset_uuid = SELECTED_ASSET;
@@ -413,6 +418,12 @@ function setSubmitValidation() {
                     validators: {
                         notEmpty: {
                             message: 'Mail girilmeden işlem yapılamaz.'
+                        },
+                        callback: {
+                            message: 'Lütfen geçerli bir mail adresi giriniz',
+                            callback: function (input) {
+                                return validateEmail(input.value);
+                            }
                         }
                     }
                 },
@@ -448,6 +459,20 @@ function setSubmitValidation() {
                     validators: {
                         notEmpty: {
                             message: 'Vergi dairesi girilmeden işleme devam edilemez.'
+                        }
+                    }
+                },
+                pre_offer_price: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Ön teklif tutarı girilmeden işleme devam edilemez.'
+                        },
+                        callback: {
+                            message: 'Lütfen geçerli bir değer giriniz',
+                            callback: function (input) {
+                                var loTemp = parseFloat(input.value);
+                                return loTemp == input.value;
+                            }
                         }
                     }
                 }

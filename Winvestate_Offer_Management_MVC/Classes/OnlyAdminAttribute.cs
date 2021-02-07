@@ -9,7 +9,7 @@ using Winvestate_Offer_Management_MVC.Session;
 
 namespace Winvestate_Offer_Management_MVC.Classes
 {
-    public class CheckAuthorizeAttribute : ActionFilterAttribute
+    public class OnlyAdminAttribute : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {

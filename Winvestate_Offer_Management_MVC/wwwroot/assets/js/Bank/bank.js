@@ -85,19 +85,26 @@ $(document).ready(function () {
     $('#kt_modal_add_bank').on('show.bs.modal',
         function (e) {
             if (loMyProcess === "update") {
-                $("#name").val(loSelectedBank.name);
+                $("#bank_name").val(loSelectedBank.bank_name);
                 $("#authorized_name").val(loSelectedBank.authorized_name);
                 $("#authorized_surname").val(loSelectedBank.authorized_surname);
+                $("#authorized_second_phone").val(loSelectedBank.authorized_phone);
+                $("#authorized_dial_code").val(loSelectedBank.authorized_dial_code);
+                $("#authorized_phone").val(loSelectedBank.authorized_phone);
                 $("#authorized_phone").val(loSelectedBank.authorized_phone);
                 $("#authorized_mail").val(loSelectedBank.authorized_mail);
                 $('#mespact_agreement_uuid').val(loSelectedBank.mespact_agreement_uuid).trigger("change");
                 $("#authorized_password").val(loSelectedBank.authorized_password);
                 $("#company_prefix").val(loSelectedBank.company_prefix);
-                $('input[name="sale_in_company"]').val(loSelectedBank.sale_in_company);
+                $("#agreement_link").val(loSelectedBank.agreement_link);
+                $('#is_enable_pre_offer').prop('checked', loSelectedBank.is_enable_pre_offer);
+                $('input[name="sale_in_company"][value=' +  loSelectedBank.sale_in_company + ']').attr('checked', 'checked');
             } else {
-                $("#name").val("");
+                $("#bank_name").val("");
                 $("#authorized_name").val("");
                 $("#authorized_surname").val("");
+                $("#authorized_second_phone").val("");
+                $("#authorized_dial_code").val("");
                 $("#authorized_phone").val("");
                 $("#authorized_mail").val("");
                 $("#authorized_password").val("");
@@ -188,6 +195,7 @@ function SaveBank() {
     }
 
     loMyBank.sale_in_company = $('input[name="sale_in_company"]:checked').val() == 'true';
+    loMyBank.is_enable_pre_offer = $("#is_enable_pre_offer").is(':checked');
     SendBankToServer(loMyBank, $("#saveBank"));
 }
 

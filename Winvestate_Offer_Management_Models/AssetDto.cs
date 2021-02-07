@@ -17,6 +17,10 @@ namespace Winvestate_Offer_Management_Models
         public string bank_name { get; set; }
         public string max_offer { get; set; }
         public string company_prefix { get; set; }
+        public string agreement_link { get; set; }
+        public string buyer_name { get; set; }
+        public bool is_enable_pre_offer { get; set; }
+        public bool sale_in_company { get; set; }
         public string full_asset_no => company_prefix + asset_no;
 
         public List<OfferHistoryDto> history { get; set; }

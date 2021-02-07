@@ -287,8 +287,11 @@
                             var form = $('#kt_login_signin_submit').closest('form')[0];
                             $('#kt_login_signin_submit').addClass('spinner spinner-right spinner-white pr-15').attr('disabled', true).text("Lütfen Bekleyiniz");
 
-                            model.password = MD5(model.password);
                             model.remember_me = $("#remember_me").is(":checked");
+
+                            if (!model.remember_me || model.password != '@Model.User.password') {
+                                model.password = MD5(model.password);
+                            } 
 
                             $.ajax({
                                 url: '/Account/Validate',

@@ -13,8 +13,12 @@ $(".confirmForOffer").on('click',
         var loModel = {};
         loModel.row_guid = $(this).data("id");
         var loTempText = btn.text();
-        btn.addClass('spinner spinner-right spinner-white pr-15').attr('disabled', true)
-            .text("Lütfen Bekleyiniz");
+
+        KTApp.block('#kt_advance_table_widget_3', {
+            overlayColor: '#000000',
+            state: 'danger',
+            message: 'Lütfen bekleyiniz...'
+        });
 
         $.ajax({
             method: "post",
@@ -26,9 +30,7 @@ $(".confirmForOffer").on('click',
                 xhr.setRequestHeader('Authorization', 'Bearer ' + HOST_TOKEN);
             },
             error: function (xhr) {
-                btn.removeClass('spinner spinner-right spinner-white pr-15').attr('disabled', false)
-                    .text(loTempText);
-                console.log(xhr);
+                KTApp.unblock('#kt_advance_table_widget_3');
                 swal.fire({
                     text: "İşlem esnasında bir problem oluştu. Lütfen tekrar deneyiniz.",
                     icon: "error",
@@ -42,8 +44,7 @@ $(".confirmForOffer").on('click',
                 });
             },
             success: function (response, status, xhr, $form) {
-                btn.removeClass('spinner spinner-right spinner-white pr-15').attr('disabled', false)
-                    .text(loTempText);
+                KTApp.unblock('#kt_advance_table_widget_3');
                 if (response.code == 200) {
                     swal.fire({
                         text: "İşlem Başarılı. Müşteri Teklif Verebilir!",
@@ -57,8 +58,6 @@ $(".confirmForOffer").on('click',
                         window.location = "/Home/Dashboard";
                     });
                 } else {
-                    btn.removeClass('spinner spinner-right spinner-white pr-15').attr('disabled', false)
-                        .text(loTempText);
                     swal.fire({
                         text: "İşlem esnasında bir problem oluştu: " + response.message,
                         icon: "error",
@@ -87,9 +86,12 @@ $(".resend").on('click',
         var btn = $(this);
         var loModel = {};
         loModel.mespact_session_uuid = $(this).data("id");
-        var loTempText = btn.text();
-        btn.addClass('spinner spinner-right spinner-white pr-15').attr('disabled', true)
-            .text("Lütfen Bekleyiniz");
+
+        KTApp.block('#kt_advance_table_widget_3', {
+            overlayColor: '#000000',
+            state: 'danger',
+            message: 'Lütfen bekleyiniz...'
+        });
 
         $.ajax({
             method: "post",
@@ -101,9 +103,7 @@ $(".resend").on('click',
                 xhr.setRequestHeader('Authorization', 'Bearer ' + HOST_TOKEN);
             },
             error: function (xhr) {
-                btn.removeClass('spinner spinner-right spinner-white pr-15').attr('disabled', false)
-                    .text(loTempText);
-                console.log(xhr);
+                KTApp.unblock('#kt_advance_table_widget_3');
                 swal.fire({
                     text: "İşlem esnasında bir problem oluştu. Lütfen tekrar deneyiniz.",
                     icon: "error",
@@ -117,8 +117,7 @@ $(".resend").on('click',
                 });
             },
             success: function (response, status, xhr, $form) {
-                btn.removeClass('spinner spinner-right spinner-white pr-15').attr('disabled', false)
-                    .text(loTempText);
+                KTApp.unblock('#kt_advance_table_widget_3');
                 if (response.code == 200) {
                     swal.fire({
                         text: "Bağlantı gönderimi sağlandı!",
@@ -179,7 +178,7 @@ $("#saveOffer").on('click',
                 if (status == 'Valid') {
                     Swal.fire({
                         title: "Onaylıyor Musunuz?",
-                        text: "Teklifiniz "+loAmountToOffer.toLocaleString()+" olarak kaydedilecek.",
+                        text: "Teklifiniz "+loAmountToOffer.toLocaleString()+ " TL olarak kaydedilecek.",
                         icon: "warning",
                         showCancelButton: true,
                         confirmButtonText: "Evet!",
@@ -288,11 +287,9 @@ $(".showOtherOffers").on('click',
         if ($(loDomName).hasClass("hide")) {
             $(loDomName).removeClass("hide").addClass("show");
             $(loDomName).show();
-            $(loBtnDomName).text("Diğer Tekliflerimi Kapat");
         } else {
             $(loDomName).addClass("hide").removeClass("show");
             $(loDomName).hide();
-            $(loBtnDomName).text("Diğer Tekliflerimi Görüntüle");
         }
     });
 

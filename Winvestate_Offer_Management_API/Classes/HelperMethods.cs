@@ -330,7 +330,7 @@ namespace Winvestate_Offer_Management_API.Classes
             loDocumentTemplateKeys.Add(loDocumentTemplateKey1);
 
             loDocumentTemplateKey2.document_template_key = ((int)ThkAgreement.ThkSatisSartname.GmNo).ToString();
-            loDocumentTemplateKey2.document_template_value = loAsset.company_prefix+loAsset.asset_no;
+            loDocumentTemplateKey2.document_template_value = loAsset.company_prefix + loAsset.asset_no;
             loDocumentTemplateKeys.Add(loDocumentTemplateKey2);
 
             loDocumentTemplateKey3.document_template_key = ((int)ThkAgreement.ThkSatisSartname.Il).ToString();
@@ -395,7 +395,7 @@ namespace Winvestate_Offer_Management_API.Classes
             loMailContent = loMailContent.Replace("@CustomerPhone@", pCallbackRecord.applicant_phone);
             loMailContent = loMailContent.Replace("@AssetName@", loAsset.asset_no + " " + loAsset.asset_name);
             loMailContent = loMailContent.Replace("@OperationDate@", pCallbackRecord.row_create_date.Value.ToString("f"));
-            loMailContent = loMailContent.Replace("@AssetLink@", "https://e-teklif.winvestate.com/Asset/AssetDetail?pId="+pCallbackRecord.asset_uuid);
+            loMailContent = loMailContent.Replace("@AssetLink@", "https://e-teklif.winvestate.com/Asset/AssetDetail?pId=" + pCallbackRecord.asset_uuid);
 
             RestCalls.SendMail(loMailContent, Common.InfoMailList, "Yeni Geri Aranma Talebi");
         }
@@ -411,14 +411,14 @@ namespace Winvestate_Offer_Management_API.Classes
             var loCompany = GetData.GetBankById(loAsset.bank_guid.ToString());
 
             var loMailContent = File.ReadAllText("winvestate_new_offer.html");
-            loMailContent = loMailContent.Replace("@AssetNo@", loAsset.asset_no.ToString());
+            loMailContent = loMailContent.Replace("@AssetNo@", loAsset.company_prefix + loAsset.asset_no);
             loMailContent = loMailContent.Replace("@AssetName@", loAsset.asset_name);
-            loMailContent = loMailContent.Replace("@CustomerName@", loCustomer.customer_name + " " + loCustomer.customer_surname);
+            loMailContent = loMailContent.Replace("@CustomerName@", loCustomer.user_type_system_type_id == 1 ? loCustomer.customer_name + " " + loCustomer.customer_surname : loCustomer.company_name);
             loMailContent = loMailContent.Replace("@CustomerPhone@", loCustomer.phone);
             loMailContent = loMailContent.Replace("@OperationDate@", loOffer.row_create_date.Value.ToString("f"));
-            loMailContent = loMailContent.Replace("@OfferAmount@", loOffer.price.Value.ToString("C0") + " TL");
+            loMailContent = loMailContent.Replace("@OfferAmount@", loOffer.price.Value.ToString("N0") + " TL");
 
-            var loSender = Common.InfoMailList + ";" + loCompany.authorized_mail;
+            var loSender = Common.OfferMail + ";" + loCompany.authorized_mail;
 
             RestCalls.SendMail(loMailContent, loSender, loCustomer.customer_name + " " + loCustomer.customer_surname + "-" + loAsset.asset_no + " " + "Yeni Teklif");
         }
@@ -432,8 +432,11 @@ namespace Winvestate_Offer_Management_API.Classes
             {
                 if (loAssetOffer.customer_phone == loCustomer.phone) continue;
 
+                var loUrlToShorten =
+                    Bitly.Shorten("https://e-teklif.winvestate.com/Asset/AssetDetail?pId=" + pOffer.asset_uuid);
+
                 RestCalls.SendSms(
-                    "Değerli müşterimiz, teklif vermiş olduğunuz gayrimenkule yeni bir teklif verilmiştir. Yeni teklifi görüntülemek ve teklifinizi yükseltmek için lütfen web sitemizi ziyaret ediniz İlan bağlantısı : https://e-teklif.winvestate.com/Asset/AssetDetail?pId="+pOffer.asset_uuid+". Mesaj Tarihi: " + DateTime.Now,
+                    "Değerli müşterimiz, teklif vermiş olduğunuz gayrimenkule yeni bir teklif verilmiştir. Yeni teklifi görüntülemek ve teklifinizi yükseltmek için lütfen web sitemizi ziyaret ediniz İlan bağlantısı : " + loUrlToShorten + " . Mesaj Tarihi: " + DateTime.Now,
                     loAssetOffer.customer_phone);
             }
         }

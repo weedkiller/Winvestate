@@ -14,6 +14,7 @@ namespace Winvestate_Offer_Management_Models.Database.Winvestate
         public Guid owner_uuid { get; set; }
         public Guid? agreement_uuid { get; set; }
         public string mespact_session_uuid { get; set; }
+        public decimal? pre_offer_price { get; set; }
 
     }
 }

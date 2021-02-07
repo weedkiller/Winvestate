@@ -2,325 +2,223 @@
 @using Winvestate_Offer_Management_MVC.Classes
 @model ViewModelBase;
 
+@if (Model.Offers != null && Model.Offers.Any(x => x.offer_state_type_system_type_id == (int)OfferStateTypes.WaitingGuarantee || x.offer_state_type_system_type_id == (int)OfferStateTypes.WaitingAgreement))
+{
 
-<div class="row">
-    <div class="col-xl-3">
-        <!--begin::Stats Widget 29-->
-        <div class="card card-custom bgi-no-repeat card-stretch gutter-b" style="background-position: right top; background-size: 30% auto; background-image: url(assets/media/svg/shapes/abstract-1.svg)">
-            <!--begin::Body-->
-            <div class="card-body">
-                <span class="svg-icon svg-icon-2x svg-icon-info">
-                    <!--begin::Svg Icon | path:assets/media/svg/icons/Communication/Mail-opened.svg-->
-                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                            <rect x="0" y="0" width="24" height="24" />
-                            <path d="M6,2 L18,2 C18.5522847,2 19,2.44771525 19,3 L19,12 C19,12.5522847 18.5522847,13 18,13 L6,13 C5.44771525,13 5,12.5522847 5,12 L5,3 C5,2.44771525 5.44771525,2 6,2 Z M7.5,5 C7.22385763,5 7,5.22385763 7,5.5 C7,5.77614237 7.22385763,6 7.5,6 L13.5,6 C13.7761424,6 14,5.77614237 14,5.5 C14,5.22385763 13.7761424,5 13.5,5 L7.5,5 Z M7.5,7 C7.22385763,7 7,7.22385763 7,7.5 C7,7.77614237 7.22385763,8 7.5,8 L10.5,8 C10.7761424,8 11,7.77614237 11,7.5 C11,7.22385763 10.7761424,7 10.5,7 L7.5,7 Z" fill="#000000" opacity="0.3" />
-                            <path d="M3.79274528,6.57253826 L12,12.5 L20.2072547,6.57253826 C20.4311176,6.4108595 20.7436609,6.46126971 20.9053396,6.68513259 C20.9668779,6.77033951 21,6.87277228 21,6.97787787 L21,17 C21,18.1045695 20.1045695,19 19,19 L5,19 C3.8954305,19 3,18.1045695 3,17 L3,6.97787787 C3,6.70173549 3.22385763,6.47787787 3.5,6.47787787 C3.60510559,6.47787787 3.70753836,6.51099993 3.79274528,6.57253826 Z" fill="#000000" />
-                        </g>
-                    </svg>
-                    <!--end::Svg Icon-->
-                </span>
-                <span class="card-title font-weight-bolder text-dark-75 font-size-h2 mb-0 mt-6 d-block">10</span>
-                <span class="font-weight-bold text-muted font-size-sm">Teklif Bekleyen Gayrimenkul</span>
-            </div>
-            <!--end::Body-->
-        </div>
-        <!--end::Stats Widget 29-->
-    </div>
-    <div class="col-xl-3">
-        <!--begin::Stats Widget 29-->
-        <div class="card card-custom bgi-no-repeat card-stretch gutter-b" style="background-position: right top; background-size: 30% auto; background-image: url(assets/media/svg/shapes/abstract-1.svg)">
-            <!--begin::Body-->
-            <div class="card-body">
-                <span class="svg-icon svg-icon-2x svg-icon-info">
-                    <!--begin::Svg Icon | path:assets/media/svg/icons/Communication/Mail-opened.svg-->
-                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                            <rect x="0" y="0" width="24" height="24" />
-                            <path d="M6,2 L18,2 C18.5522847,2 19,2.44771525 19,3 L19,12 C19,12.5522847 18.5522847,13 18,13 L6,13 C5.44771525,13 5,12.5522847 5,12 L5,3 C5,2.44771525 5.44771525,2 6,2 Z M7.5,5 C7.22385763,5 7,5.22385763 7,5.5 C7,5.77614237 7.22385763,6 7.5,6 L13.5,6 C13.7761424,6 14,5.77614237 14,5.5 C14,5.22385763 13.7761424,5 13.5,5 L7.5,5 Z M7.5,7 C7.22385763,7 7,7.22385763 7,7.5 C7,7.77614237 7.22385763,8 7.5,8 L10.5,8 C10.7761424,8 11,7.77614237 11,7.5 C11,7.22385763 10.7761424,7 10.5,7 L7.5,7 Z" fill="#000000" opacity="0.3" />
-                            <path d="M3.79274528,6.57253826 L12,12.5 L20.2072547,6.57253826 C20.4311176,6.4108595 20.7436609,6.46126971 20.9053396,6.68513259 C20.9668779,6.77033951 21,6.87277228 21,6.97787787 L21,17 C21,18.1045695 20.1045695,19 19,19 L5,19 C3.8954305,19 3,18.1045695 3,17 L3,6.97787787 C3,6.70173549 3.22385763,6.47787787 3.5,6.47787787 C3.60510559,6.47787787 3.70753836,6.51099993 3.79274528,6.57253826 Z" fill="#000000" />
-                        </g>
-                    </svg>
-                    <!--end::Svg Icon-->
-                </span>
-                <span class="card-title font-weight-bolder text-dark-75 font-size-h2 mb-0 mt-6 d-block">15</span>
-                <span class="font-weight-bold text-muted font-size-sm">Teminat Bekleyen Gayrimenkul</span>
-            </div>
-            <!--end::Body-->
-        </div>
-        <!--end::Stats Widget 29-->
-    </div>
-    <div class="col-xl-3">
-        <!--begin::Stats Widget 29-->
-        <div class="card card-custom bgi-no-repeat card-stretch gutter-b" style="background-position: right top; background-size: 30% auto; background-image: url(assets/media/svg/shapes/abstract-1.svg)">
-            <!--begin::Body-->
-            <div class="card-body">
-                <span class="svg-icon svg-icon-2x svg-icon-info">
-                    <!--begin::Svg Icon | path:assets/media/svg/icons/Communication/Mail-opened.svg-->
-                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                            <rect x="0" y="0" width="24" height="24" />
-                            <path d="M6,2 L18,2 C18.5522847,2 19,2.44771525 19,3 L19,12 C19,12.5522847 18.5522847,13 18,13 L6,13 C5.44771525,13 5,12.5522847 5,12 L5,3 C5,2.44771525 5.44771525,2 6,2 Z M7.5,5 C7.22385763,5 7,5.22385763 7,5.5 C7,5.77614237 7.22385763,6 7.5,6 L13.5,6 C13.7761424,6 14,5.77614237 14,5.5 C14,5.22385763 13.7761424,5 13.5,5 L7.5,5 Z M7.5,7 C7.22385763,7 7,7.22385763 7,7.5 C7,7.77614237 7.22385763,8 7.5,8 L10.5,8 C10.7761424,8 11,7.77614237 11,7.5 C11,7.22385763 10.7761424,7 10.5,7 L7.5,7 Z" fill="#000000" opacity="0.3" />
-                            <path d="M3.79274528,6.57253826 L12,12.5 L20.2072547,6.57253826 C20.4311176,6.4108595 20.7436609,6.46126971 20.9053396,6.68513259 C20.9668779,6.77033951 21,6.87277228 21,6.97787787 L21,17 C21,18.1045695 20.1045695,19 19,19 L5,19 C3.8954305,19 3,18.1045695 3,17 L3,6.97787787 C3,6.70173549 3.22385763,6.47787787 3.5,6.47787787 C3.60510559,6.47787787 3.70753836,6.51099993 3.79274528,6.57253826 Z" fill="#000000" />
-                        </g>
-                    </svg>
-                    <!--end::Svg Icon-->
-                </span>
-                <span class="card-title font-weight-bolder text-dark-75 font-size-h2 mb-0 mt-6 d-block">100</span>
-                <span class="font-weight-bold text-muted font-size-sm">İmzalanan Sözleşme</span>
-            </div>
-            <!--end::Body-->
-        </div>
-        <!--end::Stats Widget 29-->
-    </div>
-    <div class="col-xl-3">
-        <!--begin::Stats Widget 29-->
-        <div class="card card-custom bgi-no-repeat card-stretch gutter-b" style="background-position: right top; background-size: 30% auto; background-image: url(assets/media/svg/shapes/abstract-1.svg)">
-            <!--begin::Body-->
-            <div class="card-body">
-                <span class="svg-icon svg-icon-2x svg-icon-info">
-                    <!--begin::Svg Icon | path:assets/media/svg/icons/Communication/Mail-opened.svg-->
-                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                            <rect x="0" y="0" width="24" height="24" />
-                            <path d="M6,2 L18,2 C18.5522847,2 19,2.44771525 19,3 L19,12 C19,12.5522847 18.5522847,13 18,13 L6,13 C5.44771525,13 5,12.5522847 5,12 L5,3 C5,2.44771525 5.44771525,2 6,2 Z M7.5,5 C7.22385763,5 7,5.22385763 7,5.5 C7,5.77614237 7.22385763,6 7.5,6 L13.5,6 C13.7761424,6 14,5.77614237 14,5.5 C14,5.22385763 13.7761424,5 13.5,5 L7.5,5 Z M7.5,7 C7.22385763,7 7,7.22385763 7,7.5 C7,7.77614237 7.22385763,8 7.5,8 L10.5,8 C10.7761424,8 11,7.77614237 11,7.5 C11,7.22385763 10.7761424,7 10.5,7 L7.5,7 Z" fill="#000000" opacity="0.3" />
-                            <path d="M3.79274528,6.57253826 L12,12.5 L20.2072547,6.57253826 C20.4311176,6.4108595 20.7436609,6.46126971 20.9053396,6.68513259 C20.9668779,6.77033951 21,6.87277228 21,6.97787787 L21,17 C21,18.1045695 20.1045695,19 19,19 L5,19 C3.8954305,19 3,18.1045695 3,17 L3,6.97787787 C3,6.70173549 3.22385763,6.47787787 3.5,6.47787787 C3.60510559,6.47787787 3.70753836,6.51099993 3.79274528,6.57253826 Z" fill="#000000" />
-                        </g>
-                    </svg>
-                    <!--end::Svg Icon-->
-                </span>
-                <span class="card-title font-weight-bolder text-dark-75 font-size-h2 mb-0 mt-6 d-block">80</span>
-                <span class="font-weight-bold text-muted font-size-sm">Yapılan Satış</span>
-            </div>
-            <!--end::Body-->
-        </div>
-        <!--end::Stats Widget 29-->
-    </div>
-</div>
-
-<div class="row">
-
-    <div class="col-xl-12">
-        <div class="card card-custom gutter-b card-collapsed" data-card="true">
-            <div class="card-header">
-                <div class="card-title">
-                    <h3 class="card-label">
-                        Teklif Verilen Gayrimenkuller
-                    </h3>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card card-custom gutter-b card-collapsed" data-card="true">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3 class="card-label">
+                            Başvurular(@Model.Offers.Count(x => x.offer_state_type_system_type_id == (int)OfferStateTypes.WaitingGuarantee || x.offer_state_type_system_type_id == (int)OfferStateTypes.WaitingAgreement) Adet)
+                        </h3>
+                    </div>
+                    <div class="card-toolbar">
+                        <a href="#" class="btn btn-icon btn-sm btn-hover-light-primary mr-1" data-card-tool="toggle" data-toggle="tooltip" data-placement="top" title="Tümünü Göster">
+                            <i class="ki ki-arrow-up icon-nm"></i>
+                        </a>
+                    </div>
                 </div>
-                <div class="card-toolbar">
-                    <a href="#" class="btn btn-icon btn-sm btn-hover-light-primary mr-1" data-card-tool="toggle" data-toggle="tooltip" data-placement="top" title="Tümünü Göster">
-                        <i class="ki ki-arrow-up icon-nm"></i>
-                    </a>
+                <div class="card-body py-0">
+                    <!--begin::Table-->
+                    <div class="table-responsive">
+                        <table class="table table-head-custom table-vertical-center" id="kt_advance_table_widget_3">
+                            <thead>
+                                <tr class="text-uppercase">
+                                    <th style="min-width: 120px">Müşteri</th>
+                                    <th style="min-width: 100px">Gayrimenkul</th>
+                                    <th style="min-width: 100px">Başvuru Tarihi</th>
+                                    <th style="min-width: 120px">Durum</th>
+                                    <th style="min-width: 160px">İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var loOffer in Model.Offers.FindAll(x => x.offer_state_type_system_type_id == (int)OfferStateTypes.WaitingGuarantee || x.offer_state_type_system_type_id == (int)OfferStateTypes.WaitingAgreement))
+                                {
+                                    <tr>
+                                        <td>
+                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">@loOffer.customer_full_name</span>
+                                            <span class="text-muted font-weight-bold">@loOffer.customer_phone</span>
+                                        </td>
+                                        <td>
+                                            <a target="_blank" href="https://e-teklif.winvestate.com/Asset/AssetDetail?pId=@loOffer.asset_uuid" class="text-dark-75 font-weight-bolder text-hover-primary font-size-lg">@string.Concat(loOffer.company_prefix, loOffer.asset_no) - @loOffer.asset_name</a>
+                                        </td>
+                                        <td>
+                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">@loOffer.row_create_date.Value.ToString("f")</span>
+                                        </td>
+                                        <td>
+                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">@loOffer.offer_state</span>
+                                        </td>
+                                        <td>
+                                            @if (loOffer.offer_state_type_system_type_id == (int)OfferStateTypes.WaitingGuarantee)
+                                            {
+                                                <a target="_blank" href="@Common.MespactLinkUrl/Document/showDocument?id=@loOffer.mespact_session_uuid" data-id="@loOffer.row_guid.ToString()" class="btn btn-icon btn-light btn-hover-primary btn-sm" title="Şartnameyi Görüntüle">
+                                                    <i class="flaticon-edit-1"></i>
+                                                </a>
+                                                <a href="#" data-id="@loOffer.row_guid.ToString()" class="btn btn-icon btn-light btn-hover-primary btn-sm confirmForOffer" title="Teminatı Onayla">
+                                                    <i class="flaticon2-check-mark"></i>
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a href="#" data-id="@loOffer.mespact_session_uuid" class="btn btn-icon btn-light btn-hover-primary btn-sm resend" title="Şartname Bağlantısını Tekrar Gönder">
+                                                    <i class="flaticon2-paperplane"></i>
+                                                </a>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <!--end::Table-->
                 </div>
             </div>
-            <div class="card-body">
-                @foreach (var loOffer in Model.User.offered_assets)
-                {
-                    var loAssetName = string.IsNullOrEmpty(loOffer.asset_name) ? loOffer.asset_no.ToString() : loOffer.asset_no.ToString() + "-" + loOffer.asset_name;
-                    <div class="card card-custom mb-5">
-                        @*<div class="card-header">
-                                <div class="card-title">
-                                </div>
-                            </div>*@
-                        <div class="card-body">
-                            @{
-                                var loMaximumAmount = loOffer.max_offer_amount <= 0 ? loOffer.max_offer : loOffer.max_offer_amount.Value.ToString("C0");
+        </div>
+    </div>
+}
 
-                            }
-                            <label class="form-control text-dark">Gayrimenkul: <span class="text-danger">@loAssetName</span></label>
-                            <label class="form-control text-dark">E-Teklif Kapanış Tarihi: <span class="text-danger">@loOffer.last_offer_date</span></label>
-                            <label class="form-control text-dark">Başlangıç Teklif Tutarı: <span class="text-danger">@loOffer.starting_amount.Value.ToString("C0") </span></label>
-                            <label class="form-control text-dark">Minimum Teklif Yükseltme Tutarı: <span class="text-danger">@loOffer.minimum_increate_amout.Value.ToString("C0") </span></label>
-                            <label class="form-control text-dark">Başvuru Tarihi: <span class="text-danger">@loOffer.row_create_date.Value </span></label>
-                            <label class="form-control text-dark">Gayrimenkule Verilen Son Teklif: <span class="text-danger">@loMaximumAmount</span></label>
+@if (Model.User != null && Model.User.offered_assets.Any())
+{
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card card-custom gutter-b card-collapsed" data-card="true">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3 class="card-label">
+                            Aktif Teklifler (@Model.User.offered_assets.Count Adet)
+                        </h3>
+                    </div>
+                    <div class="card-toolbar">
+                        <a href="#" class="btn btn-icon btn-sm btn-hover-light-primary mr-1" data-card-tool="toggle" data-toggle="tooltip" data-placement="top" title="Tümünü Göster">
+                            <i class="ki ki-arrow-up icon-nm"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body py-0">
+                    <!--begin::Table-->
+                    <div class="table-responsive">
+                        <table class="table table-head-custom table-vertical-center" id="kt_advance_table_widget_2">
+                            <thead>
+                                <tr class="text-uppercase">
+                                    <th class="pl-0" style="min-width: 100px">Gayrimenkul</th>
+                                    <th style="min-width: 100px">Durum</th>
+                                    <th style="min-width: 120px">Son Teklif (TL)</th>
+                                    <th style="min-width: 120px">Son Teklif Tarihi</th>
+                                    <th class="pr-0 text-right" style="min-width: 160px">İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var loAsset in Model.User.offered_assets.OrderByDescending(x => x.last_offer_date))
+                                {
+                                    <tr>
+                                        <td class="pl-0">
+                                            <a target="_blank" href="https://e-teklif.winvestate.com/Asset/AssetDetail?pId=@loAsset.row_guid" class="text-dark-75 font-weight-bolder text-hover-primary font-size-lg">@string.Concat(loAsset.company_prefix, loAsset.asset_no) - @loAsset.asset_name</a>
+                                        </td>
+                                        <td>
+                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg"> @loAsset.state</span>
+                                        </td>
+                                        <td>
+                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg"> @string.Format("{0:N0}", loAsset.max_offer_amount)</span>
+                                        </td>
+                                        <td>
+                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg"> @string.Format("{0:f}", loAsset.row_update_date.Value)</span>
+                                        </td>
+                                        <td class="pr-0 text-right">
+                                            @if (loAsset.state_id == 1 && !loAsset.sale_in_company && Model.User.user_type==1)
+                                            {
+                                                <a href="#" class="btn btn-icon btn-light btn-hover-primary btn-sm approveSale" title="Satışı Tamamla" data-id="@loAsset.row_guid">
+                                                    <i class="flaticon2-check-mark"></i>
+                                                </a>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <!--end::Table-->
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
-                            @if (loOffer.history.Count > 1)
-                            {
-                                <a href="#" id="show_offer_detail_@loOffer.id" class="btn btn-light-warning font-weight-bold align-right showOtherOffers" data-id="@loOffer.id">Tüm Teklifleri Görüntüle</a>
-                                <div class="timeline timeline-2 mt-2 hide" id="offer_detail_@loOffer.id">
-                                    <div class="timeline-bar"></div>
-                                    @foreach (var offerHistory in loOffer.history.OrderByDescending(x => x.row_create_date))
-                                    {
-                                        <div class="timeline-item">
-                                            <div class="timeline-badge"></div>
-                                            <div class="timeline-content d-flex align-items-center justify-content-between">
-                                                <span class="mr-1">
-                                                    <a href="#">@offerHistory.customer_full_name - @offerHistory.amount.ToString("C0") TL</a>
-                                                </span>
-                                                <span class="text-muted text-right">@offerHistory.row_create_date.ToString("F")</span>
+@if (Model.ActiveCallbackRecords != null && Model.ActiveCallbackRecords.Any())
+{
+    <div class="row">
+        <div class="col-xl-12">
+            <!--begin::List Widget 5-->
+            <div class="card card-custom gutter-b card-collapsed" data-card="true">
+                <!--begin::header-->
+                <div class="card-header border-0">
+                    <h3 class="card-title">Aktif Geri Aranma Talepleri (@Model.ActiveCallbackRecords.Count Adet)</h3>
+                    <div class="card-toolbar">
+                        <a href="#" class="btn btn-icon btn-sm btn-hover-light-primary mr-1" data-card-tool="toggle" data-toggle="tooltip" data-placement="top" title="Tümünü Göster">
+                            <i class="ki ki-arrow-up icon-nm"></i>
+                        </a>
+                    </div>
+                </div>
+                <!--end::header-->
+                <!--begin::Body-->
+                <div class="card-body py-0">
+                    <!--begin::Table-->
+                    <div class="table-responsive">
+                        <table class="table table-head-custom table-vertical-center" id="kt_advance_table_widget_2">
+                            <thead>
+                                <tr class="text-uppercase">
+                                    <th class="pl-0" style="min-width: 150px">Müşteri</th>
+                                    <th style="min-width: 150px">Talep Tarihi</th>
+                                    <th style="min-width: 150px">İlgilendiği Gayrimenkul</th>
+                                    <th style="min-width: 50px">Durum</th>
+                                    <th style="min-width: 150px">Not</th>
+                                    <th style="min-width: 100px">İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var loRecord in Model.ActiveCallbackRecords.OrderByDescending(x => x.row_create_date))
+                                {
+                                    <tr>
+                                        <td class="pl-0">
+                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">@loRecord.applicant_name @loRecord.applicant_surname</span>
+                                            <span class="text-muted font-weight-bold">@loRecord.applicant_phone</span>
+                                        </td>
+                                        <td>
+                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">@loRecord.row_create_date.Value.ToString("f")</span>
+                                        </td>
+                                        <td class="pl-0">
+                                            <a target="_blank" href="https://e-teklif.winvestate.com/Asset/AssetDetail?pId=@loRecord.asset_uuid" class="text-dark-75 font-weight-bolder text-hover-primary font-size-lg">@string.Concat(loRecord.company_prefix, loRecord.asset_no) - @loRecord.asset_name</a>
+                                        </td>
+                                        <td>
+                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">@loRecord.callback_record_state</span>
+                                        </td>
+                                        <td>
+                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">@loRecord.note</span>
+                                        </td>
+                                        <td class="pr-0">
+                                            <a class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="flaticon-more-1"></i>
+                                            </a>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                @if (loRecord.callback_record_state_type_system_type_id == 43)
+                                                {
+                                                    <a class="dropdown-item changeCallbackStatus" href="#" data-id="@loRecord.row_guid" data-type="44">Ulaşılamadı</a>
+                                                }
+
+                                                <a class="dropdown-item changeCallbackStatus" href="#" data-id="@loRecord.row_guid" data-type="45">Görüşüldü</a>
                                             </div>
-                                        </div>
-                                    }
-
-                                </div>
-                            }
-
-
-
-                        </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
                     </div>
-                }
+                    <!--end::Table-->
+                </div>
             </div>
+            <!--end::List Widget 5-->
         </div>
     </div>
-</div>
-
-<div class="row">
-    <div class="col-xl-12">
-        <!--begin::List Widget 5-->
-        <div class="card card-custom gutter-b card-collapsed" data-card="true">
-            <!--begin::header-->
-            <div class="card-header border-0">
-                <h3 class="card-title font-weight-bolder">Yeni Geri Aranma Talepleri</h3>
-                <div class="card-toolbar">
-                    <a href="#" class="btn btn-icon btn-sm btn-hover-light-primary mr-1" data-card-tool="toggle" data-toggle="tooltip" data-placement="top" title="Tümünü Göster">
-                        <i class="ki ki-arrow-up icon-nm"></i>
-                    </a>
-                </div>
-            </div>
-            <!--end::header-->
-            <!--begin::Body-->
-            <div class="card-body pt-0">
-                <!--begin::Item-->
-                @foreach (var loRecord in Model.ActiveCallbackRecords)
-                {
-                    <div class="d-flex align-items-center mb-6">
-                        <!--begin::Checkbox-->
-                        <label class="checkbox checkbox-lg checkbox-primary flex-shrink-0 m-0 mr-4">
-                            <input type="checkbox" value="1" />
-                            <span></span>
-                        </label>
-                        <!--end::Checkbox-->
-                        <!--begin::Text-->
-                        <div class="d-flex flex-column flex-grow-1 py-2">
-                            <a href="#" class="text-dark-75 font-weight-bold text-hover-primary font-size-lg mb-1">@loRecord.applicant_name @loRecord.applicant_surname ( @loRecord.applicant_phone )</a>
-                            <a href="#" class="text-muted font-weight-bold text-hover-primary">@loRecord.row_create_date.Value.ToString("f")</a>
-                            <a href="#" class="text-muted font-weight-bold text-hover-primary">@loRecord.asset_no - @loRecord.asset_name</a>
-                        </div>
-                        <!--end::Text-->
-                        <!--begin::Dropdown-->
-                        <div class="dropdown dropdown-inline ml-2" data-toggle="tooltip" title="Quick actions" data-placement="left">
-                            <a href="#" class="btn btn-clean btn-hover-primary btn-sm btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="ki ki-bold-more-hor"></i>
-                            </a>
-                            <div class="dropdown-menu p-0 m-0 dropdown-menu-md dropdown-menu-right">
-                                <!--begin::Navigation-->
-                                <ul class="navi navi-hover">
-                                    <li class="navi-header font-weight-bold py-4">
-                                        <span class="font-size-lg">Durum:</span>
-                                        <i class="flaticon2-information icon-md text-muted" data-toggle="tooltip" data-placement="right" title="Click to learn more..."></i>
-                                    </li>
-                                    <li class="navi-separator mb-3 opacity-70"></li>
-                                    <li class="navi-item">
-                                        <a href="#" class="navi-link">
-                                            <span class="navi-text">
-                                                <span class="label label-xl label-inline label-light-success">Ulaşılamadı</span>
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li class="navi-item">
-                                        <a href="#" class="navi-link">
-                                            <span class="navi-text">
-                                                <span class="label label-xl label-inline label-light-danger">Görüşüldü</span>
-                                            </span>
-                                        </a>
-                                    </li>
-                                </ul>
-                                <!--end::Navigation-->
-                            </div>
-                        </div>
-                        <!--end::Dropdown-->
-                    </div>
-                }
-
-                <!--end::Item-->
-            </div>
-            <!--end::Body-->
-        </div>
-        <!--end::List Widget 5-->
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-xl-12">
-        <div class="card card-custom gutter-b card-collapsed" data-card="true">
-            <div class="card-header">
-                <div class="card-title">
-                    <h3 class="card-label">
-                        Şartname İmzası Bekleyen Başvurular
-                    </h3>
-                </div>
-                <div class="card-toolbar">
-                    <a href="#" class="btn btn-icon btn-sm btn-hover-light-primary mr-1" data-card-tool="toggle" data-toggle="tooltip" data-placement="top" title="Tümünü Göster">
-                        <i class="ki ki-arrow-up icon-nm"></i>
-                    </a>
-                </div>
-            </div>
-            <div class="card-body">
-                @foreach (var loOffer in Model.Offers.FindAll(x => x.offer_state_type_system_type_id == (int)OfferStateTypes.WaitingAgreement))
-                {
-                    var loAssetName = string.IsNullOrEmpty(loOffer.asset_name) ? loOffer.asset_no : loOffer.asset_no + "-" + loOffer.asset_name;
-                    <div class="card card-custom mb-5">
-                        <div class="card-header">
-                            <div class="card-title">
-                                <h5>
-                                    @loOffer.customer_full_name
-                                    <small>(@loOffer.customer_phone)</small>
-                                </h5>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <label class="form-control text-danger">Gayrimenkul: <span class="text-dark">@loAssetName</span></label>
-                            <label class="form-control text-danger">Başvuru Tarihi: <span class="text-dark">@loOffer.row_create_date.Value </span></label>
-                            <a href="#" data-id="@loOffer.mespact_session_uuid" class="btn btn-light-primary font-weight-bold align-right resend">Sözleşme Bağlantısını Tekrar Gönder</a>
-                        </div>
-                    </div>
-                }
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-xl-12">
-        <div class="card card-custom gutter-b card-collapsed" data-card="true">
-            <div class="card-header">
-                <div class="card-title">
-                    <h3 class="card-label">
-                        Teminat Bedeli Bekleyen Başvurular
-                    </h3>
-                </div>
-                <div class="card-toolbar">
-                    <a href="#" class="btn btn-icon btn-sm btn-hover-light-primary mr-1" data-card-tool="toggle" data-toggle="tooltip" data-placement="top" title="Tümünü Göster">
-                        <i class="ki ki-arrow-up icon-nm"></i>
-                    </a>
-                </div>
-            </div>
-            <div class="card-body">
-                @foreach (var loOffer in Model.Offers.FindAll(x => x.offer_state_type_system_type_id == (int)OfferStateTypes.WaitingGuarantee))
-                {
-                    var loAssetName = string.IsNullOrEmpty(loOffer.asset_name) ? loOffer.asset_no : loOffer.asset_no + "-" + loOffer.asset_name;
-                    <div class="card card-custom mb-5">
-                        <div class="card-header">
-                            <div class="card-title">
-                                <h5>
-                                    @loOffer.customer_full_name
-                                    <small>(@loOffer.customer_phone)</small>
-                                </h5>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <label class="form-control text-danger">Gayrimenkul: <span class="text-dark">@loAssetName</span></label>
-                            <label class="form-control text-danger">Başvuru Tarihi: <span class="text-dark">@loOffer.row_create_date.Value </span></label>
-                            <label class="form-control text-danger">Sözleşme İmzalama Tarihi: <span class="text-dark">@loOffer.row_update_date.Value</span></label>
-                            <a target="_blank" href="@Common.MespactLinkUrl/Document/showDocument?id=@loOffer.mespact_session_uuid" data-id="@loOffer.row_guid.ToString()" class="btn btn-light-danger font-weight-bold align-right">Sözleşmeyi Görüntüle</a>
-                            <a href="#" data-id="@loOffer.row_guid.ToString()" class="btn btn-light-success font-weight-bold align-right confirmForOffer">Onayla</a>
-                        </div>
-                    </div>
-                }
-            </div>
-        </div>
-    </div>
-</div>
+}
 
