@@ -48,6 +48,16 @@ namespace Winvestate_Offer_Management_API.Controllers
             pObject.asset_name = pObject.asset_name?.ToUpper();
             pObject.asset_no = pObject.asset_no?.ToUpper();
 
+            if (pObject.registry_price == null)
+            {
+                pObject.registry_price = 0;
+            }
+
+            if (pObject.free_text_no == null)
+            {
+                pObject.free_text_no = "";
+            }
+
             if (pObject.first_announcement_date == null)
             {
                 if (DateTime.TryParse(pObject.first_announcement_date_str, out var loFirstAnnonce))
@@ -215,6 +225,7 @@ namespace Winvestate_Offer_Management_API.Controllers
             loData.share = pObject.share ?? loData.share;
             loData.explanation = pObject.explanation ?? loData.explanation;
             loData.starting_amount = pObject.starting_amount ?? loData.starting_amount;
+            loData.registry_price = pObject.registry_price ?? loData.registry_price;
             loData.max_offer_amount = pObject.max_offer_amount ?? loData.max_offer_amount;
             loData.minimum_increate_amout = pObject.minimum_increate_amout ?? loData.minimum_increate_amout;
             loData.guarantee_amount = pObject.guarantee_amount ?? loData.guarantee_amount;
@@ -235,6 +246,16 @@ namespace Winvestate_Offer_Management_API.Controllers
             loData.share = loData.share?.ToUpper();
             loData.asset_name = loData.asset_name?.ToUpper();
             loData.asset_no = loData.asset_no?.ToUpper();
+
+            if (loData.registry_price == null)
+            {
+                loData.registry_price = 0;
+            }
+
+            if (loData.free_text_no == null)
+            {
+                loData.free_text_no ="";
+            }
 
             if (pObject.asset_photos != null && pObject.asset_photos.Any())
             {

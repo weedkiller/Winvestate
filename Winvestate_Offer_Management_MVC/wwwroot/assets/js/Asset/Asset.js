@@ -246,6 +246,7 @@ function SaveAsset() {
     loMyAsset.asset_type_system_type_id = Number(loMyAsset.asset_type_system_type_id);
     loMyAsset.size = Number(loMyAsset.size);
     loMyAsset.starting_amount = Number(loMyAsset.starting_amount.replaceAll(".", ""));
+    loMyAsset.registry_price = $("#registry_price").val() == null || $("#registry_price").val() === "" ? null : Number(loMyAsset.registry_price.replaceAll(".", ""));
     loMyAsset.minimum_increate_amout = $("#minimum_increate_amout").val() == null || $("#minimum_increate_amout").val() === "" ? null : Number(loMyAsset.minimum_increate_amout.replaceAll(".", ""));
     loMyAsset.guarantee_amount = $("#guarantee_amount").val() == null || $("#guarantee_amount").val() === "" ? null : Number(loMyAsset.guarantee_amount.replaceAll(".", ""));
     loMyAsset.is_compatible_for_credit = $("#is_compatible_for_credit").is(':checked');
@@ -403,6 +404,17 @@ function setAssetValidation() {
                         notEmpty: {
                             message: 'Başlangıç fiyatı girilmeden işleme devam edilemez.'
                         },
+                        callback: {
+                            message: 'Lütfen sayısal bir değer giriniz',
+                            callback: function (input) {
+                                var loResult = input.value.replace(/,/g, '').replaceAll('.', '').replaceAll('₺', '');
+                                return loResult.length == 0 || parseFloat(loResult) == loResult;
+                            }
+                        }
+                    }
+                },
+                registry_price: {
+                    validators: {
                         callback: {
                             message: 'Lütfen sayısal bir değer giriniz',
                             callback: function (input) {

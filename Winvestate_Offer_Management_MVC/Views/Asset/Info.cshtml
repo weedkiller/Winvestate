@@ -18,6 +18,7 @@
     var _startAmount = Model.Asset?.starting_amount.Value.ToString("N0");
     var _guarantee = Model.Asset?.guarantee_amount.Value.ToString("N0");
     var _minimum = Model.Asset?.minimum_increate_amout.Value.ToString("N0");
+    var _registryPrice = Model.Asset?.registry_price.HasValue==true ? Model.Asset?.registry_price.Value.ToString("N").Replace(",00","") : "0";
     var _explanation = Model.AssetExplanation;
     var _availableForCredit = Model.Asset?.is_compatible_for_credit.Value == true ? "checked=checked" : "";
     var _showLastOfferDate = Model.Asset?.show_last_offer_date == null || Model.Asset?.show_last_offer_date == true ? "checked=checked" : "";
@@ -123,7 +124,7 @@
                                 <select class="form-control select2" id="bank_guid" name="bank_guid">
                                     @foreach (var loOption in Model.User.banks)
                                     {
-                                        <option value="@loOption.row_guid">@loOption.bank_name</option>
+                                    <option value="@loOption.row_guid">@loOption.bank_name</option>
                                     }
                                 </select>
                             </div>
@@ -139,7 +140,7 @@
                                 <select class="form-control select2" id="category_type_system_type_id" name="category_type_system_type_id">
                                     @foreach (var loOption in Model.User.sys_definitions.asset_category)
                                     {
-                                        <option value="@loOption.id">@loOption.type_value</option>
+                                    <option value="@loOption.id">@loOption.type_value</option>
                                     }
                                 </select>
                             </div>
@@ -190,6 +191,10 @@
                             <div class="col-lg-2">
                                 <input class="form-control wv_upper" id="free_text_no" type="text" name="free_text_no" placeholder="" value="@_freeTextNo" />
                             </div>
+                            <label class="col-lg-2 col-form-label text-right">Tapu Bedeli:</label>
+                            <div class="col-lg-2">
+                                <input class="form-control wv_upper priceInput" id="registry_price" type="text" name="registry_price" placeholder="" value="@_registryPrice" />
+                            </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-lg-2 col-form-label">Başlangıç Bedeli:</label>
@@ -237,26 +242,26 @@
 
                         @if (Model.AssetPhotos.Count > 1)
                         {
-                            <div class="row mt-3">
-                                <label class="form-group font-weight-boldest">Fotoğraflar:</label>
-                                <div class="gallery">
-                                    <ul class="reorder_ul reorder-photos-list" id="reorder_myUl">
-                                        @foreach (var loImage in Model.AssetPhotos.FindAll(x => x.is_thumb == false).OrderBy(x => x.item_order))
+                        <div class="row mt-3">
+                            <label class="form-group font-weight-boldest">Fotoğraflar:</label>
+                            <div class="gallery">
+                                <ul class="reorder_ul reorder-photos-list" id="reorder_myUl">
+                                    @foreach (var loImage in Model.AssetPhotos.FindAll(x => x.is_thumb == false).OrderBy(x => x.item_order))
                                         {
-                                            <li id="image_li_@loImage.id" class="ui-sortable-handle" data-id="@loImage.id" data-name="@loImage.file_path" data-guid="@loImage.asset_uuid">
-                                                <a href="javascript:void(0);" style="float:none;" class="image_link">
-                                                    <img src="~/Uploads/@loImage.file_path">
-                                                </a>
-                                                <label class="checkbox mt-2 text-center">
-                                                    <input id="image_check_@loImage.id" type="checkbox" data-id="@loImage.id" class="py-5" />
-                                                    <span class="mr-1 text-center"></span>
-                                                    Sil
-                                                </label>
-                                            </li>
+                                    <li id="image_li_@loImage.id" class="ui-sortable-handle" data-id="@loImage.id" data-name="@loImage.file_path" data-guid="@loImage.asset_uuid">
+                                        <a href="javascript:void(0);" style="float:none;" class="image_link">
+                                            <img src="~/Uploads/@loImage.file_path">
+                                        </a>
+                                        <label class="checkbox mt-2 text-center">
+                                            <input id="image_check_@loImage.id" type="checkbox" data-id="@loImage.id" class="py-5" />
+                                            <span class="mr-1 text-center"></span>
+                                            Sil
+                                        </label>
+                                    </li>
                                         }
-                                    </ul>
-                                </div>
+                                </ul>
                             </div>
+                        </div>
                         }
 
 

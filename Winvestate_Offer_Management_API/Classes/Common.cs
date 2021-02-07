@@ -25,6 +25,11 @@ namespace Winvestate_Offer_Management_API.Classes
         public static string CustomerUrl = "https://winvestate.mesnetbilisim.com.tr/";
         public static string BitlyLink = "d4bbed60e7a7786929a2f43da3f264dc8e8a6f46";
 
+        public static string[] Ones = new string[] { "", "Bir", "İki", "Üç", "Dört", "Beş", "Altı", "Yedi", "Sekiz", "Dokuz" };
+        public static string[] Teens = new string[] { "On", "Onbir", "Oniki", "Onüç", "Ondört", "Onbeş", "Onaltı", "Onyedi", "Onsekiz", "Ondokuz" };
+        public static string[] Tens = new string[] { "Yirmi", "Otuz", "Kırk", "Elli", "Altmış", "Yetmiş", "Seksen", "Doksan" };
+        public static string[] Thousands = { "", " Bin", " Milyon", " Milyar" };
+
         public static readonly string MespactWinvestateUser = "54df5cfc-e986-4e1d-896b-a159e4ed5068";
 
 

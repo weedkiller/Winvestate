@@ -57,6 +57,7 @@ namespace Winvestate_Offer_Management_API.Controllers
             {
                 loCheckUserHasRegistered.send_agreement = pObject.send_agreement;
                 loCheckUserHasRegistered.asset_uuid = pObject.asset_uuid;
+                loCheckUserHasRegistered.pre_offer_price = pObject.pre_offer_price;
                 pObject = loCheckUserHasRegistered;
 
                 var loOfferToCheck =
@@ -110,7 +111,7 @@ namespace Winvestate_Offer_Management_API.Controllers
                     row_create_user = pObject.row_create_user,
                     row_guid = Guid.NewGuid(),
                     agreement_uuid = Guid.NewGuid(),
-                    pre_offer_price = pObject.pre_offer_price,
+                    pre_offer_price = pObject.pre_offer_price ?? 0,
                     is_active = true,
                     is_deleted = false
                 };
@@ -119,7 +120,7 @@ namespace Winvestate_Offer_Management_API.Controllers
 
             if (loResult > 0)
             {
-                Task.Run(() => HelperMethods.SendToDocumentToSign(pObject, loOffer));
+                Task.Run(() => HelperMethods.SendDocumentToSign(pObject, loOffer));
                 pObject.id = (int)loResult;
                 loGenericResponse.Data = pObject;
                 loGenericResponse.Status = "Ok";

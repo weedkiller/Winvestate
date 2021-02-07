@@ -2,6 +2,84 @@
 @using Winvestate_Offer_Management_MVC.Classes
 @model ViewModelBase;
 
+@if (Model.Offers != null && Model.Offers.Any(x => x.offer_state_type_system_type_id == (int)OfferStateTypes.WaitingGuarantee || x.offer_state_type_system_type_id == (int)OfferStateTypes.WaitingAgreement))
+{
+
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card card-custom gutter-b card-collapsed" data-card="true">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3 class="card-label">
+                            Başvurular(@Model.Offers.Count(x => x.offer_state_type_system_type_id == (int)OfferStateTypes.WaitingGuarantee || x.offer_state_type_system_type_id == (int)OfferStateTypes.WaitingAgreement) Adet)
+                        </h3>
+                    </div>
+                    <div class="card-toolbar">
+                        <a href="#" class="btn btn-icon btn-sm btn-hover-light-primary mr-1" data-card-tool="toggle" data-toggle="tooltip" data-placement="top" title="Tümünü Göster">
+                            <i class="ki ki-arrow-up icon-nm"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body py-0">
+                    <!--begin::Table-->
+                    <div class="table-responsive">
+                        <table class="table table-head-custom table-vertical-center" id="kt_advance_table_widget_3">
+                            <thead>
+                                <tr class="text-uppercase">
+                                    <th style="min-width: 120px">Müşteri</th>
+                                    <th style="min-width: 100px">Gayrimenkul</th>
+                                    <th style="min-width: 100px">Başvuru Tarihi</th>
+                                    <th style="min-width: 120px">Durum</th>
+                                    <th style="min-width: 160px">İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var loOffer in Model.Offers.FindAll(x => x.offer_state_type_system_type_id == (int)OfferStateTypes.WaitingGuarantee || x.offer_state_type_system_type_id == (int)OfferStateTypes.WaitingAgreement))
+                                {
+                                    <tr>
+                                        <td>
+                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">@loOffer.customer_full_name</span>
+                                            <span class="text-muted font-weight-bold">@loOffer.customer_phone</span>
+                                        </td>
+                                        <td>
+                                            <a target="_blank" href="https://e-teklif.winvestate.com/Asset/AssetDetail?pId=@loOffer.asset_uuid" class="text-dark-75 font-weight-bolder text-hover-primary font-size-lg">@string.Concat(loOffer.company_prefix, loOffer.asset_no) - @loOffer.asset_name</a>
+                                        </td>
+                                        <td>
+                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">@loOffer.row_create_date.Value.ToString("f")</span>
+                                        </td>
+                                        <td>
+                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">@loOffer.offer_state</span>
+                                        </td>
+                                        <td>
+                                            @if (loOffer.offer_state_type_system_type_id == (int)OfferStateTypes.WaitingGuarantee)
+                                            {
+                                                <a target="_blank" href="@Common.MespactLinkUrl/Document/showDocument?id=@loOffer.mespact_session_uuid" data-id="@loOffer.row_guid.ToString()" class="btn btn-icon btn-light btn-hover-primary btn-sm" title="Şartnameyi Görüntüle">
+                                                    <i class="flaticon-edit-1"></i>
+                                                </a>
+                                                <a href="#" data-id="@loOffer.row_guid.ToString()" class="btn btn-icon btn-light btn-hover-primary btn-sm confirmForOffer" title="Teminatı Onayla">
+                                                    <i class="flaticon2-check-mark"></i>
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a href="#" data-id="@loOffer.mespact_session_uuid" class="btn btn-icon btn-light btn-hover-primary btn-sm resend" title="Şartname Bağlantısını Tekrar Gönder">
+                                                    <i class="flaticon2-paperplane"></i>
+                                                </a>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <!--end::Table-->
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
 @if (Model.User != null && Model.User.offered_assets.Any())
 {
     <div class="row">
@@ -10,7 +88,7 @@
                 <div class="card-header">
                     <div class="card-title">
                         <h3 class="card-label">
-                           Aktif Teklifler (@Model.User.offered_assets.Count Adet)
+                            Aktif Teklifler (@Model.User.offered_assets.Count Adet)
                         </h3>
                     </div>
                 </div>

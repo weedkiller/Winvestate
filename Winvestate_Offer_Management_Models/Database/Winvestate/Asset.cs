@@ -26,6 +26,7 @@ namespace Winvestate_Offer_Management_Models.Database.Winvestate
         public string thumb_path { get; set; }
         public string free_text_no { get; set; }
         public decimal? max_offer_amount { get; set; }
+        public decimal? registry_price { get; set; }
         public bool? is_compatible_for_credit { get; set; }
         public bool? show_last_offer_date { get; set; }
         public bool? is_sold { get; set; }

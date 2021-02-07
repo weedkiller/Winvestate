@@ -9,6 +9,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Winvestate_Offer_Management_API.Api;
@@ -282,7 +283,7 @@ namespace Winvestate_Offer_Management_API.Classes
             return regex.Replace(sourceString, startTag + endTag).Replace(startTag, "").Replace(endTag, "");
         }
 
-        public static void SendToDocumentToSign(Customer pCustomer, Offer pOffer)
+        public static void SendDocumentToSign(Customer pCustomer, Offer pOffer)
         {
             var loAsset = GetData.GetAssetById(pOffer.asset_uuid.ToString());
             var loCompany = GetData.GetBankById(loAsset.bank_guid.ToString());
@@ -311,6 +312,24 @@ namespace Winvestate_Offer_Management_API.Classes
             loSendToSignModel.document_sign_flows.Add(loSignFlow);
 
 
+            if (loCompany.company_prefix == "THK")
+                loSendToSignModel.document_templates = GetThkAgreementTemplateValues(loAsset, pCustomer);
+            else //if (loCompany.company_prefix == "VST")
+                loSendToSignModel.document_templates = GetVstAgreementTemplateValues(loAsset, pCustomer, pOffer);
+
+
+            var loResult = RestCalls.SendCustomerAgreement(loSendToSignModel);
+            if (loResult.Code == 200)
+            {
+                var loSendToSign = JsonConvert.DeserializeObject<SendToSign>(loResult.Data.ToString());
+                var loOfferToUpdate = GetData.GetOfferById(pOffer.row_guid.ToString());
+                loOfferToUpdate.mespact_session_uuid = loSendToSign.document_to_sign.row_guid;
+                Crud<Offer>.Update(loOfferToUpdate, out _);
+            }
+        }
+
+        private static List<DocumentTemplate> GetThkAgreementTemplateValues(AssetDto pAsset, Customer pCustomer)
+        {
             var loDocumentTemplateKeys = new List<DocumentTemplate>();
             var loDocumentTemplateKey1 = new DocumentTemplate();
             var loDocumentTemplateKey2 = new DocumentTemplate();
@@ -330,27 +349,27 @@ namespace Winvestate_Offer_Management_API.Classes
             loDocumentTemplateKeys.Add(loDocumentTemplateKey1);
 
             loDocumentTemplateKey2.document_template_key = ((int)ThkAgreement.ThkSatisSartname.GmNo).ToString();
-            loDocumentTemplateKey2.document_template_value = loAsset.company_prefix + loAsset.asset_no;
+            loDocumentTemplateKey2.document_template_value = pAsset.company_prefix + pAsset.asset_no;
             loDocumentTemplateKeys.Add(loDocumentTemplateKey2);
 
             loDocumentTemplateKey3.document_template_key = ((int)ThkAgreement.ThkSatisSartname.Il).ToString();
-            loDocumentTemplateKey3.document_template_value = loAsset.city;
+            loDocumentTemplateKey3.document_template_value = pAsset.city;
             loDocumentTemplateKeys.Add(loDocumentTemplateKey3);
 
             loDocumentTemplateKey4.document_template_key = ((int)ThkAgreement.ThkSatisSartname.Ilce).ToString();
-            loDocumentTemplateKey4.document_template_value = loAsset.district;
+            loDocumentTemplateKey4.document_template_value = pAsset.district;
             loDocumentTemplateKeys.Add(loDocumentTemplateKey4);
 
             loDocumentTemplateKey5.document_template_key = ((int)ThkAgreement.ThkSatisSartname.Ada).ToString();
-            loDocumentTemplateKey5.document_template_value = loAsset.block_number;
+            loDocumentTemplateKey5.document_template_value = pAsset.block_number;
             loDocumentTemplateKeys.Add(loDocumentTemplateKey5);
 
             loDocumentTemplateKey6.document_template_key = ((int)ThkAgreement.ThkSatisSartname.Parsel).ToString();
-            loDocumentTemplateKey6.document_template_value = loAsset.plot_number;
+            loDocumentTemplateKey6.document_template_value = pAsset.plot_number;
             loDocumentTemplateKeys.Add(loDocumentTemplateKey6);
 
             loDocumentTemplateKey7.document_template_key = ((int)ThkAgreement.ThkSatisSartname.Adres).ToString();
-            loDocumentTemplateKey7.document_template_value = loAsset.address;
+            loDocumentTemplateKey7.document_template_value = pAsset.address;
             loDocumentTemplateKeys.Add(loDocumentTemplateKey7);
 
             loDocumentTemplateKey8.document_template_key = ((int)ThkAgreement.ThkSatisSartname.Adsoyad).ToString();
@@ -375,16 +394,111 @@ namespace Winvestate_Offer_Management_API.Classes
             loDocumentTemplateKey12.document_template_value = pCustomer.mail;
             loDocumentTemplateKeys.Add(loDocumentTemplateKey12);
 
+            return loDocumentTemplateKeys;
+        }
 
-            loSendToSignModel.document_templates = loDocumentTemplateKeys;
-            var loResult = RestCalls.SendCustomerAgreement(loSendToSignModel);
-            if (loResult.Code == 200)
-            {
-                var loSendToSign = JsonConvert.DeserializeObject<SendToSign>(loResult.Data.ToString());
-                var loOfferToUpdate = GetData.GetOfferById(pOffer.row_guid.ToString());
-                loOfferToUpdate.mespact_session_uuid = loSendToSign.document_to_sign.row_guid;
-                Crud<Offer>.Update(loOfferToUpdate, out _);
-            }
+        private static List<DocumentTemplate> GetVstAgreementTemplateValues(AssetDto pAsset, Customer pCustomer, Offer pOffer)
+        {
+            var loDocumentTemplateKeys = new List<DocumentTemplate>();
+            var loDocumentTemplateKey1 = new DocumentTemplate();
+            var loDocumentTemplateKey2 = new DocumentTemplate();
+            var loDocumentTemplateKey3 = new DocumentTemplate();
+            var loDocumentTemplateKey4 = new DocumentTemplate();
+            var loDocumentTemplateKey5 = new DocumentTemplate();
+            var loDocumentTemplateKey6 = new DocumentTemplate();
+            var loDocumentTemplateKey7 = new DocumentTemplate();
+            var loDocumentTemplateKey8 = new DocumentTemplate();
+            var loDocumentTemplateKey9 = new DocumentTemplate();
+            var loDocumentTemplateKey10 = new DocumentTemplate();
+            var loDocumentTemplateKey11 = new DocumentTemplate();
+            var loDocumentTemplateKey12 = new DocumentTemplate();
+            var loDocumentTemplateKey13 = new DocumentTemplate();
+            var loDocumentTemplateKey14 = new DocumentTemplate();
+            var loDocumentTemplateKey15 = new DocumentTemplate();
+            var loDocumentTemplateKey16 = new DocumentTemplate();
+            var loDocumentTemplateKey17 = new DocumentTemplate();
+
+            var loOfferWinv = Math.Round(pOffer.pre_offer_price.Value * 6 / 100, 2).ToString("N")+ " TL";
+            var loOfferPrice = pOffer.pre_offer_price.Value.ToString("N") + " TL";
+            var loOfferPriceWinv = IntegerToWritten(Convert.ToInt32(Math.Round(pOffer.pre_offer_price.Value * 6 / 100))) + " TL";
+            loOfferPrice = loOfferPrice.Replace(",00", "");
+            loOfferWinv = loOfferWinv.Replace(",00", "");
+
+            var loRegisterPriceTen = Math.Round(pAsset.registry_price.Value * 10 / 100, 2).ToString("N")+" TL";
+            var loRegisterPrice = pAsset.registry_price.Value.ToString("N") + " TL";
+            var loRegisterPriceTenText = IntegerToWritten(Convert.ToInt32(Math.Round(pAsset.registry_price.Value * 10 / 100))) + " TL";
+            loRegisterPrice = loRegisterPrice.Replace(",00", "");
+            loRegisterPriceTen = loRegisterPriceTen.Replace(",00", "");
+
+            loDocumentTemplateKey1.document_template_key = ((int)VestelAgreement.mail).ToString();
+            loDocumentTemplateKey1.document_template_value = pCustomer.mail;
+            loDocumentTemplateKeys.Add(loDocumentTemplateKey1);
+
+            loDocumentTemplateKey2.document_template_key = ((int)VestelAgreement.ad_soyad).ToString();
+            loDocumentTemplateKey2.document_template_value = pCustomer.user_type_system_type_id == 1 ? string.Concat(pCustomer.customer_name, " ", pCustomer.customer_surname) : pCustomer.company_name;
+            loDocumentTemplateKeys.Add(loDocumentTemplateKey2);
+
+            loDocumentTemplateKey3.document_template_key = ((int)VestelAgreement.ada).ToString();
+            loDocumentTemplateKey3.document_template_value = pAsset.block_number;
+            loDocumentTemplateKeys.Add(loDocumentTemplateKey3);
+
+            loDocumentTemplateKey4.document_template_key = ((int)VestelAgreement.parsel).ToString();
+            loDocumentTemplateKey4.document_template_value = pAsset.plot_number;
+            loDocumentTemplateKeys.Add(loDocumentTemplateKey4);
+
+            loDocumentTemplateKey5.document_template_key = ((int)VestelAgreement.adres).ToString();
+            loDocumentTemplateKey5.document_template_value = pAsset.address;
+            loDocumentTemplateKeys.Add(loDocumentTemplateKey5);
+
+            loDocumentTemplateKey6.document_template_key = ((int)VestelAgreement.bagimsiz_bolum).ToString();
+            loDocumentTemplateKey6.document_template_value = pAsset.free_text_no;
+            loDocumentTemplateKeys.Add(loDocumentTemplateKey6);
+
+            loDocumentTemplateKey7.document_template_key = ((int)VestelAgreement.il).ToString();
+            loDocumentTemplateKey7.document_template_value = pAsset.city;
+            loDocumentTemplateKeys.Add(loDocumentTemplateKey7);
+
+            loDocumentTemplateKey8.document_template_key = ((int)VestelAgreement.ilce).ToString();
+            loDocumentTemplateKey8.document_template_value = pAsset.district;
+            loDocumentTemplateKeys.Add(loDocumentTemplateKey8);
+
+            loDocumentTemplateKey9.document_template_key = ((int)VestelAgreement.kimlik_no).ToString();
+            loDocumentTemplateKey9.document_template_value = pCustomer.identity_no;
+            loDocumentTemplateKeys.Add(loDocumentTemplateKey9);
+
+            loDocumentTemplateKey10.document_template_key = ((int)VestelAgreement.tarih).ToString();
+            loDocumentTemplateKey10.document_template_value = DateTime.Now.ToString("f");
+            loDocumentTemplateKeys.Add(loDocumentTemplateKey10);
+
+            loDocumentTemplateKey11.document_template_key = ((int)VestelAgreement.teklif_bedeli).ToString();
+            loDocumentTemplateKey11.document_template_value = loOfferPrice;
+            loDocumentTemplateKeys.Add(loDocumentTemplateKey11);
+
+            loDocumentTemplateKey12.document_template_key = ((int)VestelAgreement.satis_bedel_yuzde_alti).ToString();
+            loDocumentTemplateKey12.document_template_value = loOfferWinv;
+            loDocumentTemplateKeys.Add(loDocumentTemplateKey12);
+
+            loDocumentTemplateKey13.document_template_key = ((int)VestelAgreement.satis_bedel_yuzde_alti_metin).ToString();
+            loDocumentTemplateKey13.document_template_value = loOfferPriceWinv;
+            loDocumentTemplateKeys.Add(loDocumentTemplateKey13);
+
+            loDocumentTemplateKey14.document_template_key = ((int)VestelAgreement.tapu_bedeli).ToString();
+            loDocumentTemplateKey14.document_template_value = loRegisterPrice;
+            loDocumentTemplateKeys.Add(loDocumentTemplateKey14);
+
+            loDocumentTemplateKey15.document_template_key = ((int)VestelAgreement.tapu_bedel_yuzde_on).ToString();
+            loDocumentTemplateKey15.document_template_value =loRegisterPriceTen;
+            loDocumentTemplateKeys.Add(loDocumentTemplateKey15);
+
+            loDocumentTemplateKey16.document_template_key = ((int)VestelAgreement.tapu_bedel_yuzde_on_metin).ToString();
+            loDocumentTemplateKey16.document_template_value = loRegisterPriceTenText;
+            loDocumentTemplateKeys.Add(loDocumentTemplateKey16);
+
+            loDocumentTemplateKey17.document_template_key = ((int)VestelAgreement.telefon).ToString();
+            loDocumentTemplateKey17.document_template_value = pCustomer.phone;
+            loDocumentTemplateKeys.Add(loDocumentTemplateKey17);
+
+            return loDocumentTemplateKeys;
         }
 
         public static void SendNewCallBackRecord(CallbackRecord pCallbackRecord)
@@ -439,6 +553,62 @@ namespace Winvestate_Offer_Management_API.Classes
                     "Değerli müşterimiz, teklif vermiş olduğunuz gayrimenkule yeni bir teklif verilmiştir. Yeni teklifi görüntülemek ve teklifinizi yükseltmek için lütfen web sitemizi ziyaret ediniz İlan bağlantısı : " + loUrlToShorten + " . Mesaj Tarihi: " + DateTime.Now,
                     loAssetOffer.customer_phone);
             }
+        }
+
+        private static string FriendlyInteger(int n, string leftDigits, int thousands)
+        {
+            if (n == 0)
+            {
+                return leftDigits;
+            }
+
+            string friendlyInt = leftDigits;
+
+            if (friendlyInt.Length > 0)
+            {
+                friendlyInt += " ";
+            }
+
+            if (n < 10)
+            {
+                friendlyInt += Common.Ones[n];
+            }
+            else if (n < 20)
+            {
+                friendlyInt += Common.Teens[n - 10];
+            }
+            else if (n < 100)
+            {
+                friendlyInt += FriendlyInteger(n % 10, Common.Tens[n / 10 - 2], 0);
+            }
+            else if (n < 1000)
+            {
+                friendlyInt += FriendlyInteger(n % 100, (Common.Ones[n / 100] + " Yüz"), 0);
+            }
+            else
+            {
+                friendlyInt += FriendlyInteger(n % 1000, FriendlyInteger(n / 1000, "", thousands + 1), 0);
+                if (n % 1000 == 0)
+                {
+                    return friendlyInt;
+                }
+            }
+
+            return friendlyInt + Common.Thousands[thousands];
+        }
+
+        public static string IntegerToWritten(int n)
+        {
+            if (n == 0)
+            {
+                return "Sıfır";
+            }
+            else if (n < 0)
+            {
+                return "Eksi " + IntegerToWritten(-n);
+            }
+
+            return FriendlyInteger(n, "", 0);
         }
     }
 }
