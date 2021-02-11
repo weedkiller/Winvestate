@@ -23,9 +23,9 @@
     height: 35rem !important;
 }
 
-.container {
+/*.container {
     padding: 10px;
-}
+}*/
 
 ul, ol, li {
     margin: 0;
@@ -131,15 +131,17 @@ ul, ol, li {
     height: 45rem !important;
 }
 
-.centerMyImage {
+
+/*.centerMyImage {
     width: 50%;
-}
+}*/
 
 .centeredDiv {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 450px;
+    width: 800px !important;
 }
 
 .splide__pagination__page {

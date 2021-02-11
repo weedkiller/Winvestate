@@ -15,7 +15,7 @@ var OfferListDT = function () {
                     read: {
                         method: 'GET',
                         contentType: 'application/json',
-                        url: HOST_URL + '/Asset/List',
+                        url: HOST_URL + '/Asset/Offered',
                         // sample custom headers
                         headers: { 'Authorization': 'Bearer ' + HOST_TOKEN },
                         map: function (raw) {
@@ -48,6 +48,29 @@ var OfferListDT = function () {
 
             pagination: true,
 
+            translate: {
+                records: {
+                    processing: 'Lütfen bekleyiniz...',
+                    noRecords: 'Kayıt bulunamadı..'
+                },
+                toolbar: {
+                    pagination: {
+                        items: {
+                            default: {
+                                first: 'İlk',
+                                prev: 'Önceki',
+                                next: 'Sonraki',
+                                last: 'Son',
+                                more: 'Daha fazla sayfa',
+                                input: 'Sayfa Sayısı',
+                                select: 'Kayıt Sayısı Seçiniz',
+                            },
+                            info: ' {{start}} - {{end}} arasındaki {{total}} kayıt gösteriliyor',
+                        }
+                    }
+                }
+            },
+
             detail: {
                 title: 'Teklifleri Görüntüle',
                 content: subTableInit,
@@ -68,13 +91,26 @@ var OfferListDT = function () {
                     textAlign: 'center',
                 },
                 {
-                    field: '',
-                    title: 'Gayrimenkul No',
+                    field: 'company_name',
+                    title: '',
+                    width: '100px',
                     template: function (row) {
                         var output = '<div class="d-flex align-items-center detail" data-id=' + row.row_guid + '>\
                                                 <div class="ml-4">\
-                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ row.asset_no + '</div>\
-                                                    <div class="text-muted">' + row.asset_name + '</div>\
+                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ row.bank_name + '</div>\
+                                                </div>\
+                                            </div>';
+                        return output;
+                    }
+                },
+                {
+                    field: 'asset_no',
+                    title: '',
+                    width: '50px',
+                    template: function (row) {
+                        var output = '<div class="d-flex align-items-center detail" data-id=' + row.row_guid + '>\
+                                                <div class="ml-4">\
+                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ row.company_prefix + row.asset_no + '</div>\
                                                 </div>\
                                             </div>';
                         return output;
@@ -82,23 +118,34 @@ var OfferListDT = function () {
                 },
                 {
                     field: 'city',
-                    title: 'İl-İlçe',
+                    title: '',
+                    width: '100px',
                     template: function (row) {
-                        var loSize = row.size + "m2";
-                        var loAddress = row.city + ' ' + row.district;
-                        var output = '<div class="d-flex align-items-left detail" data-id=' + row.row_guid + '>\
+                        var output = '<div class="d-flex align-items-center detail" data-id=' + row.row_guid + '>\
                                                 <div class="ml-4">\
-                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ loAddress + '</div>\
-                                                    <div class="text-muted">' + loSize + '</div>\
+                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ row.district + '</div>\
                                                 </div>\
                                             </div>';
-
+                        return output;
+                    }
+                },
+                {
+                    field: 'district',
+                    title: '',
+                    width: '100px',
+                    template: function (row) {
+                        var output = '<div class="d-flex align-items-center detail" data-id=' + row.row_guid + '>\
+                                                <div class="ml-4">\
+                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ row.city + '</div>\
+                                                </div>\
+                                            </div>';
                         return output;
                     }
                 },
                 {
                     field: 'max_offer',
-                    title: 'Son Teklif',
+                    title: '',
+                    width: 'auto',
                     template: function (row) {
                         if (row.max_offer_amount) {
                             var output = '<div class="d-flex align-items-left detail" data-id=' + row.row_guid + '>\
@@ -113,17 +160,27 @@ var OfferListDT = function () {
                 },
                 {
                     field: 'last_offer_date',
-                    title: 'Son Teklif Tarihi',
-                    width: 240,
+                    title: '',
+                    width: 'auto',
                     template: function (row) {
                         var loDate1 = new Date(row.last_offer_date);
-                        var loDate2 = new Date(row.last_announcement_date);
-                        var loDate3 = new Date(row.first_announcement_date);
                         var output = '<div class="d-flex align-items-center">\
                                                 <div class="ml-4">\
-                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ loDate1.toLocaleDateString() + " " + loDate1.toLocaleTimeString() + '</div>\
-                                                    <div class="text-muted">İlan Başlangıç :' + loDate2.toLocaleDateString() + " " + loDate2.toLocaleTimeString() + '</div>\
-                                                    <div class="text-muted">İlan Bitiş:' + loDate3.toLocaleDateString() + " " + loDate3.toLocaleTimeString() + '</div>\
+                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ loDate1.toLocaleDateString()+ '</div>\
+                                                </div>\
+                                            </div>';
+                        return output;
+                    }
+                },
+                {
+                    field: 'last_offer_hour',
+                    title: '',
+                    width: '50px',
+                    template: function (row) {
+                        var loDate1 = new Date(row.last_offer_date);
+                        var output = '<div class="d-flex align-items-center">\
+                                                <div class="ml-4">\
+                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ loDate1.toLocaleTimeString() + '</div>\
                                                 </div>\
                                             </div>';
                         return output;
@@ -131,7 +188,8 @@ var OfferListDT = function () {
                 },
                 {
                     field: 'state',
-                    title: 'Durum',
+                    title: '',
+                    width: 'auto',
                     template: function (row) {
                         var output = '';
                         var loClass = row.state == "Aktif" ? "text-success" : "text-danger"
@@ -195,41 +253,96 @@ var OfferListDT = function () {
                     },
                 },
 
+                translate: {
+                    records: {
+                        processing: 'Lütfen bekleyiniz...',
+                        noRecords: 'Kayıt bulunamadı..'
+                    },
+                    toolbar: {
+                        pagination: {
+                            items: {
+                                default: {
+                                    first: 'İlk',
+                                    prev: 'Önceki',
+                                    next: 'Sonraki',
+                                    last: 'Son',
+                                    more: 'Daha fazla sayfa',
+                                    input: 'Sayfa Sayısı',
+                                    select: 'Kayıt Sayısı Seçiniz',
+                                },
+                                info: ' {{start}} - {{end}} arasındaki {{total}} kayıt gösteriliyor',
+                            }
+                        }
+                    }
+                },
+
                 sortable: true,
 
                 // columns definition
                 columns: [
                     {
-                        field: 'last_offer_date',
-                        title: ' Teklif Tarihi',
+                        field: 'customer_full_name',
+                        title: '',
+                        width: 200,
+                        template: function (row) {
+                            var loDate1 = new Date(row.row_create_date);
+                            var output = '<div class="d-flex align-items-center">\
+                                                <div class="ml-4">\
+                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ row.customer_full_name + '</div>\
+                                                </div>\
+                                            </div>';
+                            return output;
+                        }
+                    }, {
+                        field: 'customer_phone',
+                        title: '',
                         width: 150,
                         template: function (row) {
                             var loDate1 = new Date(row.row_create_date);
                             var output = '<div class="d-flex align-items-center">\
                                                 <div class="ml-4">\
-                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ loDate1.toLocaleDateString() + " " + loDate1.toLocaleTimeString() + '</div>\
+                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ row.customer_phone + '</div>\
+                                                </div>\
+                                            </div>';
+                            return output;
+                        }
+                    }, {
+                        field: 'amount',
+                        title: '',
+                        template: function (row) {
+
+                            var loClass = row.amount == e.data.max_offer ? "text-success" : "text-danger";
+                            var output = '<div class="d-flex align-items-left detail" data-id=' + row.row_guid + '>\
+                                                <div class="ml-4">\
+                                                    <div class="font-weight-bolder mb-0 '+ loClass + '">' + row.amount.toLocaleString("tr") + " TL" + '</div>\
                                                 </div>\
                                             </div>';
                             return output;
                         }
                     },
                     {
-                        field: 'customer_full_name',
-                        title: 'Müşteri Adı',
-                        width: 200
-                    }, {
-                        field: 'customer_phone',
-                        title: 'Müşteri Telefonu',
-                        width: 150
-                    }, {
-                        field: 'amount',
-                        title: 'Teklif Tutarı',
+                        field: 'last_offer_date',
+                        title: ' ',
+                        width: 150,
                         template: function (row) {
-
-                            var loClass = row.amount == e.data.max_offer ? "text-success" : "text-danger";
-                            var output = '<div class="d-flex align-items-left detail" data-id=' + row.row_guid + '>\
+                            var loDate1 = new Date(row.row_create_date);
+                            var output = '<div class="d-flex align-items-center">\
                                                 <div class="ml-4">\
-                                                    <div class="font-weight-bolder mb-0 '+ loClass+'">'+ row.amount.toLocaleString("tr") + " TL" + '</div>\
+                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ loDate1.toLocaleDateString()+ '</div>\
+                                                </div>\
+                                            </div>';
+                            return output;
+                        }
+                    },
+                    {
+                        field: 'last_offer_time',
+                        title: ' ',
+                        width: 150,
+                        template: function (row) {
+                            var loDate1 = new Date(row.row_create_date);
+                            var output = '<div class="d-flex align-items-center">\
+                                                <div class="ml-4">\
+                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ loDate1.toLocaleTimeString() + '</div>\
                                                 </div>\
                                             </div>';
                             return output;

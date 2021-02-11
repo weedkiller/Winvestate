@@ -472,6 +472,29 @@ var KTDatatableAutoColumnHideDemo = function () {
 
             pagination: true,
 
+            translate: {
+                records: {
+                    processing: 'Lütfen bekleyiniz...',
+                    noRecords: 'Kayıt bulunamadı..'
+                },
+                toolbar: {
+                    pagination: {
+                        items: {
+                            default: {
+                                first: 'İlk',
+                                prev: 'Önceki',
+                                next: 'Sonraki',
+                                last: 'Son',
+                                more: 'Daha fazla sayfa',
+                                input: 'Sayfa Sayısı',
+                                select: 'Kayıt Sayısı Seçiniz',
+                            },
+                            info: ' {{start}} - {{end}} arasındaki {{total}} kayıt gösteriliyor',
+                        }
+                    }
+                }
+            },
+
             search: {
                 input: $('#kt_datatable_search_query'),
                 key: 'generalSearch'

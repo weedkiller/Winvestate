@@ -163,7 +163,7 @@ namespace Winvestate_Offer_Management_MVC.Controllers
             var loToken = RestCalls.GetToken();
             var loAsset = RestCalls.GetAssetById(pId, loToken);
 
-            if (loAsset != null)
+            if (loAsset != null && loAsset.id > 0)
             {
                 var loModel = new HomeViewModel { Asset = loAsset, Token = loToken };
                 loModel.AssetExplanation = loModel.Asset.explanation;

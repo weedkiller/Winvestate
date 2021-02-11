@@ -12,6 +12,7 @@ using SixLabors.ImageSharp.Processing;
 using Winvestate_Offer_Management_MVC.Api;
 using Winvestate_Offer_Management_MVC.Classes;
 using SixLabors.ImageSharp;
+using Image = System.Drawing.Image;
 
 namespace Winvestate_Offer_Management_MVC
 {
@@ -22,7 +23,6 @@ namespace Winvestate_Offer_Management_MVC
             Common.SetVariablesForDebug();
             Common.SetVariablesForTest();
             Common.SetVariablesForProd();
-
 
             //var loDirectories = Directory.GetDirectories(
             //    @"C:\Users\Emre\source\repos\Winvestate_Offer_Management\Winvestate_Offer_Management_MVC\wwwroot\Uploads");

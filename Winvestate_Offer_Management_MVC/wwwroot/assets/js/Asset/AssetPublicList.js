@@ -114,7 +114,7 @@ var AssetForOfferDT = function () {
                     field: 'city',
                     title: 'No1',
                     autoHide: false,
-                    visible:false
+                    visible: false
                 }, {
                     field: 'district',
                     title: 'No2',
@@ -136,37 +136,66 @@ var AssetForOfferDT = function () {
                     title: 'No4',
                     visible: false,
                     autoHide: false
-                },{
-                    field: '',
-                    title: 'Gayrimenkul No',
-                    width: 170,
+                }, {
+                    field: 'my_asset_no',
+                    title: 'GM No',
+                    width: 80,
                     autoHide: false,
                     template: function (row) {
                         var output = '<a href="/Asset/AssetDetail?pId=' + row.row_guid + '" class="d-flex align-items-center detail" data-id=' + row.row_guid + '>\
                                                 <div class="ml-4">\
                                                     <div class="text-dark-75 font-weight-bolder mb-0">'+ row.company_prefix + row.asset_no + '</div>\
-                                                    <div class="text-muted font-size-xs">' + row.asset_name + '</div>\
                                                 </div>\
                                             </a>';
                         return output;
                     }
                 },
                 {
-                    field: 'city_district',
-                    title: 'İl-İlçe',
-                    width: 150,
+                    field: 'my_asset_name',
+                    title: 'Başlık',
+                    width: 170,
+                    autoHide: false,
+                    template: function (row) {
+                        var output = '<a href="/Asset/AssetDetail?pId=' + row.row_guid + '" class="d-flex align-items-center detail" data-id=' + row.row_guid + '>\
+                                                <div class="ml-0">\
+                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ row.asset_name + '</div>\
+                                                </div>\
+                                            </a>';
+                        return output;
+                    }
+                },
+                {
+                    field: 'myCity',
+                    title: 'İl',
+                    width: 100,
                     autoHide: false,
                     responsive: {
                         visible: 'lg',
                         hidden: 'sm'
                     },
                     template: function (row) {
-                        var loSize = row.size + "m2";
-                        var loAddress = row.city + ' ' + row.district;
-                        var output = '<a href="/Asset/AssetDetail?pId=' + row.row_guid + '" class="d-flex align-items-center detail" data-id=' + row.row_guid + '>\
-                                                <div class="ml-4">\
-                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ loAddress + '</div>\
-                                                    <div class="text-muted">' + loSize + '</div>\
+                        var output = '<a href="/Asset/AssetDetail?pId=' + row.row_guid + '" class="d-flex detail" data-id=' + row.row_guid + '>\
+                                                <div class="ml-0">\
+                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ row.city + '</div>\
+                                                </div>\
+                                            </a>';
+
+                        return output;
+                    }
+                },
+                {
+                    field: 'myDistrict',
+                    title: 'İlçe',
+                    width: 100,
+                    autoHide: false,
+                    responsive: {
+                        visible: 'lg',
+                        hidden: 'sm'
+                    },
+                    template: function (row) {
+                        var output = '<a href="/Asset/AssetDetail?pId=' + row.row_guid + '" class="d-flex detail" data-id=' + row.row_guid + '>\
+                                                <div class="ml-0">\
+                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ row.district + '</div>\
                                                 </div>\
                                             </a>';
 
@@ -186,7 +215,7 @@ var AssetForOfferDT = function () {
                         var output = '<a href="/Asset/AssetDetail?pId=' + row.row_guid + '" class="d-flex align-items-center detail" data-id=' + row.row_guid + '>\
                                                 <div class="ml-4">\
                                                     <div class="text-dark-75 font-weight-bolder mb-0">'+ row.category + '</div>\
-                                                    <div class="text-muted font-size-xs">' + row.asset_type + '</div>\
+                                                    <div class="text-dark-75">' + row.asset_type + '</div>\
                                                 </div>\
                                             </a>';
 
@@ -194,8 +223,8 @@ var AssetForOfferDT = function () {
                     }
                 }, {
                     field: 'max_offer',
-                    title: 'Son Teklif (TL)',
-                    width: 150,
+                    title: 'Fiyat/Son Teklif (TL)',
+                    width: 80,
                     autoHide: false,
                     responsive: {
                         visible: 'lg',

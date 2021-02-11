@@ -11,7 +11,7 @@
                 <div class="card-header">
                     <div class="card-title">
                         <h3 class="card-label">
-                            Başvurular(@Model.Offers.Count(x => x.offer_state_type_system_type_id == (int)OfferStateTypes.WaitingGuarantee || x.offer_state_type_system_type_id == (int)OfferStateTypes.WaitingAgreement) Adet)
+                            Yeni Başvurular(@Model.Offers.Count(x => x.offer_state_type_system_type_id == (int)OfferStateTypes.WaitingGuarantee || x.offer_state_type_system_type_id == (int)OfferStateTypes.WaitingAgreement) Adet)
                         </h3>
                     </div>
                     <div class="card-toolbar">
@@ -26,11 +26,15 @@
                         <table class="table table-head-custom table-vertical-center" id="kt_advance_table_widget_3">
                             <thead>
                                 <tr class="text-uppercase">
-                                    <th style="min-width: 120px">Müşteri</th>
-                                    <th style="min-width: 100px">Gayrimenkul</th>
-                                    <th style="min-width: 100px">Başvuru Tarihi</th>
-                                    <th style="min-width: 120px">Durum</th>
-                                    <th style="min-width: 160px">İşlemler</th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -38,14 +42,25 @@
                                 {
                                     <tr>
                                         <td>
+                                            <a target="_blank" href="https://e-teklif.winvestate.com/Asset/AssetDetail?pId=@loOffer.asset_uuid" class="text-dark-75 font-weight-bolder text-hover-primary font-size-lg">@string.Concat(loOffer.company_prefix, loOffer.asset_no)</a>
+                                        </td>
+                                        <td>
+                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">@loOffer.city</span>
+                                        </td>
+                                        <td>
+                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">@loOffer.district</span>
+                                        </td>
+                                        <td>
                                             <span class="text-dark-75 font-weight-bolder d-block font-size-lg">@loOffer.customer_full_name</span>
-                                            <span class="text-muted font-weight-bold">@loOffer.customer_phone</span>
                                         </td>
                                         <td>
-                                            <a target="_blank" href="https://e-teklif.winvestate.com/Asset/AssetDetail?pId=@loOffer.asset_uuid" class="text-dark-75 font-weight-bolder text-hover-primary font-size-lg">@string.Concat(loOffer.company_prefix, loOffer.asset_no) - @loOffer.asset_name</a>
+                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">@loOffer.customer_phone</span>
                                         </td>
                                         <td>
-                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">@loOffer.row_create_date.Value.ToString("f")</span>
+                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">@loOffer.row_create_date.Value.ToString("dd.MM.yyyy")</span>
+                                        </td>
+                                        <td>
+                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">@loOffer.row_create_date.Value.ToString("hh:mm")</span>
                                         </td>
                                         <td>
                                             <span class="text-dark-75 font-weight-bolder d-block font-size-lg">@loOffer.offer_state</span>
@@ -87,7 +102,7 @@
                 <div class="card-header">
                     <div class="card-title">
                         <h3 class="card-label">
-                            Aktif Teklifler (@Model.User.offered_assets.Count Adet)
+                            Yeni Teklifler (@Model.User.offered_assets.Count Adet)
                         </h3>
                     </div>
                     <div class="card-toolbar">
@@ -102,38 +117,46 @@
                         <table class="table table-head-custom table-vertical-center" id="kt_advance_table_widget_2">
                             <thead>
                                 <tr class="text-uppercase">
-                                    <th class="pl-0" style="min-width: 100px">Gayrimenkul</th>
-                                    <th style="min-width: 100px">Durum</th>
-                                    <th style="min-width: 120px">Son Teklif (TL)</th>
-                                    <th style="min-width: 120px">Son Teklif Tarihi</th>
-                                    <th class="pr-0 text-right" style="min-width: 160px">İşlemler</th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var loAsset in Model.User.offered_assets.OrderByDescending(x => x.last_offer_date))
                                 {
-                                    <tr>
-                                        <td class="pl-0">
-                                            <a target="_blank" href="https://e-teklif.winvestate.com/Asset/AssetDetail?pId=@loAsset.row_guid" class="text-dark-75 font-weight-bolder text-hover-primary font-size-lg">@string.Concat(loAsset.company_prefix, loAsset.asset_no) - @loAsset.asset_name</a>
-                                        </td>
-                                        <td>
-                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg"> @loAsset.state</span>
-                                        </td>
-                                        <td>
-                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg"> @string.Format("{0:N0}", loAsset.max_offer_amount)</span>
-                                        </td>
-                                        <td>
-                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg"> @string.Format("{0:f}", loAsset.row_update_date.Value)</span>
-                                        </td>
-                                        <td class="pr-0 text-right">
-                                            @if (loAsset.state_id == 1 && !loAsset.sale_in_company && Model.User.user_type==1)
-                                            {
-                                                <a href="#" class="btn btn-icon btn-light btn-hover-primary btn-sm approveSale" title="Satışı Tamamla" data-id="@loAsset.row_guid">
-                                                    <i class="flaticon2-check-mark"></i>
-                                                </a>
-                                            }
-                                        </td>
-                                    </tr>
+                                <tr>
+                                    <td class="pl-0">
+                                        <a target="_blank" href="https://e-teklif.winvestate.com/Asset/AssetDetail?pId=@loAsset.row_guid" class="text-dark-75 font-weight-bolder text-hover-primary font-size-lg">@string.Concat(loAsset.company_prefix, loAsset.asset_no)</a>
+                                    </td>
+                                    <td>
+                                        <span class="text-dark-75 font-weight-bolder d-block font-size-lg"> @loAsset.city</span>
+                                    </td>
+                                    <td>
+                                        <span class="text-dark-75 font-weight-bolder d-block font-size-lg"> @loAsset.district</span>
+                                    </td>
+                                    <td>
+                                        <span class="text-dark-75 font-weight-bolder d-block font-size-lg"> @string.Format("{0:N0}", loAsset.max_offer_amount)</span>
+                                    </td>
+                                    <td>
+                                        <span class="text-dark-75 font-weight-bolder d-block font-size-lg">@loAsset.row_update_date.Value.ToString("dd.MM.yyyy")</span>
+                                    </td>
+                                    <td>
+                                        <span class="text-dark-75 font-weight-bolder d-block font-size-lg">@loAsset.row_update_date.Value.ToString("hh:mm")</span>
+                                    </td>
+                                    <td class="pr-0 text-right">
+                                        @if (loAsset.state_id == 1 && !loAsset.sale_in_company && Model.User.user_type == 1)
+                                        {
+                                            <a href="#" class="btn btn-icon btn-light btn-hover-primary btn-sm approveSale" title="Satışı Tamamla" data-id="@loAsset.row_guid">
+                                                <i class="flaticon2-check-mark"></i>
+                                            </a>
+                                        }
+                                    </td>
+                                </tr>
                                 }
                             </tbody>
                         </table>
@@ -168,27 +191,42 @@
                         <table class="table table-head-custom table-vertical-center" id="kt_advance_table_widget_2">
                             <thead>
                                 <tr class="text-uppercase">
-                                    <th class="pl-0" style="min-width: 150px">Müşteri</th>
-                                    <th style="min-width: 150px">Talep Tarihi</th>
-                                    <th style="min-width: 150px">İlgilendiği Gayrimenkul</th>
-                                    <th style="min-width: 50px">Durum</th>
-                                    <th style="min-width: 150px">Not</th>
-                                    <th style="min-width: 100px">İşlemler</th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var loRecord in Model.ActiveCallbackRecords.OrderByDescending(x => x.row_create_date))
                                 {
                                     <tr>
-                                        <td class="pl-0">
-                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">@loRecord.applicant_name @loRecord.applicant_surname</span>
-                                            <span class="text-muted font-weight-bold">@loRecord.applicant_phone</span>
+                                        <td>
+                                            <a target="_blank" href="https://e-teklif.winvestate.com/Asset/AssetDetail?pId=@loRecord.asset_uuid" class="text-dark-75 font-weight-bolder text-hover-primary font-size-lg">@string.Concat(loRecord.company_prefix, loRecord.asset_no)</a>
                                         </td>
                                         <td>
-                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">@loRecord.row_create_date.Value.ToString("f")</span>
+                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">@loRecord.city</span>
                                         </td>
-                                        <td class="pl-0">
-                                            <a target="_blank" href="https://e-teklif.winvestate.com/Asset/AssetDetail?pId=@loRecord.asset_uuid" class="text-dark-75 font-weight-bolder text-hover-primary font-size-lg">@string.Concat(loRecord.company_prefix, loRecord.asset_no) - @loRecord.asset_name</a>
+                                        <td>
+                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">@loRecord.district</span>
+                                        </td>
+                                        <td>
+                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">@loRecord.applicant_name @loRecord.applicant_surname</span>
+                                        </td>
+                                        <td>
+                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">@loRecord.applicant_phone</span>
+                                        </td>
+                                        <td>
+                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">@loRecord.row_create_date.Value.ToString("dd.MM.yyyy")</span>
+                                        </td>
+                                        <td>
+                                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">@loRecord.row_create_date.Value.ToString("hh:mm")</span>
                                         </td>
                                         <td>
                                             <span class="text-dark-75 font-weight-bolder d-block font-size-lg">@loRecord.callback_record_state</span>

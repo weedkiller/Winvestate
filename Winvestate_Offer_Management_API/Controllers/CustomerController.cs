@@ -319,6 +319,8 @@ namespace Winvestate_Offer_Management_API.Controllers
             };
 
             var loResult = GetData.GetAllCallbacks();
+            loResult = loResult.OrderBy(x => x.company_name).ThenBy(x => x.callback_record_state_type_system_type_id)
+                .ThenByDescending(x => x.row_create_date.Value).ToList();
 
             if (!loResult.Any())
             {

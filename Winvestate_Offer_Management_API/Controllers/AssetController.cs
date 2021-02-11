@@ -316,7 +316,7 @@ namespace Winvestate_Offer_Management_API.Controllers
                 Status = "Fail"
             };
 
-            var loResult = GetData.GetOfferedAssets();
+            var loResult = GetData.GetOfferedAssets().OrderBy(x=>x.bank_name).ThenByDescending(x=>x.row_update_date.Value).ToList();
 
             if (!loResult.Any())
             {

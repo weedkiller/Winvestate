@@ -33,7 +33,7 @@ var CallbackList = function () {
 
             // layout definition
             layout: {
-                scroll: false, // enable/disable datatable scroll both horizontal and vertical when needed.
+                scroll: true, // enable/disable datatable scroll both horizontal and vertical when needed.
                 footer: false, // display/hide footer
             },
 
@@ -41,6 +41,29 @@ var CallbackList = function () {
             sortable: true,
 
             pagination: true,
+
+            translate: {
+                records: {
+                    processing: 'Lütfen bekleyiniz...',
+                    noRecords: 'Kayıt bulunamadı..'
+                },
+                toolbar: {
+                    pagination: {
+                        items: {
+                            default: {
+                                first: 'İlk',
+                                prev: 'Önceki',
+                                next: 'Sonraki',
+                                last: 'Son',
+                                more: 'Daha fazla sayfa',
+                                input: 'Sayfa Sayısı',
+                                select: 'Kayıt Sayısı Seçiniz',
+                            },
+                            info: ' {{start}} - {{end}} arasındaki {{total}} kayıt gösteriliyor',
+                        }
+                    }
+                }
+            },
 
             search: {
                 input: $('#kt_datatable_search_query'),
@@ -50,64 +73,101 @@ var CallbackList = function () {
 
             // columns definition
             columns: [
+
                 {
                     field: 'asset_no',
-                    title: 'Gayrimenkul No',
+                    title: '',
+                    width: 'auto',
                     template: function (row) {
-                        var output = '<div class="d-flex align-items-center detail" data-id=' + row.row_guid + '>\
+                        var output = '<a href=/Asset/AssetDetail?pId='+row.asset_uuid+' class="d-flex align-items-center detail" data-id=' + row.row_guid + '>\
                                                 <div class="ml-4">\
                                                     <div class="text-dark-75 font-weight-bolder mb-0">'+ row.company_prefix + row.asset_no + '</div>\
-                                                    <div class="text-muted">' + row.asset_name + '</div>\
                                                 </div>\
-                                            </div>';
+                                            </a>';
                         return output;
                     }
                 },
                 {
                     field: 'customer_name_surname',
-                    title: 'Müşteri Adı Soyadı',
+                    title: '',
+                    width: 'auto',
                     template: function (row) {
-                        var output = '<div class="d-flex align-items-center detail" data-id=' + row.row_guid + '>\
+                        var output = '<a href=/Asset/AssetDetail?pId=' + row.asset_uuid + ' class="d-flex align-items-center detail" data-id=' + row.row_guid + '>\
                                                 <div class="ml-4">\
                                                     <div class="text-dark-75 font-weight-bolder mb-0">'+ row.applicant_full_name + '</div>\
-                                                    <div class="text-muted">' + row.applicant_phone + '</div>\
                                                 </div>\
-                                            </div>';
+                                            </a>';
+                        return output;
+                    }
+                },
+                {
+                    field: 'customer_phone',
+                    title: '',
+                    width: 'auto',
+                    template: function (row) {
+                        var output = '<a href=/Asset/AssetDetail?pId=' + row.asset_uuid + ' class="d-flex align-items-center detail" data-id=' + row.row_guid + '>\
+                                                <div class="ml-4">\
+                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ row.applicant_phone + '</div>\
+                                                </div>\
+                                            </a>';
                         return output;
                     }
                 },
                 {
                     field: 'record_date',
-                    title: 'Oluşturulma Tarihi',
+                    title: '',
+                    width: 'auto',
                     template: function (row) {
                         var loDate1 = new Date(row.row_create_date);
-                        var output = '<div class="d-flex align-items-center detail" data-id=' + row.row_guid + '>\
+                        var output = '<a href=/Asset/AssetDetail?pId=' + row.asset_uuid + ' class="d-flex align-items-center detail" data-id=' + row.row_guid + '>\
                                                 <div class="ml-4">\
-                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ loDate1.toLocaleDateString() + " " + loDate1.toLocaleTimeString() + '</div>\
+                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ loDate1.toLocaleDateString()+ '</div>\
                                                 </div>\
-                                            </div>';
+                                            </a>';
+                        return output;
+                    }
+                },
+                {
+                    field: 'record_time',
+                    title: '',
+                    width: 'auto',
+                    template: function (row) {
+                        var loDate1 = new Date(row.row_create_date);
+                        var output = '<a href=/Asset/AssetDetail?pId=' + row.asset_uuid + ' class="d-flex align-items-center detail" data-id=' + row.row_guid + '>\
+                                                <div class="ml-4">\
+                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+loDate1.toLocaleTimeString() + '</div>\
+                                                </div>\
+                                            </a>';
                         return output;
                     }
                 },
                 {
                     field: 'state',
-                    title: 'Durum',
+                    title: '',
+                    width: 'auto',
                     template: function (row) {
-                        var output = '';
-                        output += '<div class="font-weight-boldest mb-0">' + row.callback_record_state + '</div>';
+                        var output = '<a href=/Asset/AssetDetail?pId=' + row.asset_uuid + ' class="d-flex align-items-center detail" data-id=' + row.row_guid + '>\
+                                                <div class="ml-4">\
+                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ row.callback_record_state + '</div>\
+                                                </div>\
+                                            </a>';
                         return output;
                     }
                 },
                 {
                     field: 'note',
-                    title: 'Not',
+                    title: '',
+                    width: 'auto',
                     template: function (row) {
-                        var output = '';
                         var loNote = "";
                         if (row.note) {
                             loNote = row.note;
                         }
-                        output += '<div class="font-weight-boldest mb-0">' + loNote + '</div>';
+                        var output = '<a href=/Asset/AssetDetail?pId=' + row.asset_uuid + ' class="d-flex align-items-center detail" data-id=' + row.row_guid + '>\
+                                                <div class="ml-4">\
+                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ loNote + '</div>\
+                                                </div>\
+                                            </a>';
                         return output;
                     }
                 },

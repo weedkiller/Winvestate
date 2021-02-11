@@ -138,7 +138,7 @@
                                 </div>
                             </div>
                             @{
-                                var loResult = Model.Asset.is_compatible_for_credit == true ? "Evet" : "Hayır";
+                                var loResult = Model.Asset.is_compatible_for_credit == true ? "EVET" : "HAYIR";
                             }
                             <div class="form-group row my-2">
                                 <label class="col-6 col-form-label font-size-xs">Krediye Uygunluk:</label>
@@ -153,7 +153,7 @@
                                 <div class="col-6">
                                     <span class="form-control-plaintext">
                                         @{
-                                            var loMaxOffer = Model.Asset.max_offer_amount.HasValue && Model.Asset.max_offer_amount > 0 ? string.Format("{0:N0}", Model.Asset.max_offer_amount) :  string.Format("{0:N0}", Model.Asset.starting_amount);
+                                            var loMaxOffer = Model.Asset.max_offer_amount.HasValue && Model.Asset.max_offer_amount > 0 ? string.Format("{0:N0}", Model.Asset.max_offer_amount) :  "-";
                                         }
                                         <span class="font-weight-bolder">@loMaxOffer</span>
                                     </span>
@@ -163,7 +163,10 @@
                                 <label class="col-6 col-form-label font-size-xs">Minimum Artış Tutarı(TL):</label>
                                 <div class="col-6">
                                     <span class="form-control-plaintext">
-                                        <span class="font-weight-bolder">@string.Format("{0:N0}", Model.Asset.minimum_increate_amout)</span>
+                                        @{
+                                            var loMinimumIncreaseAmount = !Model.Asset.max_offer_amount.HasValue || Model.Asset.minimum_increate_amout == 0 ? "-" : string.Format("{0:N0}", Model.Asset.minimum_increate_amout);
+                                        }
+                                        <span class="font-weight-bolder">@loMinimumIncreaseAmount</span>
                                     </span>
                                 </div>
                             </div>
@@ -179,7 +182,10 @@
                                 <label class="col-6 col-form-label font-size-xs">Teminat Bedeli(TL):</label>
                                 <div class="col-6">
                                     <span class="form-control-plaintext">
-                                        <span class="font-weight-bolder">@string.Format("{0:N0}", Model.Asset.guarantee_amount)</span>
+                                        @{
+                                            var loGuaranteeAmount = !Model.Asset.guarantee_amount.HasValue || Model.Asset.guarantee_amount == 0 ? "-" : string.Format("{0:N0}", Model.Asset.guarantee_amount);
+                                        }
+                                        <span class="font-weight-bolder">@loGuaranteeAmount</span>
                                     </span>
                                 </div>
                             </div>
@@ -226,24 +232,27 @@
                         </div>
                         <!--end::Callout-->
                     </div>
-
-                    <div class="col-xl-6">
-                        <!--begin::Callout-->
-                        <div class="card card-custom gutter-b bg-light-primary">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center justify-content-between p-4 flex-lg-wrap flex-xl-nowrap">
-                                    <div class="d-flex flex-column mr-5">
-                                        <a  class="h4 text-dark text-hover-primary mb-5">E-Teklif</a>
-                                        <p class="text-dark-50">Kolay ve hızlı teklif vermek için, tüm bilgilerinizi doldurun; daha sonra E-Sözleşme’yi online imzalayın. </p>
-                                    </div>
-                                    <div class="ml-6 ml-lg-0 ml-xxl-6 flex-shrink-0">
-                                        <a href="#" class="btn font-weight-bolder text-uppercase btn-primary py-4 px-6" data-toggle="modal" data-target="#kt_modal_offer_info">Teklif Ver</a>
+                    @if (Model.Asset.company_prefix == "THK")
+                    {
+                        <div class="col-xl-6">
+                            <!--begin::Callout-->
+                            <div class="card card-custom gutter-b bg-light-primary">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center justify-content-between p-4 flex-lg-wrap flex-xl-nowrap">
+                                        <div class="d-flex flex-column mr-5">
+                                            <a  class="h4 text-dark text-hover-primary mb-5">E-Teklif</a>
+                                            <p class="text-dark-50">Kolay ve hızlı teklif vermek için, tüm bilgilerinizi doldurun; daha sonra E-Sözleşme’yi online imzalayın. </p>
+                                        </div>
+                                        <div class="ml-6 ml-lg-0 ml-xxl-6 flex-shrink-0">
+                                            <a href="#" class="btn font-weight-bolder text-uppercase btn-primary py-4 px-6" data-toggle="modal" data-target="#kt_modal_offer_info">Teklif Ver</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <!--end::Callout-->
                         </div>
-                        <!--end::Callout-->
-                    </div>
+                    }
+
                 </div>
             }
         </div>

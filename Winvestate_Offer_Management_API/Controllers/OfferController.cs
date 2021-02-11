@@ -33,7 +33,7 @@ namespace Winvestate_Offer_Management_API.Controllers
                 Status = "Fail"
             };
 
-            var loResult = GetData.GetOfferSummary();
+            var loResult = GetData.GetOfferSummary().OrderBy(x=>x.company_name).ThenByDescending(x=>x.row_update_date).ToList();
 
             loResult = loUserType switch
             {

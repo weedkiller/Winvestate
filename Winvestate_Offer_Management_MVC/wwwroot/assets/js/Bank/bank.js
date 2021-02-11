@@ -48,7 +48,7 @@ $(document).ready(function () {
                     SendBankToServer(loSelectedBank, $(this));
                 }
             });
-           
+
         });
 
     $(document).on("click",
@@ -98,7 +98,7 @@ $(document).ready(function () {
                 $("#company_prefix").val(loSelectedBank.company_prefix);
                 $("#agreement_link").val(loSelectedBank.agreement_link);
                 $('#is_enable_pre_offer').prop('checked', loSelectedBank.is_enable_pre_offer);
-                $('input[name="sale_in_company"][value=' +  loSelectedBank.sale_in_company + ']').attr('checked', 'checked');
+                $('input[name="sale_in_company"][value=' + loSelectedBank.sale_in_company + ']').attr('checked', 'checked');
             } else {
                 $("#bank_name").val("");
                 $("#authorized_name").val("");
@@ -153,7 +153,7 @@ function SendBankToServer(model, btn) {
                     }
                 }).then(function () {
                     $("#kt_modal_add_bank").modal("hide");
-                    window.location='/Bank/List';
+                    window.location = '/Bank/List';
                 });
             } else {
                 btn.removeClass('spinner spinner-right spinner-white pr-15').attr('disabled', false)
@@ -264,7 +264,7 @@ function setBankValidation() {
 
 }
 
-var KTDatatableBank= function () {
+var KTDatatableBank = function () {
     // Private functions
 
     // basic demo
@@ -304,6 +304,29 @@ var KTDatatableBank= function () {
 
             pagination: true,
 
+            translate: {
+                records: {
+                    processing: 'Lütfen bekleyiniz...',
+                    noRecords: 'Kayıt bulunamadı..'
+                },
+                toolbar: {
+                    pagination: {
+                        items: {
+                            default: {
+                                first: 'İlk',
+                                prev: 'Önceki',
+                                next: 'Sonraki',
+                                last: 'Son',
+                                more: 'Daha fazla sayfa',
+                                input: 'Sayfa Sayısı',
+                                select: 'Kayıt Sayısı Seçiniz',
+                            },
+                            info: ' {{start}} - {{end}} arasındaki {{total}} kayıt gösteriliyor',
+                        }
+                    }
+                }
+            },
+
             search: {
                 input: $('#kt_datatable_search_query'),
                 key: 'generalSearch'
@@ -312,27 +335,86 @@ var KTDatatableBank= function () {
             // columns definition
             columns: [
                 {
-                    field: 'bank_name',
-                    title: 'Adı',
-                    width: '250'
+                    field: 'company_name',
+                    title: 'Kurum Adı',
+                    width: 'auto',
+                    template: function (row) {
+                        var output = '<div class="d-flex align-items-center detail" data-id=' + row.row_guid + '>\
+                                                <div class="ml-4">\
+                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ row.bank_name + '</div>\
+                                                </div>\
+                                            </div>';
+
+                        return output;
+                    }
+                },
+                {
+                    field: 'company_prefix',
+                    title: 'Kurum Ön Eki',
+                    width: 'auto',
+                    template: function (row) {
+                        var output = '<div class="d-flex align-items-center detail" data-id=' + row.row_guid + '>\
+                                                <div class="ml-4">\
+                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ row.company_prefix + '</div>\
+                                                </div>\
+                                            </div>';
+
+                        return output;
+                    }
                 },
                 {
                     field: 'name_aut',
                     title: 'Yetkili Kişi',
                     width: 'auto',
                     template: function (row) {
-                        return row.authorized_name + " " + row.authorized_surname;
+                        var output = '<div class="d-flex align-items-center detail" data-id=' + row.row_guid + '>\
+                                                <div class="ml-4">\
+                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ row.authorized_name + " " + row.authorized_surname + '</div>\
+                                                </div>\
+                                            </div>';
+
+                        return output;
                     }
                 },
                 {
                     field: 'surname_aut',
-                    title: 'Yetkili İletişim',
+                    title: 'Yetkili Gsm No',
                     template: function (row) {
-                        var output = '<div class="d-flex align-items-center detail" data-id=' + row.authorized_phone + '>\
+                        var loResult = "";
+
+                        if (row.authorized_phone) {
+                            loResult = row.authorized_phone;
+                        } else if (row.authorized_second_phone) {
+                            loResult = row.authorized_second_phone;
+                            if (row.authorized_dial_code) {
+                                loResult = loResult + "-" + row.authorized_dial_code;
+                            }
+                        }
+
+                        var output = '<div class="d-flex align-items-center detail" data-id=' + row.row_guid + '>\
                                                 <div class="ml-4">\
-                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ row.authorized_phone + '</div>\
-                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ row.authorized_second_phone + '-' + row.authorized_dial_code+'</div>\
-                                                    <div class="text-muted">' + row.authorized_mail + '</div>\
+                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ loResult + '</div>\
+                                                </div>\
+                                            </div>';
+                        return output;
+                    }
+                },
+                {
+                    field: 'sale_autho',
+                    title: 'Satış Onayı',
+                    template: function (row) {
+                        var loResult = "";
+
+                        if (row.sale_in_company) {
+                            loResult = "Kurum";
+                        }
+                        else {
+                            loResult = "Winvestate";
+                        }
+
+                        var output = '<div class="d-flex align-items-center detail" data-id=' + row.row_guid + '>\
+                                                <div class="ml-4">\
+                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ loResult + '</div>\
                                                 </div>\
                                             </div>';
                         return output;

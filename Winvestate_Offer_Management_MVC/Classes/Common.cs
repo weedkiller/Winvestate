@@ -16,6 +16,7 @@ namespace Winvestate_Offer_Management_MVC.Classes
         public static string ValidateOtpUrl = ApiUrl + "/Otp/Validate";
         public static string ApiKey = "LJK1231MVFVNJNJ212312493123VNSDA5158898A";
         public static readonly string MespactLinkUrl = "https://panel.esozlesme.com.tr";
+        public const int ExifOrientationTagId = 0x112;
 
         [Conditional("DEBUG")]
         public static void SetVariablesForDebug()

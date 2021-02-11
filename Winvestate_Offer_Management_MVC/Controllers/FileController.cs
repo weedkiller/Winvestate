@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Hosting;
 using SixLabors.ImageSharp.Processing;
 using Winvestate_Offer_Management_MVC.Classes;
 using SixLabors.ImageSharp;
+using Image = SixLabors.ImageSharp.Image;
 
 namespace Winvestate_Offer_Management_MVC.Controllers
 {
@@ -47,7 +49,16 @@ namespace Winvestate_Offer_Management_MVC.Controllers
                     }
                     else
                     {
-                        using var image = Image.Load(file.OpenReadStream());
+
+                        var loMyImage = System.Drawing.Image.FromStream(file.OpenReadStream());
+                        loMyImage.Save(filePath);
+
+                        var loMySecondImage = System.Drawing.Image.FromFile(filePath);
+                        loMySecondImage.NormalizeOrientation();
+                        byte[] bytes = (byte[])(new ImageConverter()).ConvertTo(loMySecondImage, typeof(byte[]));
+                        loMySecondImage.Dispose();
+                        System.IO.File.Delete(filePath);
+                        using var image = Image.Load(bytes);
 
                         if (image.Width > image.Height)
                         {
@@ -73,14 +84,15 @@ namespace Winvestate_Offer_Management_MVC.Controllers
                         }
 
                         image.Save(filePath);
-                        System.Drawing.Image loImage = System.Drawing.Image.FromFile(_environment.WebRootPath + "/white_canvas.png");
-                        System.Drawing.Image loImage2 = System.Drawing.Image.FromFile(filePath);
+                        //System.Drawing.Image loImage = System.Drawing.Image.FromFile(_environment.WebRootPath + "/white_canvas.png");
+                        //System.Drawing.Image loImage2 = System.Drawing.Image.FromFile(filePath);
 
-                        HelperMethods.CombineImages(loImage, loImage2, filePath2);
-                        
-                        loImage.Dispose();
-                        loImage2.Dispose();
-                        System.IO.File.Delete(filePath);
+                        //HelperMethods.CombineImages(loImage, loImage2, filePath2);
+                        //HelperMethods.MergedBitmaps(loImage, loImage2, "emrenin_denemesi.jpg");
+
+                        //loImage.Dispose();
+                        //loImage2.Dispose();
+                        //System.IO.File.Delete(filePath);
 
                         if (i == 0)
                         {
@@ -102,7 +114,7 @@ namespace Winvestate_Offer_Management_MVC.Controllers
             }
             catch (Exception ex)
             {
-                System.IO.File.WriteAllText("file_error.txt",ex.ToString());
+                System.IO.File.WriteAllText("file_error.txt", ex.ToString());
                 return BadRequest(new { success = false, message = "Error file failed to upload" });
             }
         }

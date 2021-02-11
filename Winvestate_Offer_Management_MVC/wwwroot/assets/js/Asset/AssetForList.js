@@ -64,6 +64,29 @@ var AssetListDT = function () {
 
             pagination: true,
 
+            translate: {
+                records: {
+                    processing: 'Lütfen bekleyiniz...',
+                    noRecords: 'Kayıt bulunamadı..'
+                },
+                toolbar: {
+                    pagination: {
+                        items: {
+                            default: {
+                                first: 'İlk',
+                                prev: 'Önceki',
+                                next: 'Sonraki',
+                                last: 'Son',
+                                more: 'Daha fazla sayfa',
+                                input: 'Sayfa Sayısı',
+                                select: 'Kayıt Sayısı Seçiniz',
+                            },
+                            info: ' {{start}} - {{end}} arasındaki {{total}} kayıt gösteriliyor',
+                        }
+                    }
+                }
+            },
+
             search: {
                 input: $('#kt_datatable_search_query'),
                 delay: 400,
@@ -118,7 +141,7 @@ var AssetListDT = function () {
                         var output = '<div class="d-flex align-items-left detail" data-id=' + row.row_guid + '>\
                                                 <div class="ml-4">\
                                                     <div class="text-dark-75 font-weight-bolder mb-0">'+ loAddress + '</div>\
-                                                    <div class="text-muted">' + loSize + '</div>\
+                                                    <div class="text-dark-75">' + loSize + '</div>\
                                                 </div>\
                                             </div>';
 
@@ -136,8 +159,8 @@ var AssetListDT = function () {
                         var output = '<div class="d-flex align-items-center">\
                                                 <div class="ml-4">\
                                                     <div class="text-dark-75 font-weight-bolder mb-0">'+ loDate1.toLocaleDateString() + " " + loDate1.toLocaleTimeString() + '</div>\
-                                                    <div class="text-muted">İlan Başlangıç :' + loDate3.toLocaleDateString() + " " + loDate3.toLocaleTimeString() + '</div>\
-                                                    <div class="text-muted">İlan Bitiş:' + loDate2.toLocaleDateString() + " " + loDate2.toLocaleTimeString() + '</div>\
+                                                    <div class="text-dark-75">İlan Başlangıç :' + loDate3.toLocaleDateString() + " " + loDate3.toLocaleTimeString() + '</div>\
+                                                    <div class="text-dark-75">İlan Bitiş:' + loDate2.toLocaleDateString() + " " + loDate2.toLocaleTimeString() + '</div>\
                                                 </div>\
                                             </div>';
                         return output;
@@ -236,6 +259,29 @@ var SoldAssetListDT = function () {
 
             pagination: true,
 
+            translate: {
+                records: {
+                    processing: 'Lütfen bekleyiniz...',
+                    noRecords: 'Kayıt bulunamadı..'
+                },
+                toolbar: {
+                    pagination: {
+                        items: {
+                            default: {
+                                first: 'İlk',
+                                prev: 'Önceki',
+                                next: 'Sonraki',
+                                last: 'Son',
+                                more: 'Daha fazla sayfa',
+                                input: 'Sayfa Sayısı',
+                                select: 'Kayıt Sayısı Seçiniz',
+                            },
+                            info: ' {{start}} - {{end}} arasındaki {{total}} kayıt gösteriliyor',
+                        }
+                    }
+                }
+            },
+
             search: {
                 input: $('#kt_datatable_search_query'),
                 delay: 400,
@@ -263,7 +309,7 @@ var SoldAssetListDT = function () {
                 },
                 {
                     field: 'last_offer_date',
-                    title: 'Satış Tarihi',
+                    title: 'Satış Onay Tarihi',
                     width: 240,
                     template: function (row) {
                         var loDate1 = new Date(row.asset_update_date);

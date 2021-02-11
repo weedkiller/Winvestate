@@ -14,5 +14,8 @@ namespace Winvestate_Offer_Management_Models.Database.Winvestate
         public string note { get; set; }
         public Guid? asset_uuid { get; set; }
         public int callback_record_state_type_system_type_id { get; set; }
+        public string company_name { get; set; }
+        public string city { get; set; }
+        public string district { get; set; }
     }
 }

@@ -42,6 +42,29 @@ var SignedOfferListDT = function () {
 
             pagination: true,
 
+            translate: {
+                records: {
+                    processing: 'Lütfen bekleyiniz...',
+                    noRecords: 'Kayıt bulunamadı..'
+                },
+                toolbar: {
+                    pagination: {
+                        items: {
+                            default: {
+                                first: 'İlk',
+                                prev: 'Önceki',
+                                next: 'Sonraki',
+                                last: 'Son',
+                                more: 'Daha fazla sayfa',
+                                input: 'Sayfa Sayısı',
+                                select: 'Kayıt Sayısı Seçiniz',
+                            },
+                            info: ' {{start}} - {{end}} arasındaki {{total}} kayıt gösteriliyor',
+                        }
+                    }
+                }
+            },
+
             search: {
                 input: $('#kt_datatable_search_query'),
                 delay: 400,
@@ -52,30 +75,49 @@ var SignedOfferListDT = function () {
             columns: [
                 {
                     field: 'bank_name',
-                    title: 'Kurum Adı',
-                },
-                {
-                    field: 'asset_no',
-                    title: 'Gayrimenkul No',
+                    title: '',
                     template: function (row) {
-                        var output = '<div class="d-flex align-items-center detail" data-id=' + row.row_guid + '>\
-                                                <div class="ml-4">\
-                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ row.company_prefix + row.asset_no + '</div>\
-                                                    <div class="text-muted font-size-xs">' + row.asset_name + '</div>\
+                        var output = '<div class="d-flex  detail" data-id=' + row.row_create_date + '>\
+                                                <div class="">\
+                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ row.bank_name + '</div>\
                                                 </div>\
                                             </div>';
                         return output;
                     }
                 },
                 {
-                    field: 'last_offer_date',
-                    title: 'İşlem Tarihi',
-                    width: 240,
+                    field: 'asset_no',
+                    title: '',
+                    width:75,
                     template: function (row) {
-                        var loDate1 = new Date(row.asset_update_date);
-                        var output = '<div class="d-flex align-items-center detail" data-id=' + row.row_create_date + '>\
-                                                <div class="ml-4">\
-                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ loDate1.toLocaleDateString() + " " + loDate1.toLocaleTimeString() + '</div>\
+                        var output = '<div class="d-flex detail" data-id=' + row.row_guid + '>\
+                                                <div class="">\
+                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ row.company_prefix + row.asset_no + '</div>\
+                                                </div>\
+                                            </div>';
+                        return output;
+                    }
+                },
+                {
+                    field: 'city',
+                    title: '',
+                    width:120,
+                    template: function (row) {
+                        var output = '<div class="d-flex detail" data-id=' + row.row_guid + '>\
+                                                <div class="">\
+                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ row.city + '</div>\
+                                                </div>\
+                                            </div>';
+                        return output;
+                    }
+                },
+                {
+                    field: 'district',
+                    title: '',
+                    template: function (row) {
+                        var output = '<div class="d-flex detail" data-id=' + row.district + '>\
+                                                <div class="">\
+                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ row.district + '</div>\
                                                 </div>\
                                             </div>';
                         return output;
@@ -83,10 +125,10 @@ var SignedOfferListDT = function () {
                 },
                 {
                     field: 'buyer',
-                    title: 'Müşteri',
+                    title: '',
                     template: function (row) {
-                        var output = '<div class="d-flex align-items-left detail" data-id=' + row.row_guid + '>\
-                                                <div class="ml-4">\
+                        var output = '<div class="d-flex detail" data-id=' + row.row_guid + '>\
+                                                <div class="">\
                                                     <div class="text-dark-75 font-weight-bolder mb-0">'+ row.customer_full_name + '</div>\
                                                 </div>\
                                             </div>';
@@ -94,8 +136,48 @@ var SignedOfferListDT = function () {
                     }
                 },
                 {
+                    field: 'buyer_phone',
+                    title: '',
+                    template: function (row) {
+                        var output = '<div class="d-flex detail" data-id=' + row.row_guid + '>\
+                                                <div class="">\
+                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ row.customer_phone + '</div>\
+                                                </div>\
+                                            </div>';
+                        return output;
+                    }
+                },
+                {
+                    field: 'last_offer_date',
+                    title: '',
+                    width: 70,
+                    template: function (row) {
+                        var loDate1 = new Date(row.asset_update_date);
+                        var output = '<div class="d-flex  detail" data-id=' + row.row_create_date + '>\
+                                                <div class="">\
+                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ loDate1.toLocaleDateString() + '</div>\
+                                                </div>\
+                                            </div>';
+                        return output;
+                    }
+                },
+                {
+                    field: 'last_offer_time',
+                    title: '',
+                    width: 70,
+                    template: function (row) {
+                        var loDate1 = new Date(row.asset_update_date);
+                        var output = '<div class="d-flex  detail" data-id=' + row.row_create_date + '>\
+                                                <div class="">\
+                                                    <div class="text-dark-75 font-weight-bolder mb-0">'+ loDate1.toLocaleTimeString() + '</div>\
+                                                </div>\
+                                            </div>';
+                        return output;
+                    }
+                },
+                {
                     field: 'İşlemler',
-                    title: 'İşlemler',
+                    title: '',
                     sortable: false,
                     width: 125,
                     overflow: 'visible',
